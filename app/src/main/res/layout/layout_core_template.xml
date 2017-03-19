@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/style_fillParent" android:orientation="vertical"
+    android:background="@android:color/white">
+    <include layout="@layout/layout_core_toolbar"/>
+    <com.jxnu.zha.qinglibrary.widget.TipInfoLayout android:id="@+id/tipInfo_layout"
+        style="@style/style_fillParent">
+        <LinearLayout android:id="@+id/ll_mainBody" style="@style/style_fillParent"
+            android:orientation="vertical"/>
+    </com.jxnu.zha.qinglibrary.widget.TipInfoLayout>
+</LinearLayout>

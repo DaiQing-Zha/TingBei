@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="id_drawerLayout" type="id">true</item>
+    <item name="id_mainContent" type="id">true</item>
+    <item name="id_nvMenu" type="id">true</item>
+</resources>

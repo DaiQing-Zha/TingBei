@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 专用 -->
+<com.jxnu.zha.qinglibrary.view.LoadStatusBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loadStatusBox" android:background="@color/loadState_textWhite"
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"
+    android:visibility="visible" >
+
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        android:layout_width="48.0dip"
+        android:layout_height="48.0dip"
+        android:layout_centerInParent="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/progress_drawable"
+        android:indeterminateDuration="500"
+        android:indeterminateOnly="true" />
+
+    <LinearLayout
+        android:id="@+id/loadErrorBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/loadErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="@string/loadState_msgBadNet" />
+
+        <Button
+            android:id="@+id/loadErrorBn"
+            style="@style/BlueButton"
+            android:text="@string/loadState_reObtain" />
+    </LinearLayout>
+
+</com.jxnu.zha.qinglibrary.view.LoadStatusBox>

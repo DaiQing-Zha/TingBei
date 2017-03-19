@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="150dip" android:background="?attr/colorPrimary"
+    android:paddingLeft="15dip" android:id="@+id/ll_menuHead_head">
+
+    <com.jxnu.zha.tingbei.widgets.CircleImageView android:id="@+id/cImg_portrait"
+        android:layout_width="60dip" android:layout_height="60dip"
+        android:src="@mipmap/ic_default_portrait" android:layout_marginTop="10dip"/>
+    <TextView android:id="@+id/tv_menuHead_userName"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="@string/menuDrawer_login" android:textSize="20sp"
+        android:textColor="@color/color_commWhite" android:layout_marginTop="12dip"/>
+</LinearLayout>

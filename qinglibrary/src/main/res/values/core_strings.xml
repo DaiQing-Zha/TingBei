@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tipInfo_loading">正在加载···</string>
+    <string name="tipInfo_networkError">没有可用网络</string>
+    <string name="tipInfo_loadDataFail">数据加载失败</string>
+    <string name="tipInfo_loadEmpty">暂无数据</string>
+
+    <string name="refreshLayout_loading">正在加载，请稍候...</string>
+
+    <string name="loadState_msgBadNet">点击按钮，再请求一次。</string>
+    <string name="loadState_reObtain">重新获取</string>
+
+    <string name="http_statusCode404">未知的网络请求</string>
+    <string name="http_statusCode500">非常抱歉，服务器异常，请稍后再试</string>
+    <string name="http_noNetwork">当前网络不可用，请检查网络设置</string>
+    <string name="http_loadFailure">数据加载失败，请稍后再试！</string>
+    <string name="http_response">服务器暂时连接不上</string>
+    <string name="http_timeOut">网络不稳定，请稍候再试...</string>
+    <string name="http_loadError">加载数据出现错误，请稍候再试...</string>
+    <string name="http_noData">连接失败,未获取到数据</string>
+</resources>

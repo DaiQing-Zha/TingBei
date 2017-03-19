@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item android:id="@+id/action_main" android:title="@string/menuDrawer_personal" android:icon="@mipmap/ic_menu_personal"/>
+    </group>
+
+    <item android:id="@+id/other" android:title="@string/menuDrawer_other">
+        <menu>
+            <item android:id="@+id/action_switchTheme" android:title="@string/menuDrawer_switchTheme"/>
+            <item android:id="@+id/action_setting" android:title="@string/menuDrawer_setting"/>
+        </menu>
+    </item>
+</menu>
