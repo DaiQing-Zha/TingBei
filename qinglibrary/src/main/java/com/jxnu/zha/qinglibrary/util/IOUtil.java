@@ -28,11 +28,11 @@ public class IOUtil {
         try {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
-                line=null;
+                line = null;
             }
         } finally {
             try {
-                if(reader!=null){
+                if(reader != null){
                     reader.close();
                 }
             } catch (IOException e) {
@@ -44,9 +44,7 @@ public class IOUtil {
         return line;
     }
 
-
     /**
-     *
      * @author caibing.zhang
      * @createdate 2012-6-26 下午10:38:11
      * @Description: 字符串转InputStream
@@ -102,7 +100,7 @@ public class IOUtil {
      */
     public static void closeInputStream(InputStream in){
         try {
-            if(in!=null){
+            if(in != null){
                 in.close();
             }
         } catch (IOException e) {

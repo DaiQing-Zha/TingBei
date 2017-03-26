@@ -2,7 +2,6 @@ package com.jxnu.zha.tingbei.utils;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 

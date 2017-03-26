@@ -8,4 +8,9 @@
     <string name="menuDrawer_setting">设置</string>
     <string name="menuDrawer_open">打开</string>
     <string name="menuDrawer_close">关闭</string>
+
+    <string name="mainFragment_handPick">精选</string>
+    <string name="mainFragment_recommend">推荐</string>
+    <string name="mainFragment_ranking">排行</string>
+    <string name="mainFragment_radio">电台</string>
 </resources>

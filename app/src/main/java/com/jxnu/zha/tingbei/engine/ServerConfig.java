@@ -12,7 +12,6 @@ import com.jxnu.zha.tingbei.utils.CommonUtil;
  * Description:服务器访问配置类
  */
 public class ServerConfig {
-
     /**
      * DEBUG：本地调试环境
      * TEST：测试环境
@@ -22,7 +21,7 @@ public class ServerConfig {
         DEBUG, TEST, RELEASE
     }
 
-    private static final String ROOT_DEBUG = "139.129.213.70/awake/";
+    private static final String ROOT_DEBUG = "http://139.129.213.70/awake/";
     private static final String ROOT_TEST = "";
     private static final String ROOT_RELEASE = "";
 
@@ -31,6 +30,11 @@ public class ServerConfig {
         final Context context = BaseApplication.getInstance();
         USE_SERVER_MODE = Enum.valueOf(Mode.class, CommonUtil.getMetaValue(context, "server_mode"));
     }
+
+    /**
+     * 获取根路径
+     * @return
+     */
     public static String getServerRoot() {
         if (USE_SERVER_MODE == Mode.DEBUG) {
             return ROOT_DEBUG;

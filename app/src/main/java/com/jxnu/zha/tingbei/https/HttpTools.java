@@ -8,7 +8,15 @@ import com.jxnu.zha.tingbei.engine.ServerConfig;
  * description:
  */
 public class HttpTools {
+
+    /**
+     * 获取绝对路径
+     * @param url
+     * @return
+     */
     public static String getAbsoluteUrl(String url){
         return ServerConfig.getServerRoot() + url;
     }
+
+    public static final String APP_ID = "e431976548adec559dd10664e0f117f9";
 }

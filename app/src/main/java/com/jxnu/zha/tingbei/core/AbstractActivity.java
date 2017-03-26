@@ -30,31 +30,31 @@ import cz.msebera.android.httpclient.Header;
 public abstract class AbstractActivity extends BaseActivity {
     public abstract class AsyncTack{
         //是否需要进行网络判断,true判断(默认),false不需要判断
-        private boolean isNetWork = true;
+        private boolean isNeedNetWork = true;
         //是否覆盖mainBody显示showWaitDialog, true覆盖显示showWaitDialog,false覆盖，不显示
-        private boolean isCover;
+        private boolean isNeedCover;
         private String url;
         protected TipInfoLayout mTipInfoLayout = AbstractActivity.super.mTipInfoLayout;
 
         public AsyncTack(){
-            this.isCover=true;
+            this.isNeedCover =true;
         }
 
         /**
-         * @param isCover 是否覆盖mainBody显示showWaitDialog,
+         * @param isNeedCover 是否覆盖mainBody显示showWaitDialog,
          *  true覆盖显示showWaitDialog,false不覆盖显示showWaitDialog，
          */
-        public AsyncTack(boolean isCover){
-            this.isCover=isCover;
+        public AsyncTack(boolean isNeedCover){
+            this.isNeedCover =isNeedCover;
         }
 
         /**
-         * @param isCover 是否覆盖mainBody显示showWaitDialog, true覆盖显示showWaitDialog,false不覆盖显示showWaitDialog
-         * @param isNetWork 是否需要进行网络判断,true判断(默认),false不需要判断
+         * @param isNeedNetCover 是否覆盖mainBody显示showWaitDialog, true覆盖显示showWaitDialog,false不覆盖显示showWaitDialog
+         * @param isNeedNetWork 是否需要进行网络判断,true判断(默认),false不需要判断
          */
-        public AsyncTack(boolean isCover,boolean isNetWork){
-            this.isCover=isCover;
-            this.isNetWork=isNetWork;
+        public AsyncTack(boolean isNeedNetCover,boolean isNeedNetWork){
+            this.isNeedCover = isNeedNetCover;
+            this.isNeedNetWork = isNeedNetWork;
         }
         /**
          * @author caibing.zhang
@@ -115,14 +115,14 @@ public abstract class AbstractActivity extends BaseActivity {
         private void request(boolean isPost,boolean isLoading,String url, RequestParams params){
 
             //没有网络或不需要网络判断
-            if(isNetWork && !NetWorkUtil.NETWORK){
+            if(isNeedNetWork && !NetWorkUtil.NETWORK){
                 mTipInfoLayout.setNetWorkError();
                 showSnackBarMsg(EAlertStyle.ALERT, R.string.http_noNetwork);
                 exception();
                 return;
             }
-            this.url=url;
-            if(isCover && mMainBody!=null){
+            this.url = url;
+            if(isNeedCover && mMainBody != null){
                 mMainBody.setVisibility(View.GONE);
             }
             if(isLoading){
@@ -138,22 +138,27 @@ public abstract class AbstractActivity extends BaseActivity {
         /**
          * @author caibing.zhang
          * @createdate 2015年1月16日 下午10:06:21
-         * @Description: 判断返回的判断码
+         * @Description: 根据状态码判断网络请求是否正确返回
          * @param statusCode
          * @return
          */
-        private boolean isStatusCode(int statusCode){
+        private boolean isCorrectResponse(int statusCode){
             mTipInfoLayout.completeLoading();
             if(statusCode==200 || statusCode==201){  //201(已创建)请求成功并且服务器创建了新的资源。
                 return true;
             }else{
-                int messageResId = isStatusCodeMessage(statusCode);
+                int messageResId = getMessageIdByStatusCode(statusCode);
                 showSnackBarMsg(EAlertStyle.ALERT, messageResId);
                 return false;
             }
         }
 
-        private int isStatusCodeMessage(int statusCode){
+        /**
+         * 根据状态码获取要提示的错误信息的resId
+         * @param statusCode
+         * @return
+         */
+        private int getMessageIdByStatusCode(int statusCode){
             int messageResId;
             switch (statusCode) {
                 case 404:
@@ -179,17 +184,17 @@ public abstract class AbstractActivity extends BaseActivity {
             try {
                 String exceptionInfo = analysisException(throwable);
                 L.e(exceptionInfo);
-                if(exceptionInfo.indexOf("UnknownHostException")!=-1){
+                if(exceptionInfo.indexOf("UnknownHostException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
-                }else if(exceptionInfo.indexOf("NoDataException")!=-1){
+                }else if(exceptionInfo.indexOf("NoDataException") != -1){
                     showSnackBarMsg(EAlertStyle.WARNING, R.string.http_noData);
-                }else if(exceptionInfo.indexOf("SocketException")!=-1){
+                }else if(exceptionInfo.indexOf("SocketException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
-                }else if(exceptionInfo.indexOf("SocketTimeoutException")!=-1){
+                }else if(exceptionInfo.indexOf("SocketTimeoutException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
-                }else if(exceptionInfo.indexOf("ConnectTimeoutException")!=-1){
+                }else if(exceptionInfo.indexOf("ConnectTimeoutException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
-                }else if(exceptionInfo.indexOf("HttpResponseException")!=-1){
+                }else if(exceptionInfo.indexOf("HttpResponseException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_response);
                 }else {
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_loadError);
@@ -221,7 +226,7 @@ public abstract class AbstractActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 L.w("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", JSONArray response-->:" + response.toString());
-                if(isStatusCode(statusCode)){
+                if(isCorrectResponse(statusCode)){
                     FileLocalCache.saveFile(url, response.toString());
                     loadSuccess(response.toString());
                 }
@@ -229,7 +234,7 @@ public abstract class AbstractActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers,JSONObject response) {
                 L.w("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", JSONObject response-->:" + response);
-                if(isStatusCode(statusCode)){
+                if(isCorrectResponse(statusCode)){
                     String responseInfo=response.toString();
                     FileLocalCache.saveFile(url, responseInfo);
                     loadSuccess(responseInfo);
@@ -238,7 +243,7 @@ public abstract class AbstractActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers,String responseString) {
                 L.w("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", String responseString-->:" + responseString);
-                if(isStatusCode(statusCode)){
+                if(isCorrectResponse(statusCode)){
                     FileLocalCache.saveFile(url, responseString);
                     loadSuccess(responseString);
                 }
@@ -247,21 +252,21 @@ public abstract class AbstractActivity extends BaseActivity {
             public void onFailure(int statusCode,Header[] headers,
                                   String responseString, Throwable throwable) {
                 L.w("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", responseString-->:" + responseString);
-                int messageResId = isStatusCodeMessage(statusCode);
+                int messageResId = getMessageIdByStatusCode(statusCode);
                 handleThrowable(getString(messageResId),AsyncTack.this,throwable);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers,
                                   Throwable throwable, JSONArray errorResponse) {
                 L.w("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", JSONArray errorResponse-->");
-                int messageResId = isStatusCodeMessage(statusCode);
+                int messageResId = getMessageIdByStatusCode(statusCode);
                 handleThrowable(getString(messageResId),AsyncTack.this,throwable);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers,
                                   Throwable throwable, JSONObject errorResponse) {
                 L.d("--statusCode-->:" + statusCode + ", url-->:" + HttpTools.getAbsoluteUrl(url) + ", JSONObject errorResponse-->");
-                int messageResId = isStatusCodeMessage(statusCode);
+                int messageResId = getMessageIdByStatusCode(statusCode);
                 handleThrowable(getString(messageResId),AsyncTack.this,throwable);
             }
         };

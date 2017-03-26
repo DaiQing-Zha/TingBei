@@ -9,10 +9,11 @@ import java.util.List;
  */
 public class Recommend {
 
+
     /**
      * code : 0
      * msg : 查询成功
-     * obj : [{"context":"神之少女霸上校园少 男","id":"f39db5d34fd41edf014fee5785fc027f","musicListReleaseId":"f39db5d34fd41edf014fee56c135027e","openUrl":"","picPath":"http://www.nnshow.cn /resource/recommend/20150921 /4a616421d05740d3b10ffdabb1a18565.png","picPathSmall":"http: //www.nnshow.cn/resource/recommend/20150921 /4a616421d05740d3b10ffdabb1a18565-s.png","title":"神之少女霸上校园少男","type":1},{"context":"灯光下不为人知的交 易","id":"f39db5d34fd41edf014fee5120d6027d","musicListReleaseId":"f39db5d34fd41edf014fee4156f70279","openUrl":"","picPath":"http://www.nnshow.cn /resource/recommend/20150921 /f27e6a74bbe747b8a7c77ae6782fed16.png","picPathSmall":"http: //www.nnshow.cn/resource/recommend/20150921 /f27e6a74bbe747b8a7c77ae6782fed16-s.png","title":"都市迷魂债","type":1},{"context":"乱事中那美丽爱 情","id":"f39db5d34fd41edf014fee4c7bfe027b","musicListReleaseId":"f39db5d34fd41edf014fee441d2c027a","openUrl":"","picPath":"http://www.nnshow.cn /resource/recommend/20150921 /c4d434991c91437e9598c6ee15aa41d9.png","picPathSmall":"http: //www.nnshow.cn/resource/recommend/20150921 /c4d434991c91437e9598c6ee15aa41d9-s.png","title":"魔乱九天天君是我爱","type":1}]
+     * obj : [{"context":"全能唱作人杨朗朗专访","id":"f39c8ce3549dabef015529fbe0dc0fd8","musicListReleaseId":"f39c8ce3549dabef01552895b27a0f6b","openUrl":"","picPath":"http://115.28.12.99/resource/recommend/20160607/639e44f1d46d4335ad2610d3784d6305.png","picPathSmall":"http://115.28.12.99/resource/recommend/20160607/639e44f1d46d4335ad2610d3784d6305-s.png","title":"杨朗朗：我走得很慢但我从不后退","type":3},{"context":"杨朗朗：奔跑吧兄弟","id":"f39c8ce3549dabef015523b57fe60eff","musicListReleaseId":"f39c8ce3549dabef015523b501020efe","openUrl":"","picPath":"http://115.28.12.99/resource/recommend/20160606/50f89c450d5f4042a5bb571bbbb5f5e0.png","picPathSmall":"http://115.28.12.99/resource/recommend/20160606/50f89c450d5f4042a5bb571bbbb5f5e0-s.png","title":"杨朗朗：奔跑吧兄弟","type":1},{"context":"魏楚沅：未来","id":"f39c8ce3549dabef015505dfc17e0d36","musicListReleaseId":"f39c8ce3549dabef015505de3f420d35","openUrl":"","picPath":"http://115.28.12.99/resource/recommend/20160531/04c0a43d64ad47a3bc89326f32dc03f1.png","picPathSmall":"http://115.28.12.99/resource/recommend/20160531/04c0a43d64ad47a3bc89326f32dc03f1-s.png","title":"魏楚沅：未来","type":1},{"context":"人声兄弟：正青春","id":"f39c8ce3549dabef0154ebd59d3c0a97","musicListReleaseId":"f39c8ce3549dabef0154ebd0ed080a93","openUrl":"","picPath":"http://115.28.12.99/resource/recommend/20160526/3310db04d52e4f5a875aa859613a7c03.png","picPathSmall":"http://115.28.12.99/resource/recommend/20160526/3310db04d52e4f5a875aa859613a7c03-s.png","title":"人声兄弟：正青春","type":1},{"context":"曲/词/编曲/监制:黄贯中","id":"f39c8ce3549dabef0154e176135f0974","musicListReleaseId":"f39c8ce3549dabef0154e17568490973","openUrl":"","picPath":"http://115.28.12.99/resource/recommend/20160524/4a6adcbff4584018a563acacee53b93f.png","picPathSmall":"http://115.28.12.99/resource/recommend/20160524/4a6adcbff4584018a563acacee53b93f-s.png","title":"黄贯中：大英雄","type":1}]
      */
 
     private int code;
@@ -45,14 +46,14 @@ public class Recommend {
 
     public static class ObjEntity {
         /**
-         * context : 神之少女霸上校园少 男
-         * id : f39db5d34fd41edf014fee5785fc027f
-         * musicListReleaseId : f39db5d34fd41edf014fee56c135027e
+         * context : 全能唱作人杨朗朗专访
+         * id : f39c8ce3549dabef015529fbe0dc0fd8
+         * musicListReleaseId : f39c8ce3549dabef01552895b27a0f6b
          * openUrl :
-         * picPath : http://www.nnshow.cn /resource/recommend/20150921 /4a616421d05740d3b10ffdabb1a18565.png
-         * picPathSmall : http: //www.nnshow.cn/resource/recommend/20150921 /4a616421d05740d3b10ffdabb1a18565-s.png
-         * title : 神之少女霸上校园少男
-         * type : 1
+         * picPath : http://115.28.12.99/resource/recommend/20160607/639e44f1d46d4335ad2610d3784d6305.png
+         * picPathSmall : http://115.28.12.99/resource/recommend/20160607/639e44f1d46d4335ad2610d3784d6305-s.png
+         * title : 杨朗朗：我走得很慢但我从不后退
+         * type : 3
          */
 
         private String context;

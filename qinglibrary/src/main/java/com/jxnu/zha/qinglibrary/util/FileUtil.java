@@ -69,7 +69,6 @@ public class FileUtil {
 		String cacheDir = "/Android/data/" + context.getPackageName() + "/cache";
 		return Environment.getExternalStorageDirectory().getPath() + cacheDir;
 
-//		return getCacheDirectory(context,true);
 	}
 
 	public static File getCacheDirectory(Context context, boolean preferExternal) {

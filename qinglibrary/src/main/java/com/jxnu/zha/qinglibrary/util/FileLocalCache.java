@@ -65,20 +65,6 @@ public class FileLocalCache {
 	}
 
 	/**
-	 * 清除SD卡中的数据缓存
-	 */
-/*	public static void clearCache1() {
-		File f = new File(FancusApplication.CACHE_DIR);
-		if (f.exists() && f.isDirectory()) {
-			File flist[] = f.listFiles();
-			for (int i = 0; flist != null && i < flist.length; i++) {
-				flist[i].delete();
-			}
-		}
-	}*/
-
-
-	/**
 	 * 从缓存中读取缓存数据
 	 * @param url
 	 * @param expiredTime 数据有效期（毫秒）
@@ -177,10 +163,10 @@ public class FileLocalCache {
 	 */
 	public static Object getSerializableData(int type, String fileName) {
 		String dir;
-		if(CoreConstants.CACHE_DIR_SD==type){  //缓存在SD卡中
-			dir=CoreApplication.CACHE_DIR_SD;
+		if(CoreConstants.CACHE_DIR_SD == type){  //缓存在SD卡中
+			dir = CoreApplication.CACHE_DIR_SD;
 		}else{  //缓存在SYSTEM文件中
-			dir=CoreApplication.CACHE_DIR_SYSTEM;
+			dir = CoreApplication.CACHE_DIR_SYSTEM;
 		}
 		Object obj = null;
 		try {
@@ -223,10 +209,10 @@ public class FileLocalCache {
 	 */
 	public static Object getSerializableData(int type, String fileName, long time) {
 		String dir;
-		if(CoreConstants.CACHE_DIR_SD==type){  //缓存在SD卡中
-			dir=CoreApplication.CACHE_DIR_SD;
+		if(CoreConstants.CACHE_DIR_SD == type){  //缓存在SD卡中
+			dir = CoreApplication.CACHE_DIR_SD;
 		}else{  //缓存在SYSTEM文件中
-			dir=CoreApplication.CACHE_DIR_SYSTEM;
+			dir = CoreApplication.CACHE_DIR_SYSTEM;
 		}
 		Object obj = null;
 		try {
@@ -241,9 +227,9 @@ public class FileLocalCache {
 			if (f.length() == 0){
 				return null;
 			}
-			long lastTime=f.lastModified();
-			long nowTime= System.currentTimeMillis();
-			if(nowTime-lastTime>time){
+			long lastTime = f.lastModified();
+			long nowTime = System.currentTimeMillis();
+			if(nowTime-lastTime > time){
 				return null;
 			}
 			FileInputStream byteOut = new FileInputStream(f);
@@ -273,7 +259,7 @@ public class FileLocalCache {
 	 */
 	public static void setSerializableData(int type, Object obj, String fileName) {
 		String dir;
-		if(CoreConstants.CACHE_DIR_SD==type){  //缓存在SD卡中
+		if(CoreConstants.CACHE_DIR_SD == type){  //缓存在SD卡中
 			dir=CoreApplication.CACHE_DIR_SD;
 		}else{  //缓存在SYSTEM文件中
 			dir=CoreApplication.CACHE_DIR_SYSTEM;
@@ -300,12 +286,12 @@ public class FileLocalCache {
 	 */
 	public static boolean deleteSerializableData(int type,String fileName) {
 		String dir;
-		if(CoreConstants.CACHE_DIR_SD==type){  //缓存在SD卡中
-			dir=CoreApplication.CACHE_DIR_SD;
+		if(CoreConstants.CACHE_DIR_SD == type){  //缓存在SD卡中
+			dir = CoreApplication.CACHE_DIR_SD;
 		}else{  //缓存在SYSTEM文件中
-			dir=CoreApplication.CACHE_DIR_SYSTEM;
+			dir = CoreApplication.CACHE_DIR_SYSTEM;
 		}
-		File file=new File(dir + md5(fileName));
+		File file = new File(dir + md5(fileName));
 		if(file.exists()){
 			return file.delete();
 		}
@@ -321,10 +307,10 @@ public class FileLocalCache {
 	 */
 	public static void delSerializableData(int type,String fileName){
 		String dir;
-		if(CoreConstants.CACHE_DIR_SD==type){  //缓存在SD卡中
-			dir=CoreApplication.CACHE_DIR_SD;
+		if(CoreConstants.CACHE_DIR_SD == type){  //缓存在SD卡中
+			dir = CoreApplication.CACHE_DIR_SD;
 		}else{  //缓存在SYSTEM文件中
-			dir= CoreApplication.CACHE_DIR_SYSTEM;
+			dir = CoreApplication.CACHE_DIR_SYSTEM;
 		}
 		File d = new File(dir);
 		if (!d.exists()){

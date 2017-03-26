@@ -21,10 +21,9 @@ import butterknife.ButterKnife;
  * email:13767191284@163.com
  * description:
  */
-public abstract class BaseFragment extends Fragment{
+public abstract class BaseFragment extends AbstractFragment{
 
     private View rootView;
-    protected TipInfoLayout mTipInfoLayout;
     protected RequestQueue mRQueue;
     protected BaseActivity father;
 
@@ -40,28 +39,7 @@ public abstract class BaseFragment extends Fragment{
             ViewGroup viewGroup = (ViewGroup) rootView.getParent();
             if (viewGroup != null) viewGroup.removeAllViewsInLayout();
         }
-        mRQueue = Volley.newRequestQueue(getBaseActivity());
         return rootView;
-    }
-
-    /**
-     * 获取该Fragment所附属的Activity
-     * @return
-     */
-    protected BaseActivity getBaseActivity(){
-        return (BaseActivity) getActivity();
-    }
-
-    /**
-     * 提示语封装
-     * @return
-     */
-    protected TipInfoLayout getTipInfoLayout(){
-        if(mTipInfoLayout != null){
-            return mTipInfoLayout;
-        }else{
-            return getBaseActivity().mTipInfoLayout;
-        }
     }
 
     public abstract View getRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
@@ -69,8 +47,35 @@ public abstract class BaseFragment extends Fragment{
     public abstract void builderView(View rootView);
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRQueue = Volley.newRequestQueue(getBaseActivity());
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         father = (BaseActivity) context;
+    }
+
+    /**
+     * 自定义查找控件的方法
+     * @param view
+     * @param resId
+     * @param <T>
+     * @return
+     */
+    public <T extends View> T findWidget(View view,int resId){
+        return (T) view.findViewById(resId);
+    }
+
+    /**
+     * 自定义控件查找方法
+     * @param resId
+     * @param <T>
+     * @return
+     */
+    public <T extends View> T findWidget(int resId){
+        return (T) father.findViewById(resId);
     }
 }
