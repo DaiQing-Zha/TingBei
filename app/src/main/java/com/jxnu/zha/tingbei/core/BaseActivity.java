@@ -21,7 +21,7 @@ import com.jxnu.zha.tingbei.utils.EAlertStyle;
  */
 public abstract class BaseActivity extends AppCompatActivity{
 
-    private static final String mToolBarTitleColor = "FFFFFF";  //toolbar标题颜色
+    private static final String mToolBarTitleColor = "#FFFFFF";  //toolbar标题颜色
     protected boolean mIsTemplate =true; //是否使用模板
     protected LinearLayout mMainBody;       //主体
     protected Toolbar mToolbar;        //toolbar

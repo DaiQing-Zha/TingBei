@@ -1,6 +1,7 @@
 package com.jxnu.zha.tingbei.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import com.jxnu.zha.qinglibrary.widget.RefreshLayout;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
@@ -47,6 +49,9 @@ public class HandPickFragment extends BaseFragment
     private AutoLoopViewAdapter mAdpGallery;
     private String mIndexTopId;
     private CirclePageIndicator mCirclePageIndicator;
+    /**
+     * 获取推荐页分组
+     */
     StringRequest requestRecommendGroup = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getRecommendGroupOnInter)
             , new Response.Listener<String>() {
@@ -56,11 +61,12 @@ public class HandPickFragment extends BaseFragment
             RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
             mIndexTopId = recommendGroup.getObj().get(0).getId();
             mRQueue.add(requestRecommend);
+            mRfContent.setRefreshing(false);
         }
     }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            mRfContent.setRefreshing(false);
         }
     }){
         @Override
@@ -70,7 +76,9 @@ public class HandPickFragment extends BaseFragment
             return map;
         }
     };
-
+    /**
+     * 根据分组id获取推荐页
+     */
     StringRequest requestRecommend = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getRecommendByGroupId)
             , new Response.Listener<String>() {
@@ -111,16 +119,14 @@ public class HandPickFragment extends BaseFragment
     }
     @Override
     public void onRefresh() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mRfContent.setRefreshing(false);
+
     }
 
-    private void showAutoLoopViewPage(List<Recommend.ObjEntity> data){
-
+    /**
+     * 显示首页轮播图片
+     * @param data
+     */
+    private void showAutoLoopViewPage(final List<Recommend.ObjEntity> data){
 
         // 固定ViewPager高度为屏幕宽度的一半
         mLoopView.getLayoutParams().height = DeviceUtil.getDeviceWidth(father) / 2;
@@ -130,26 +136,35 @@ public class HandPickFragment extends BaseFragment
         mLoopView.setAutoScrollDurationFactor(10d);
         mLoopView.setInterval(3000);
         mLoopView.startAutoScroll();
-
         mCirclePageIndicator.setCentered(true);
         mCirclePageIndicator.setViewPager(mLoopView);
+        mLoopView.setOnItemClickListener(new AutoLoopViewPager.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Recommend.ObjEntity objEntity = data.get(position);
+                Intent intent = new Intent(father, MusicDetailActivity.class);
+                intent.putExtra("obj",objEntity);
+                father.startActivity(intent);
+            }
+        });
     }
 
-
-
+    /**
+     * 轮播图片适配器
+     */
     private static class AutoLoopViewAdapter extends PagerAdapter {
         private int  count = 100;
         private Queue<ImageView> views;
-        private List<Recommend.ObjEntity> data;
+        private List<Recommend.ObjEntity> listRecommend;
         private Context context;
         public AutoLoopViewAdapter(Context ct, List<Recommend.ObjEntity> listData){
             views = new LinkedList<>();
-            data = listData;
+            listRecommend = listData;
             context = ct;
         }
         @Override
         public int getCount() {
-            return data.size();
+            return listRecommend.size();
         }
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
@@ -166,8 +181,8 @@ public class HandPickFragment extends BaseFragment
                         , ViewGroup.LayoutParams.MATCH_PARENT));
                 mage.setId(count ++);
             }
-            Log.e("handPick","url = " + data.get(position).getPicPathSmall());
-            ImageManager.getInstance().displayImage(data.get(position).getPicPathSmall(), mage,
+            Log.e("handPick","url = " + listRecommend.get(position).getPicPathSmall());
+            ImageManager.getInstance().displayImage(listRecommend.get(position).getPicPathSmall(), mage,
                     ImageManager.getNewsHeadOptions());
             container.addView(mage);
             return mage;

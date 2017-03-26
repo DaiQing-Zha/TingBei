@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class Recommend {
         return obj;
     }
 
-    public static class ObjEntity {
+    public static class ObjEntity implements Serializable{
         /**
          * context : 全能唱作人杨朗朗专访
          * id : f39c8ce3549dabef015529fbe0dc0fd8

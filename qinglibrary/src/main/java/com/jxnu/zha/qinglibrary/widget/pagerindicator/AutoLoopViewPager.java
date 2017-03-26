@@ -23,7 +23,9 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.Interpolator;
 
 import java.lang.reflect.Field;
@@ -368,11 +370,35 @@ public class AutoLoopViewPager extends ViewPager {
 				startAutoScroll();
 			}
 		}
+		if (action == MotionEvent.ACTION_DOWN){
+			actionDownTime = System.currentTimeMillis();
+		}
+		if (action == MotionEvent.ACTION_UP){
+			actionUpTime = System.currentTimeMillis();
+			if (actionUpTime - actionDownTime < 100){	//如果按下和弹起时间小于100毫秒，那么则判断为点击
+				if (actionUpTime - lastClickTime > 1000 || lastClickTime == 0){	//如果在800毫秒内再次点击，则不触发事件，防止二次点击
+					onItemClickListener.onClick(getCurrentItem());
+					lastClickTime = actionUpTime;
+				}
+			}
+		}
 		// if(action == MotionEvent.ACTION_UP)
 		// getParent().requestDisallowInterceptTouchEvent(true);
 		// if(action == MotionEvent.ACTION_DOWN)
 		// getParent().requestDisallowInterceptTouchEvent(false);
 		return super.dispatchTouchEvent(ev);
+	}
+
+	private long actionDownTime = 0;
+	private long actionUpTime = 0;
+	private long lastClickTime = 0;	//上次点击时间结束的时间
+
+	private OnItemClickListener onItemClickListener;
+	public interface OnItemClickListener {
+		void onClick(int position);
+	}
+	public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+		this.onItemClickListener = onItemClickListener;
 	}
 
 	private class MyHandler extends Handler {
