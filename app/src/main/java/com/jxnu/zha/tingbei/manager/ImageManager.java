@@ -26,9 +26,9 @@ public class ImageManager {
 	public static DisplayImageOptions getNewsHeadOptions() {
 		if (newsHeadOptions == null) {
 			newsHeadOptions = new DisplayImageOptions.Builder()
-					.showImageForEmptyUri(R.mipmap.ic_default_portrait)
-					.showImageOnFail(R.mipmap.ic_default_portrait)
-					.showImageOnLoading(R.mipmap.ic_default_portrait)
+					.showImageForEmptyUri(R.mipmap.ic_default_unload)
+					.showImageOnFail(R.mipmap.ic_default_unload)
+					.showImageOnLoading(R.mipmap.ic_default_unload)
 					.cacheInMemory(true) // 缓存内存
 					.cacheOnDisc(true)// 缓存文件
 					.build();

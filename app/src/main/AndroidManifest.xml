@@ -34,7 +34,7 @@
         </activity>
         <activity
             android:name=".activity.MusicDetailActivity"
-            android:label="@string/title_activity_music_detail"
+            android:label="@string/musicDetail_title"
             android:theme="@style/AppTheme"></activity>
     </application>
 

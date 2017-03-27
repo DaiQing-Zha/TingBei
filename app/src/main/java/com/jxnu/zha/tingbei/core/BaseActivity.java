@@ -2,19 +2,25 @@ package com.jxnu.zha.tingbei.core;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/3/14.
@@ -22,14 +28,16 @@ import com.jxnu.zha.tingbei.utils.EAlertStyle;
 public abstract class BaseActivity extends AppCompatActivity{
 
     private static final String mToolBarTitleColor = "#FFFFFF";  //toolbar标题颜色
-    protected boolean mIsTemplate =true; //是否使用模板
+    protected boolean mIsTemplate = true; //是否使用模板
     protected LinearLayout mMainBody;       //主体
     protected Toolbar mToolbar;        //toolbar
     protected TipInfoLayout mTipInfoLayout;
     protected Fragment mFragmentContent;
+    protected RequestQueue mRQueue;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRQueue = Volley.newRequestQueue(this);
         if(mIsTemplate){
             setContentView(R.layout.layout_core_template);
             initWidget();
@@ -45,8 +53,12 @@ public abstract class BaseActivity extends AppCompatActivity{
                 mMainBody.addView(this.getLayoutInflater().inflate(layoutResID,null),
                         new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
                                 WindowManager.LayoutParams.MATCH_PARENT));
+                Log.e("main","--------mainBody1-------");
+                ButterKnife.bind(this);
             }else{
                 super.setContentView(layoutResID);
+                Log.e("main","--------mainBody2-------");
+                ButterKnife.bind(this);
             }
             init();
         }
@@ -132,4 +144,26 @@ public abstract class BaseActivity extends AppCompatActivity{
         return (T) this.findViewById(resId);
     }
 
+    /**
+     * 根据error获取volley请求错误时的提示信息
+     * @param error
+     * @return
+     */
+    protected String getVolleyErrorMessage(@NonNull String error){
+        String errorMessage = "";
+        error = error.replace("com.android.volley.","");
+        if (error.equalsIgnoreCase("TimeoutError")){
+            errorMessage = getString(R.string.http_timeOut);
+        }
+        if (error.equalsIgnoreCase("NetworkError")){
+            errorMessage = getString(R.string.http_noNetwork);
+        }
+        if (error.equalsIgnoreCase("NoConnectionError")){
+            errorMessage = getString(R.string.http_connectTimeOut);
+        }
+        if (error.equalsIgnoreCase("ServerError")){
+            errorMessage = getString(R.string.http_response);
+        }
+        return errorMessage;
+    }
 }

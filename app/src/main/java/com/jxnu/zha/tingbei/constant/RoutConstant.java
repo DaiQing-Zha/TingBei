@@ -14,4 +14,12 @@ public class RoutConstant {
      * 根据分组ID获取推荐页
      */
     public final static String getRecommendByGroupId = "inter/getRecommendByGroupId";
+    /**
+     * 根据标签ID获取发布歌单
+     */
+    public final static String getSongListByLabelId = "inter/getSongListByLabelId";
+    /**
+     * 根据ID获取发布的音乐集（暂时未用）
+     */
+    public final static String getMusicListReleaseById = "inter/getMusicListReleaseById";
 }

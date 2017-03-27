@@ -185,7 +185,7 @@ public abstract class AbstractActivity extends BaseActivity {
                 String exceptionInfo = analysisException(throwable);
                 L.e(exceptionInfo);
                 if(exceptionInfo.indexOf("UnknownHostException") != -1){
-                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
+                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_unKnowHost);
                 }else if(exceptionInfo.indexOf("NoDataException") != -1){
                     showSnackBarMsg(EAlertStyle.WARNING, R.string.http_noData);
                 }else if(exceptionInfo.indexOf("SocketException") != -1){
@@ -193,7 +193,7 @@ public abstract class AbstractActivity extends BaseActivity {
                 }else if(exceptionInfo.indexOf("SocketTimeoutException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
                 }else if(exceptionInfo.indexOf("ConnectTimeoutException") != -1){
-                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
+                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_connectTimeOut);
                 }else if(exceptionInfo.indexOf("HttpResponseException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_response);
                 }else {

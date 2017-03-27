@@ -12,10 +12,13 @@
 
     <string name="http_statusCode404">未知的网络请求</string>
     <string name="http_statusCode500">非常抱歉，服务器异常，请稍后再试</string>
-    <string name="http_noNetwork">当前网络不可用，请检查网络设置</string>
+    <string name="http_unKnowHost">未知主机异常</string>
+    <string name="http_noNetwork">当前网络不可用，请检查您的网络设置</string>
     <string name="http_loadFailure">数据加载失败，请稍后再试！</string>
     <string name="http_response">服务器暂时连接不上</string>
     <string name="http_timeOut">网络不稳定，请稍候再试...</string>
     <string name="http_loadError">加载数据出现错误，请稍候再试...</string>
-    <string name="http_noData">连接失败,未获取到数据</string>
+    <string name="http_connectTimeOut">网络连接超时，请稍候再试...</string>
+    <string name="http_noData">获取数据失败</string>
+
 </resources>
