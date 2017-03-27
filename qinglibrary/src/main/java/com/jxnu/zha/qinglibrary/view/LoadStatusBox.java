@@ -38,6 +38,7 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
     @Override
     public void onClick(View v) {
         loading();
+        btnClick.onClick(this);
     }
 
     /**
@@ -50,7 +51,6 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
         }
         viewProgress.setVisibility(VISIBLE);
         viewError.setVisibility(GONE);
-        btnClick.onClick(this);
     }
 
     /**

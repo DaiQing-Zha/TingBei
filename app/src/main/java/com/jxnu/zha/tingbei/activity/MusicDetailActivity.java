@@ -3,25 +3,32 @@ package com.jxnu.zha.tingbei.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.adapter.MusicListAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -32,9 +39,13 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     ImageView mImgTopBg;
     @BindView(R.id.loadStatusBox)
     LoadStatusBox mLoadStatusBox;
+    @BindView(R.id.lst_musicList)
+    ListView mLstMusicList;
     final String TAG = "musicDetail";
     private String mReleaseId = "";
     private String mPicPath = "";
+    MusicListAdapter mMusicListAdapter;
+    List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
     /**
      * 获取推荐页分组
      */
@@ -44,6 +55,9 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         @Override
         public void onResponse(String response) {
             mLoadStatusBox.loadSuccess();
+            MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
+            mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
+            mMusicListAdapter.notifyDataSetChanged();
         }
     }, new Response.ErrorListener() {
         @Override
@@ -77,7 +91,10 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         ImageManager.getInstance().displayImage(mPicPath, mImgTopBg,
                 ImageManager.getNewsHeadOptions());
         mLoadStatusBox.setOnClickListener(this);
-       getMusicListRelease();
+        mObjBeanList = new ArrayList<>();
+        mMusicListAdapter = new MusicListAdapter(this,mObjBeanList);
+        mLstMusicList.setAdapter(mMusicListAdapter);
+        getMusicListRelease();
     }
 
     @Override
@@ -85,7 +102,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         switch (view.getId()){
             case R.id.loadStatusBox:
                 Log.e(TAG,"---------loadErrorBn---------");
-//                getMusicListRelease();
+                getMusicListRelease();
                 break;
         }
     }
