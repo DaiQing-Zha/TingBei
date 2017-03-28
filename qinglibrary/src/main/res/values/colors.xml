@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="color_commGray">#999999</color>
     <color name="color_commWhite">#FFFFFF</color>
     <color name="color_commGreen">#68dc65</color>

@@ -1,11 +1,15 @@
 package com.jxnu.zha.qinglibrary.view;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jxnu.zha.qinglibrary.R;
+import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
 
 /**
  * Created by DaiQing.Zha on 2017/3/19.
@@ -15,24 +19,35 @@ import com.jxnu.zha.qinglibrary.R;
  */
 public class LoadStatusBox extends RelativeLayout implements View.OnClickListener{
 
+    private RelativeLayout mRlContent;
+    private TextView mTvErrorCause,mTvErrorSuggest;
+    private ImageView mImgLoadError;
     private View viewProgress,viewError;
     private OnClickListener btnClick;
+    private Context mContext;
     public LoadStatusBox(Context context) {
         super(context);
+        mContext = context;
     }
 
     public LoadStatusBox(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
     }
 
     public LoadStatusBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
     }
 
     @Override
     public void setOnClickListener(OnClickListener l) {
         btnClick = l;
-        findViewById(R.id.loadErrorBn).setOnClickListener(this);
+        mRlContent = (RelativeLayout) findViewById(R.id.rl_content);
+        mTvErrorCause = (TextView) findViewById(R.id.tv_loadErrorCause);
+        mTvErrorSuggest = (TextView) findViewById(R.id.tv_loadErrorSuggest);
+        mImgLoadError = (ImageView) findViewById(R.id.img_loadError);
+        mRlContent.setOnClickListener(this);
     }
 
     @Override
@@ -51,6 +66,8 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
         }
         viewProgress.setVisibility(VISIBLE);
         viewError.setVisibility(GONE);
+        mRlContent.setClickable(false);
+
     }
 
     /**
@@ -59,6 +76,18 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
     public void loadFailed(){
         viewProgress.setVisibility(GONE);
         viewError.setVisibility(VISIBLE);
+        mRlContent.setClickable(true);
+    }
+
+    /**
+     * 数据加载失败
+     * @param style
+     */
+    public void loadFailed(ENetWorkErrorStyle style){
+        viewProgress.setVisibility(GONE);
+        viewError.setVisibility(VISIBLE);
+        mRlContent.setClickable(true);
+        setPrompt(style);
     }
 
     /**
@@ -68,4 +97,46 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
         this.setVisibility(GONE);
     }
 
+    /**
+     * 设置提示消息
+     * @param cause
+     * @param suggest
+     */
+    private void setPromptMessage(String cause,String suggest){
+        mTvErrorCause.setText(cause);
+        mTvErrorSuggest.setText(suggest);
+    }
+
+    /**
+     * 设置提示图片
+     * @param imgResource
+     */
+    private void setPromptImg(@DrawableRes int imgResource){
+        mImgLoadError.setImageResource(imgResource);
+    }
+
+    public void setPrompt(ENetWorkErrorStyle style){
+        String cause = "";
+        String suggest = "";
+        int imgResourceId = R.mipmap.ic_default_network_error1;
+        switch (style){
+            case CONNECT_TIME_OUT:
+                cause = mContext.getString(R.string.loadState_errorConnectTimeOutCause);
+                suggest = mContext.getString(R.string.loadState_errorConnectTimeOutSuggest);
+                imgResourceId = R.mipmap.ic_network_connect_timeout;
+                break;
+            case NETWORK_ERROR:
+                cause = mContext.getString(R.string.loadState_errorDefaultCause);
+                suggest = mContext.getString(R.string.loadState_errorDefaultSuggest);
+                imgResourceId = R.mipmap.ic_default_network_error1;
+                break;
+            case NETWORK_ERROR400:
+                cause = mContext.getString(R.string.loadState_errorServerErrorCause);
+                suggest = mContext.getString(R.string.loadState_errorServerErrorSuggest);
+                imgResourceId = R.mipmap.ic_network_error400;
+                break;
+        }
+        setPromptMessage(cause,suggest);
+        setPromptImg(imgResourceId);
+    }
 }

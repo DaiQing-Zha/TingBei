@@ -195,7 +195,7 @@ public abstract class AbstractActivity extends BaseActivity {
                 }else if(exceptionInfo.indexOf("ConnectTimeoutException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_connectTimeOut);
                 }else if(exceptionInfo.indexOf("HttpResponseException") != -1){
-                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_response);
+                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_severNoResponse);
                 }else {
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_loadError);
                 }

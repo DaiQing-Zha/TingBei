@@ -3,4 +3,5 @@
     <color name="color_tabStripTextColorSelected">@color/colorPrimary</color>
     <color name="color_tabStripTextColorUnSelected">#999999</color>
     <color name="color_tabStripUnderLineColor">@color/colorPrimary</color>
+
 </resources>

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
@@ -151,19 +152,36 @@ public abstract class BaseActivity extends AppCompatActivity{
      */
     protected String getVolleyErrorMessage(@NonNull String error){
         String errorMessage = "";
-        error = error.replace("com.android.volley.","");
-        if (error.equalsIgnoreCase("TimeoutError")){
+        if (error.contains("TimeoutError")){
             errorMessage = getString(R.string.http_timeOut);
-        }
-        if (error.equalsIgnoreCase("NetworkError")){
+        }else if (error.contains("NetworkError")){
+            errorMessage = getString(R.string.http_noNetwork);
+        }else if (error.contains("NoConnectionError")){     //把手机网络关掉了
+            errorMessage = getString(R.string.http_noNetwork);
+        }else if (error.contains("ServerError")){   //请求地址错误或者参数错误
+            errorMessage = getString(R.string.http_severNoResponse);
+        }else{
             errorMessage = getString(R.string.http_noNetwork);
         }
-        if (error.equalsIgnoreCase("NoConnectionError")){
-            errorMessage = getString(R.string.http_connectTimeOut);
-        }
-        if (error.equalsIgnoreCase("ServerError")){
-            errorMessage = getString(R.string.http_response);
-        }
         return errorMessage;
+    }
+
+    /**
+     * 获取错误类型
+     * @param error
+     * @return
+     */
+    protected ENetWorkErrorStyle getErrorStyle(@NonNull String error){
+        if (error.contains("TimeoutError")){
+            return ENetWorkErrorStyle.CONNECT_TIME_OUT;
+        }else if (error.contains("NetworkError")){
+            return ENetWorkErrorStyle.NETWORK_ERROR;
+        } else if (error.contains("NoConnectionError")){
+            return ENetWorkErrorStyle.NETWORK_ERROR;
+        }else if (error.contains("ServerError")){
+            return ENetWorkErrorStyle.NETWORK_ERROR400;
+        }else{
+            return ENetWorkErrorStyle.NETWORK_ERROR;
+        }
     }
 }

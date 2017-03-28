@@ -62,7 +62,8 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            mLoadStatusBox.loadFailed();
+            Log.e("mainError","error = " + error.toString());
+            mLoadStatusBox.loadFailed(getErrorStyle(error.toString()));
             showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(error.toString()));
         }
     }){

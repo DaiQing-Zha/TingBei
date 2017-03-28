@@ -3,4 +3,8 @@
     <color name="tipInfo_tipMsg">#999999</color>
     <color name="loadState_textWhite">#FFFFFF</color>
     <color name="loadState_titleColor">#03A9F4</color>
+    <color name="loadState_errorCause">#333333</color>
+
+    <color name="loadState_pressedBg">#20000000</color>
+    <color name="loadState_unPressedBg">#00000000</color>
 </resources>

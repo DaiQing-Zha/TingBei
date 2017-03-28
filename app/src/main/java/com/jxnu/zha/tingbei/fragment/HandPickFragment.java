@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
@@ -27,6 +28,7 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.RecommendGroup;
 
@@ -47,8 +49,9 @@ public class HandPickFragment extends BaseFragment
     private RefreshLayout mRfContent;
     private AutoLoopViewPager mLoopView;
     private AutoLoopViewAdapter mAdpGallery;
-    private String mIndexTopId;
     private CirclePageIndicator mCirclePageIndicator;
+    private Button btn_testNetwork;
+    private String mIndexTopId;
     /**
      * 获取推荐页分组
      */
@@ -114,12 +117,28 @@ public class HandPickFragment extends BaseFragment
         mRQueue.add(requestRecommendGroup);//http://blog.csdn.net/baidu_31093133/article/details/51525113?locationNum=7&fps=1 q1
         mRfContent = findWidget(rootView,R.id.rf_content);
         mLoopView = findWidget(rootView,R.id.autoLoop);
+        btn_testNetwork = findWidget(rootView,R.id.btn_testNetwork);
         mCirclePageIndicator = findWidget(rootView,R.id.indy);
         mRfContent.setOnRefreshListener(this);
+        btn_testNetwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ThreadPool.getInstance().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("mainNetWork","--------------------");
+                        Map map = new HashMap();
+                        map.put("appid",HttpTools.APP_ID);
+                        String source =  HttpTools.httpPost(RoutConstant.getRecommendGroupOnInter,map);
+                        Log.e("mainNetWork","source = " + source);
+                    }
+                });
+            }
+        });
     }
     @Override
     public void onRefresh() {
-
+        mRQueue.add(requestRecommendGroup);
     }
 
     /**

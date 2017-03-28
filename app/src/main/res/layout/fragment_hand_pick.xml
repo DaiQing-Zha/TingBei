@@ -15,11 +15,13 @@
                 android:layout_width="match_parent" android:layout_height="@dimen/autoLoopViewPager_height" />
             <com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator
                 android:id="@+id/indy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:padding="4dp"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_gravity="bottom" android:padding="4dp"
                 app:centered="true" />
         </FrameLayout>
+        <Button android:id="@+id/btn_testNetwork"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="网络请求测试"/>
     </LinearLayout>
+
 </com.jxnu.zha.qinglibrary.widget.RefreshLayout>
