@@ -7,24 +7,23 @@
 
     <string name="refreshLayout_loading">正在加载，请稍候...</string>
 
-    <string name="loadState_errorDefaultCause">网络异常</string>
-    <string name="loadState_errorDefaultSuggest">您的设备没有连接到网络，建议检查后点击屏幕重新尝试</string>
+    <string name="loadState_errorNetworkCause">网络异常</string>
+    <string name="loadState_errorNetworkSuggest">您的设备没有连接到网络，建议检查后点击屏幕重新尝试</string>
     <string name="loadState_errorConnectTimeOutCause">连接超时</string>
     <string name="loadState_errorConnectTimeOutSuggest">网络连接超时，可能您的手机网络信号不好，请稍后点击屏幕重新尝试</string>
     <string name="loadState_errorServerErrorCause">服务器连接超时</string>
     <string name="loadState_errorServerErrorSuggest">服务器连接超时，请稍后点击屏幕重新尝试</string>
-
-    <string name="loadState_reObtain">重新获取</string>
+    <string name="loadState_errorDefaultLoadCause">数据加载失败</string>
+    <string name="loadState_errorDefaultLoadSuggest">数据加载失败，请稍后点击屏幕重新尝试</string>
 
     <string name="http_statusCode404">未知的网络请求</string>
     <string name="http_statusCode500">非常抱歉，服务器异常，请稍后再试</string>
     <string name="http_unKnowHost">未知主机异常</string>
+
     <string name="http_noNetwork">当前网络不可用，请检查您的网络设置</string>
-    <string name="http_loadFailure">数据加载失败，请稍后再试！</string>
+    <string name="http_defaultLoadError">数据加载失败，请稍后再试！</string>
     <string name="http_severNoResponse">服务器连接超时</string>
     <string name="http_timeOut">网络不稳定，请稍候再试...</string>
-    <string name="http_loadError">加载数据出现错误，请稍候再试...</string>
     <string name="http_connectTimeOut">网络连接超时，请稍候再试...</string>
-    <string name="http_noData">获取数据失败</string>
 
 </resources>

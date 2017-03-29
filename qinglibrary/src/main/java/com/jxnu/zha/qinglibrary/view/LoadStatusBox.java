@@ -118,23 +118,27 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
     public void setPrompt(ENetWorkErrorStyle style){
         String cause = "";
         String suggest = "";
-        int imgResourceId = R.mipmap.ic_default_network_error1;
+        int imgResourceId = R.mipmap.ic_default_network_error;
         switch (style){
-            case CONNECT_TIME_OUT:
+            case CONNECT_TIME_OUT:  //超时
                 cause = mContext.getString(R.string.loadState_errorConnectTimeOutCause);
                 suggest = mContext.getString(R.string.loadState_errorConnectTimeOutSuggest);
                 imgResourceId = R.mipmap.ic_network_connect_timeout;
                 break;
-            case NETWORK_ERROR:
-                cause = mContext.getString(R.string.loadState_errorDefaultCause);
-                suggest = mContext.getString(R.string.loadState_errorDefaultSuggest);
-                imgResourceId = R.mipmap.ic_default_network_error1;
+            case NETWORK_ERROR: //手机没有网络
+                cause = mContext.getString(R.string.loadState_errorNetworkCause);
+                suggest = mContext.getString(R.string.loadState_errorNetworkSuggest);
+                imgResourceId = R.mipmap.ic_default_network_error;
                 break;
-            case NETWORK_ERROR400:
+            case NETWORK_ERROR404:  //页面不存在
                 cause = mContext.getString(R.string.loadState_errorServerErrorCause);
                 suggest = mContext.getString(R.string.loadState_errorServerErrorSuggest);
                 imgResourceId = R.mipmap.ic_network_error400;
                 break;
+            case DEFAULT_LOAD_ERROR:    //默认的网络错误
+                cause = mContext.getString(R.string.loadState_errorDefaultLoadCause);
+                suggest = mContext.getString(R.string.loadState_errorDefaultLoadSuggest);
+                imgResourceId = R.mipmap.ic_default_load_error;
         }
         setPromptMessage(cause,suggest);
         setPromptImg(imgResourceId);

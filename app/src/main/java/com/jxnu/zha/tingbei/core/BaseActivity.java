@@ -161,7 +161,7 @@ public abstract class BaseActivity extends AppCompatActivity{
         }else if (error.contains("ServerError")){   //请求地址错误或者参数错误
             errorMessage = getString(R.string.http_severNoResponse);
         }else{
-            errorMessage = getString(R.string.http_noNetwork);
+            errorMessage = getString(R.string.http_defaultLoadError);
         }
         return errorMessage;
     }
@@ -179,9 +179,9 @@ public abstract class BaseActivity extends AppCompatActivity{
         } else if (error.contains("NoConnectionError")){
             return ENetWorkErrorStyle.NETWORK_ERROR;
         }else if (error.contains("ServerError")){
-            return ENetWorkErrorStyle.NETWORK_ERROR400;
+            return ENetWorkErrorStyle.NETWORK_ERROR404;
         }else{
-            return ENetWorkErrorStyle.NETWORK_ERROR;
+            return ENetWorkErrorStyle.DEFAULT_LOAD_ERROR;
         }
     }
 }

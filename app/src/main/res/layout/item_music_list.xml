@@ -11,13 +11,13 @@
         android:layout_toRightOf="@id/img_songIcon" android:layout_alignTop="@id/img_songIcon"
         android:textSize="@dimen/item_titleSize" android:layout_marginRight="@dimen/item_marginHorizontal"
         android:textColor="@color/color_commBlack33" android:ellipsize="end"
-        android:singleLine="true" android:text="GGG"/>
+        android:singleLine="true" android:text=""/>
 
     <TextView android:id="@+id/tv_singerName" style="@style/style_wrapContent"
         android:layout_toRightOf="@id/img_songIcon" android:layout_below="@id/tv_musicName"
         android:singleLine="true" android:textSize="@dimen/item_msgSize"
         android:ellipsize="end" android:layout_marginTop="3dip"
-        android:text="BBB"/>
+        android:text=""/>
     <ImageView android:id="@+id/ic_moreInfo"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_centerVertical="true" android:layout_alignParentRight="true"

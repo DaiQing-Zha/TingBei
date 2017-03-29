@@ -168,7 +168,7 @@ public abstract class AbstractActivity extends BaseActivity {
                     messageResId= R.string.http_statusCode500;
                     break;
                 default:
-                    messageResId= R.string.http_loadFailure;
+                    messageResId= R.string.http_defaultLoadError;
                     break;
             }
             return messageResId;
@@ -187,7 +187,7 @@ public abstract class AbstractActivity extends BaseActivity {
                 if(exceptionInfo.indexOf("UnknownHostException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_unKnowHost);
                 }else if(exceptionInfo.indexOf("NoDataException") != -1){
-                    showSnackBarMsg(EAlertStyle.WARNING, R.string.http_noData);
+                    showSnackBarMsg(EAlertStyle.WARNING, R.string.http_defaultLoadError);
                 }else if(exceptionInfo.indexOf("SocketException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_timeOut);
                 }else if(exceptionInfo.indexOf("SocketTimeoutException") != -1){
@@ -197,11 +197,11 @@ public abstract class AbstractActivity extends BaseActivity {
                 }else if(exceptionInfo.indexOf("HttpResponseException") != -1){
                     showSnackBarMsg(EAlertStyle.ALERT, R.string.http_severNoResponse);
                 }else {
-                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_loadError);
+                    showSnackBarMsg(EAlertStyle.ALERT, R.string.http_defaultLoadError);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                showSnackBarMsg(EAlertStyle.ALERT, R.string.http_loadError);
+                showSnackBarMsg(EAlertStyle.ALERT, R.string.http_defaultLoadError);
             }
             asyncTask.exception();
         }
