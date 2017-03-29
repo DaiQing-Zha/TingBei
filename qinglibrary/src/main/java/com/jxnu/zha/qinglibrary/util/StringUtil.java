@@ -15,25 +15,41 @@ public class StringUtil {
 	 * @return
 	 */
 	public static boolean stringIsNotNull(String value){
-		return  value!=null && value.trim().length()>0;
+		return  value != null && value.trim().length() > 0;
 	}
-	
 	/**
 	 * 字符串为空
 	 * @param value  要验证的字符串
 	 * @return
 	 */
 	public static boolean stringIsNull(String value){
-		return value ==null || value.trim().length()<=0;
+		return value == null || value.trim().length() <= 0;
 	}
 
+	/**
+	 * 判断给定字符串是否空白串。 空白串是指由空格、制表符、回车符、换行符组成的字符串 若输入字符串为null或空字符串，返回true
+	 *
+	 * @param input
+	 * @return boolean
+	 */
+	public static boolean isEmpty(String input) {
+		if (input == null || "".equals(input))
+			return true;
+		for (int i = 0; i < input.length(); i++) {
+			char c = input.charAt(i);
+			if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	 * 获取文本内容的长度，中文算一个字符，英文算半个字符，包括标点符号
 	 * @param str
 	 * @return
 	 */
-	public static int getTextLengthes(String str){
-		int number=getTextLength(str);
+	public static int getTextLength1(String str){
+		int number= getTextLength2(str);
 		int length=number/2;
 		if(number % 2 != 0){
 			length+=1;
@@ -47,7 +63,7 @@ public class StringUtil {
 	 * @param str
 	 * @return
 	 */
-	public static int getTextLength(String str){
+	public static int getTextLength2(String str){
 		int length=0;
 		try {
 			str=new String(str.getBytes("GBK"), "ISO8859_1");

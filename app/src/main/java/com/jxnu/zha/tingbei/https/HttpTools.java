@@ -21,7 +21,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by DaiQing.Zha on 2017/3/17.
  * email:13767191284@163.com
- * description:
+ * description: 自定义网络请求类
  */
 public class HttpTools {
 
@@ -73,7 +73,6 @@ public class HttpTools {
             OutputStream outputStream = httpURLConnection.getOutputStream();
             outputStream.write(data);
             int response = httpURLConnection.getResponseCode(); // 获得服务器的响应码
-            Log.e("mainNetWork","response = " + response);
             if (response == HttpURLConnection.HTTP_OK) {
                 InputStream is = httpURLConnection.getInputStream();
                 byte[] bytes = getBytes(is);
@@ -85,8 +84,10 @@ public class HttpTools {
             }
             return "NetworkError";
         } catch (MalformedURLException e){  //URL格式或者路径错误异常
-            return "MalformedURLException";
-        } catch (IOException e){ //网络异常
+            return "ServerError";
+        } catch (TimeoutException e){
+            return "TimeoutError";
+        }catch (IOException e){ //网络异常
             return "NetworkError";
         }catch (Exception e) { //普通异常
             return "Exception";

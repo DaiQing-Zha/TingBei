@@ -10,6 +10,7 @@ import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -271,4 +272,15 @@ public abstract class AbstractActivity extends BaseActivity {
             }
         };
     }
+    protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+        }
+    };
 }
