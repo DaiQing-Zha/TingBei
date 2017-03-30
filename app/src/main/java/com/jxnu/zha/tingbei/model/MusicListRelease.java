@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * email:13767191284@163.com
  * description:
  */
-public class MusicListRelease {
+public class MusicListRelease extends Entity{
 
 
     /**
@@ -16,8 +17,6 @@ public class MusicListRelease {
      * obj : {"id":"f39c8ce3549dabef01552895b27a0f6b","musicList":{"addTime":"2016-06-07 09:56:01","id":"f39c8ce3549dabef015528921a5d0f6a","listMusic":[{"addTime":"2016-06-07 16:38:15","cooperation":"自有","id":"f39c8ce3549dabef0155288ff7d90f52","initialId":"971e4b8c32ae4a92978fe5976ba6ae09","initialSingerId":"1002126901","isRecommend":0,"isTime":"2016-06-07 00:00:00","musicPath":"http://7xsr9t.com2.z0.glb.qiniucdn.com/o_1akk8sqvs99e1alr124jlkg1driu.mp3","musicPathBak":"http://115.28.12.99/resource/musicbak/20160608/f39c8ce3549dabef0155288ff7d90f52.mp3","musicPicPath":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0667f1rr11lalaj01tiu1ojp13.png","musicPicPathSmall":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0667f1rr11lalaj01tiu1ojp13.png","musicSingerPicPath":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0611o1ks109b12lpl87169bu.png","musicSingerPicPathSmall":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0611o1ks109b12lpl87169bu.png","musicType":6,"name":"杨朗朗：我走得很慢！但我从不后退！","nameSpell":"yllwzdhmdwcbht","sell":2,"setRingTone":[],"singerName":"杨朗朗","singerNameSpell":"yll","valueFrom":"界面"}],"name":"杨朗朗：我走得很慢！","type":"3","user":{"active":1,"addTime":"2016-04-13 14:51:30","addUser":"zhangjian","appId":"4b631227be8dae4a1f58baffd63d739a","company":"至信方达","findRights":0,"id":"f39c8ce353ca768001540e63a0c80e08","loginId":"linan","loginPwd":"c3055777db867440f192c13a76ef8111","name":"李楠","role":{"id":"402881f54c4ebeba014c4ed14d960001","menuId":"0,1,104,10402,10403,2,201,20101,20102,20103,20104,20105,202,20201,203,20303,2030301,2030302,2030303,20305,2030501,2030502,20306,2030601,20307,2030701,204,20401,20402,206,20601,207,20701,208,20801,210,21001,21002,9","name":"音乐编辑","rights":{"bangListAudit":"on","bangListReleasec":"on","bangListReleased":"on","bangListReleaseu":"on","bangListc":"on","bangListu":"on","goodsAudit":"on","goodsc":"on","goodsd":"on","goodsu":"on","id":"402881f54c4ebeba014c4ec3d2390000","imageColorc":"on","imageColord":"on","imageColoru":"on","labelGroupc":"on","labelGroupd":"on","labelGroupu":"on","labelc":"on","labeld":"on","labelu":"on","musicListTypec":"on","musicListTyped":"on","musicListTypeu":"on","musicRingCallc":"on","musicRingCalld":"on","musicRingCallu":"on","musicTypec":"on","musicTyped":"on","musicTypeu":"on","musicc":"on","musicd":"on","musicu":"on","name":"音乐编辑","radioListAudit":"on","radioListReleasec":"on","radioListReleased":"on","radioListReleaseu":"on","radioListc":"on","radioListu":"on","recommendAudit":"on","recommendGroupc":"on","recommendGroupu":"on","recommendc":"on","recommendu":"on","singerTypec":"on","singerTyped":"on","singerTypeu":"on","singerc":"on","singerd":"on","singeru":"on","songListAudit":"on","songListReleasec":"on","songListReleased":"on","songListReleaseu":"on","songListc":"on","songListu":"on"}},"state":1}},"picPath":"http://115.28.12.99/resource/musiclist/20160607/5c704915b99d406dbe3c46d662a07e61.png","picPathSmall":"http://115.28.12.99/resource/musiclist/20160607/5c704915b99d406dbe3c46d662a07e61-s.png","setLabel":[],"title":"杨朗朗：我走得很慢！但我从不后退！"}
      */
 
-    private int code;
-    private String msg;
     /**
      * id : f39c8ce3549dabef01552895b27a0f6b
      * musicList : {"addTime":"2016-06-07 09:56:01","id":"f39c8ce3549dabef015528921a5d0f6a","listMusic":[{"addTime":"2016-06-07 16:38:15","cooperation":"自有","id":"f39c8ce3549dabef0155288ff7d90f52","initialId":"971e4b8c32ae4a92978fe5976ba6ae09","initialSingerId":"1002126901","isRecommend":0,"isTime":"2016-06-07 00:00:00","musicPath":"http://7xsr9t.com2.z0.glb.qiniucdn.com/o_1akk8sqvs99e1alr124jlkg1driu.mp3","musicPathBak":"http://115.28.12.99/resource/musicbak/20160608/f39c8ce3549dabef0155288ff7d90f52.mp3","musicPicPath":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0667f1rr11lalaj01tiu1ojp13.png","musicPicPathSmall":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0667f1rr11lalaj01tiu1ojp13.png","musicSingerPicPath":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0611o1ks109b12lpl87169bu.png","musicSingerPicPathSmall":"http://7xsr9w.com2.z0.glb.qiniucdn.com/o_1akl0611o1ks109b12lpl87169bu.png","musicType":6,"name":"杨朗朗：我走得很慢！但我从不后退！","nameSpell":"yllwzdhmdwcbht","sell":2,"setRingTone":[],"singerName":"杨朗朗","singerNameSpell":"yll","valueFrom":"界面"}],"name":"杨朗朗：我走得很慢！","type":"3","user":{"active":1,"addTime":"2016-04-13 14:51:30","addUser":"zhangjian","appId":"4b631227be8dae4a1f58baffd63d739a","company":"至信方达","findRights":0,"id":"f39c8ce353ca768001540e63a0c80e08","loginId":"linan","loginPwd":"c3055777db867440f192c13a76ef8111","name":"李楠","role":{"id":"402881f54c4ebeba014c4ed14d960001","menuId":"0,1,104,10402,10403,2,201,20101,20102,20103,20104,20105,202,20201,203,20303,2030301,2030302,2030303,20305,2030501,2030502,20306,2030601,20307,2030701,204,20401,20402,206,20601,207,20701,208,20801,210,21001,21002,9","name":"音乐编辑","rights":{"bangListAudit":"on","bangListReleasec":"on","bangListReleased":"on","bangListReleaseu":"on","bangListc":"on","bangListu":"on","goodsAudit":"on","goodsc":"on","goodsd":"on","goodsu":"on","id":"402881f54c4ebeba014c4ec3d2390000","imageColorc":"on","imageColord":"on","imageColoru":"on","labelGroupc":"on","labelGroupd":"on","labelGroupu":"on","labelc":"on","labeld":"on","labelu":"on","musicListTypec":"on","musicListTyped":"on","musicListTypeu":"on","musicRingCallc":"on","musicRingCalld":"on","musicRingCallu":"on","musicTypec":"on","musicTyped":"on","musicTypeu":"on","musicc":"on","musicd":"on","musicu":"on","name":"音乐编辑","radioListAudit":"on","radioListReleasec":"on","radioListReleased":"on","radioListReleaseu":"on","radioListc":"on","radioListu":"on","recommendAudit":"on","recommendGroupc":"on","recommendGroupu":"on","recommendc":"on","recommendu":"on","singerTypec":"on","singerTyped":"on","singerTypeu":"on","singerc":"on","singerd":"on","singeru":"on","songListAudit":"on","songListReleasec":"on","songListReleased":"on","songListReleaseu":"on","songListc":"on","songListu":"on"}},"state":1}}
@@ -29,22 +28,6 @@ public class MusicListRelease {
 
     private ObjBean obj;
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public ObjBean getObj() {
         return obj;
     }
@@ -53,7 +36,7 @@ public class MusicListRelease {
         this.obj = obj;
     }
 
-    public static class ObjBean {
+    public static class ObjBean implements Serializable{
         private String id;
         /**
          * addTime : 2016-06-07 09:56:01
@@ -118,7 +101,7 @@ public class MusicListRelease {
             this.setLabel = setLabel;
         }
 
-        public static class MusicListBean {
+        public static class MusicListBean implements Serializable{
             private String addTime;
             private String id;
             private String name;
@@ -213,7 +196,7 @@ public class MusicListRelease {
                 this.listMusic = listMusic;
             }
 
-            public static class UserBean {
+            public static class UserBean implements Serializable{
                 private int active;
                 private String addTime;
                 private String addUser;
@@ -330,7 +313,7 @@ public class MusicListRelease {
                     this.state = state;
                 }
 
-                public static class RoleBean {
+                public static class RoleBean implements Serializable{
                     private String id;
                     private String menuId;
                     private String name;
@@ -427,7 +410,7 @@ public class MusicListRelease {
                         this.rights = rights;
                     }
 
-                    public static class RightsBean {
+                    public static class RightsBean implements Serializable{
                         private String bangListAudit;
                         private String bangListReleasec;
                         private String bangListReleased;
@@ -936,7 +919,7 @@ public class MusicListRelease {
                 }
             }
 
-            public static class ListMusicBean {
+            public static class ListMusicBean implements Serializable{
                 private String addTime;
                 private String cooperation;
                 private String id;

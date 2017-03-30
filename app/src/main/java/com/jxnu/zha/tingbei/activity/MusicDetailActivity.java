@@ -22,16 +22,20 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import cz.msebera.android.httpclient.Header;
 
 public class MusicDetailActivity extends AbstractActivity implements View.OnClickListener{
 
@@ -46,6 +50,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     private String mPicPath = "";
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
+
     /**
      * 获取推荐页分组
      */
@@ -58,13 +63,13 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
             mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
             mMusicListAdapter.notifyDataSetChanged();
+            saveCache(musicListRelease);
         }
     }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e("mainError","error = " + error.toString());
-            mLoadStatusBox.loadFailed(getErrorStyle(error.toString()));
-            showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(error.toString()));
+            readCacheData(getCacheKey(),error.toString());
         }
     }){
         @Override
@@ -108,11 +113,38 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         }
     }
 
+
     /**
      * 根据ID获取发布的音乐集
      */
     private void getMusicListRelease(){
         mLoadStatusBox.loading();
         mRQueue.add(musicListRelease);
+    }
+
+    @Override
+    protected Entity readData(Serializable serializable) {
+        return (MusicListRelease) serializable;
+    }
+
+    @Override
+    protected String getCacheKey() {
+        return RoutConstant.getMusicListReleaseById.replace("/","_") + HttpTools.APP_ID + mReleaseId;
+    }
+
+    @Override
+    protected void executeOnLoadDataSuccess(Entity entity) {
+        super.executeOnLoadDataSuccess(entity);
+        mLoadStatusBox.loadSuccess();
+        MusicListRelease musicListRelease = (MusicListRelease) entity;
+        mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
+        mMusicListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void executeOnLoadDataFailure(String errorInfo) {
+        super.executeOnLoadDataFailure(errorInfo);
+        mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
+        showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
     }
 }

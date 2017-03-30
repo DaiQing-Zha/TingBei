@@ -1,7 +1,12 @@
 package com.jxnu.zha.tingbei.core;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
+import com.android.volley.Cache;
+import com.jxnu.zha.qinglibrary.manager.CacheManager;
 import com.jxnu.zha.qinglibrary.util.FileLocalCache;
 import com.jxnu.zha.qinglibrary.util.L;
 import com.jxnu.zha.qinglibrary.util.NetWorkUtil;
@@ -9,6 +14,7 @@ import com.jxnu.zha.qinglibrary.util.QingHttpClient;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.https.HttpTools;
+import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -20,6 +26,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -272,15 +280,116 @@ public abstract class AbstractActivity extends BaseActivity {
             }
         };
     }
-    protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
+    private AsyncTask<String, Void, Entity> mCacheTask;
+
+    /**
+     * 读取数据
+     * @param serializable
+     * @return
+     */
+    protected Entity readData(Serializable serializable) {
+        return null;
+    }
+
+    /**
+     * 获取缓存key
+     * @return
+     */
+    protected String getCacheKey() {
+        return null;
+    }
+
+    /**
+     * 保存缓存文件
+     * @param entity
+     */
+    protected void saveCache(Entity entity) {
+        new SaveObjectTaskAsync(this, entity, getCacheKey()).execute();
+    }
+
+    /**
+     * 读取缓存文件
+     * @param cacheKey
+     * @param errorInfo
+     */
+    protected void readCacheData(String cacheKey,String errorInfo) {
+        cancelReadCache();
+        mCacheTask = new CacheTaskAsync(this,errorInfo).execute(cacheKey);
+    }
+
+    /**
+     * 取消读取缓存文件
+     */
+    private void cancelReadCache() {
+        if (mCacheTask != null) {
+            mCacheTask.cancel(true);
+            mCacheTask = null;
         }
+    }
+    /**
+     * 数据加载成功
+     * @param entity
+     */
+    protected void executeOnLoadDataSuccess(Entity entity) {}
 
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+    /**
+     * 数据加载失败
+     * @param errorInfo
+     */
+    protected void executeOnLoadDataFailure(String errorInfo) {}
+    /**
+     * 读取缓存文件
+     */
+    private class CacheTaskAsync extends AsyncTask<String,Void,Entity>{
+        private final WeakReference<Context> mContext;
+        private String errorInfo;
+        public CacheTaskAsync(Context context) {
+            this.mContext = new WeakReference<Context>(context);
         }
-    };
+        public CacheTaskAsync(Context context,String errorInfo) {
+            this.mContext = new WeakReference<Context>(context);
+            this.errorInfo = errorInfo;
+        }
+        @Override
+        protected Entity doInBackground(String... params) {
+            if (mContext != null){
+                Serializable serializable = CacheManager.readObject(mContext.get(),params[0]);
+                if (serializable == null) {
+                    return null;
+                }else{
+                    return readData(serializable);
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Entity entity) {
+            super.onPostExecute(entity);
+            if (entity != null){
+                executeOnLoadDataSuccess(entity);
+            }else{
+                executeOnLoadDataFailure(errorInfo);
+            }
+        }
+    }
+
+    /**
+     * 保存对象异步类
+     */
+    protected class SaveObjectTaskAsync extends AsyncTask<Void,Void,Void> {
+        private final WeakReference<Context> mContext;
+        private final Serializable serializable;
+        private final String key;
+        public SaveObjectTaskAsync(Context context, Serializable serializable, String key) {
+            mContext = new WeakReference<Context>(context);
+            this.serializable = serializable;
+            this.key = key;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            CacheManager.saveObject(mContext.get(),serializable,key);
+            return null;
+        }
+    }
 }

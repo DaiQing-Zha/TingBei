@@ -1,6 +1,7 @@
 package com.jxnu.zha.qinglibrary.manager;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.jxnu.zha.qinglibrary.util.NetWorkUtil;
 
@@ -70,6 +71,7 @@ public class CacheManager {
             ois = new ObjectInputStream(fis);
             return (Serializable) ois.readObject();
         }catch (FileNotFoundException e){
+
         } catch (Exception e){
             //反序列化失败，则删除文件
             if (e instanceof InvalidClassException){
