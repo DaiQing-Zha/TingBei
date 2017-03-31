@@ -61,7 +61,7 @@ public class HandPickFragment extends BaseFragment
         public void onResponse(String response) {
             Log.e("handPick","response = " + response);
             RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
-            mIndexTopId = recommendGroup.getObj().get(0).getId();
+            mIndexTopId = recommendGroup.getObj().get(1).getId();
             mRQueue.add(requestRecommend);
             mRfContent.setRefreshing(false);
         }

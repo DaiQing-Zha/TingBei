@@ -50,4 +50,8 @@ public class RoutConstant {
      * 获取非推荐榜单
      */
     public final static String getBangListByNoRecommend = "inter/getBangListByNoRecommend";
+    /**
+     * 获取推荐歌单（暂时未用）
+     */
+    public final static String getSongListByRecommend = "inter/getSongListByRecommend";
 }
