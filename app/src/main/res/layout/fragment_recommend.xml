@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/fr_slider"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#ffffff" >
+        <com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager
+            android:id="@+id/autoLoop"
+            android:layout_width="match_parent" android:layout_height="@dimen/autoLoopViewPager_height" />
+        <com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator
+            android:id="@+id/indy"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_gravity="bottom" android:padding="4dp"
+            app:centered="true" />
+    </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip" android:textColor="@color/color_commBlack33"
+        android:textSize="@dimen/comm_size14" android:text="@string/recommendFragment_hotRecommend"/>
     <com.jxnu.zha.tingbei.widgets.HorizontalListView android:id="@+id/hzLst"
-        android:layout_width="match_parent" android:layout_height="80dip">
+        android:layout_width="match_parent" android:layout_height="75dip">
 
     </com.jxnu.zha.tingbei.widgets.HorizontalListView>
     <ImageView

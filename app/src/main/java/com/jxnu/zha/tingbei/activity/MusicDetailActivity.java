@@ -81,13 +81,11 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             return map;
         }
     };
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_detail);
     }
-
     @Override
     protected void init() {
         Intent intent = getIntent();
@@ -112,7 +110,6 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
                 break;
         }
     }
-
 
     /**
      * 根据ID获取发布的音乐集

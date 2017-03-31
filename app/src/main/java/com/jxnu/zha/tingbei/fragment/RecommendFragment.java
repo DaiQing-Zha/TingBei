@@ -1,29 +1,43 @@
 package com.jxnu.zha.tingbei.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
+import com.jxnu.zha.qinglibrary.util.DeviceUtil;
+import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
+import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
 import com.jxnu.zha.tingbei.adapter.HotRecommendAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
+import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
+import com.jxnu.zha.tingbei.model.Entity;
+import com.jxnu.zha.tingbei.model.MusicListRelease;
+import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.SongLabel;
+import com.jxnu.zha.tingbei.model.SongList;
 import com.jxnu.zha.tingbei.widgets.HorizontalListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by DaiQing.Zha on 2017/3/26.
@@ -33,10 +47,16 @@ import butterknife.OnClick;
 public class RecommendFragment extends BaseFragment {
     @BindView(R.id.hzLst)
     HorizontalListView mHzLstHotRecommend;
-
     HotRecommendAdapter mHotRecommendAdapter;
-    List<SongLabel.ObjEntity> lst;
+    @BindView(R.id.autoLoop)
+    AutoLoopViewPager mLoopView;
+    @BindView(R.id.indy)
+    CirclePageIndicator mCirclePageIndicator;
+    private AutoLoopViewAdapter mAdpGallery;
+
+    List<SongLabel.ObjEntity> lstHotRecommend;
     private String TAG = "RECOMMEND_";
+    private final int mHotRecommendNum = 10;
     @Override
     public View getRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recommend,container,false);
@@ -44,12 +64,39 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     public void builderView(View rootView) {
-        lst = new ArrayList<>();
-        mHotRecommendAdapter = new HotRecommendAdapter(father,lst);
+        lstHotRecommend = new ArrayList<>();
+        mHotRecommendAdapter = new HotRecommendAdapter(father, lstHotRecommend);
         mHzLstHotRecommend.setAdapter(mHotRecommendAdapter);
+        getDefaultRecommend();
         getHotRecommend();
     }
-//getSongLabel --> getSongListByLabelId
+    private void getDefaultRecommend(){
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid", HttpTools.APP_ID);
+                map.put("row", "1");
+                map.put("page", "1");
+                String source = HttpTools.httpPost(RoutConstant.getSongListByRecommend,map);
+                try{
+                    final SongList songList = new Gson().fromJson(source,SongList.class);
+                    Log.e(TAG,"------------songList = " + songList.getObj().size());
+                    father.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showAutoLoopViewPage(songList.getObj().get(0).getListMusic());
+                            saveCache(songList);
+                        }
+                    });
+                }catch (Exception e){
+                    Log.e(TAG,"------------exception = " + e.toString());
+                    readCacheData(getCacheKey(new SongList()),source);
+                }
+            }
+        });
+    }
+    //getSongLabel --> getSongListByLabelId
     private void getHotRecommend(){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override
@@ -57,19 +104,147 @@ public class RecommendFragment extends BaseFragment {
                 Map map = new HashMap();
                 map.put("appid", HttpTools.APP_ID);
                 String source = HttpTools.httpPost(RoutConstant.getSongLabel,map);
-                final SongLabel songLabel = new Gson().fromJson(source,SongLabel.class);
-                lst.addAll(songLabel.getObj());
-                father.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e(TAG,"source = " + songLabel.getObj().get(0).getName());
-                        Log.e(TAG,"source = " + songLabel.getObj().get(1).getName());
-                        Log.e(TAG,"source = " + songLabel.getObj().get(2).getName());
-                        mHotRecommendAdapter.notifyDataSetChanged();
+                try{
+                    final SongLabel songLabel = new Gson().fromJson(source,SongLabel.class);
+                    if (songLabel.getCode() == 0){
+                        for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
+                            lstHotRecommend.add(songLabel.getObj().get(i));
+                        }
+                        saveCache(songLabel);
+                        refreshHotRecommend();
+                    }else{
+                        readCacheData(getCacheKey(new SongLabel()),source);
                     }
-                });
-
+                }catch (Exception e){
+                    readCacheData(getCacheKey(new SongLabel()),source);
+                }
             }
         });
+    }
+
+    private void refreshHotRecommend(){
+        father.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mHotRecommendAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    protected Entity readData(Serializable serializable) {
+        if (serializable instanceof SongLabel){
+            return (SongLabel) serializable;
+        }
+        if (serializable instanceof SongList){
+            return (SongList) serializable;
+        }
+        return null;
+    }
+
+    @Override
+    protected String getCacheKey(Entity entity) {
+        if (entity instanceof SongLabel){
+            return RoutConstant.getSongLabel.replace("/","_") + HttpTools.APP_ID;
+        }
+        if (entity instanceof SongList){
+            return RoutConstant.getSongListByRecommend.replace("/","_") + HttpTools.APP_ID;
+        }
+        return "";
+    }
+
+    @Override
+    protected void executeOnLoadDataSuccess(Entity entity) {
+        super.executeOnLoadDataSuccess(entity);
+        SongLabel songLabel = (SongLabel) entity;
+        if (entity instanceof  SongLabel){
+            for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
+                lstHotRecommend.add(songLabel.getObj().get(i));
+            }
+            refreshHotRecommend();
+        }
+        if (entity instanceof SongList){
+            Log.e(TAG,"----------------------true is true");
+            showAutoLoopViewPage(((SongList)entity).getObj().get(0).getListMusic());
+        }
+    }
+
+    @Override
+    protected void executeOnLoadDataFailure(String errorInfo) {
+        super.executeOnLoadDataFailure(errorInfo);
+        for (int i = 0; i < mHotRecommendNum; i ++){
+            SongLabel.ObjEntity objEntity = new SongLabel.ObjEntity();
+            objEntity.setId("0");
+            objEntity.setName("未知");
+            lstHotRecommend.add(objEntity);
+        }
+        mHotRecommendAdapter.notifyDataSetChanged();
+    }
+    /**
+     * 显示首页轮播图片
+     * @param listMusicEntity
+     */
+    private void showAutoLoopViewPage(final List<SongList.ObjEntity.ListMusicEntity> listMusicEntity){
+
+        // 固定ViewPager高度为屏幕宽度的一半
+        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
+        mAdpGallery = new AutoLoopViewAdapter(father, listMusicEntity);
+        mLoopView.setAdapter(mAdpGallery);
+        mLoopView.setBoundaryCaching(true);
+        mLoopView.setAutoScrollDurationFactor(10d);
+        mLoopView.setInterval(3000);
+        mLoopView.startAutoScroll();
+        mCirclePageIndicator.setCentered(true);
+        mCirclePageIndicator.setViewPager(mLoopView);
+        mLoopView.setOnItemClickListener(new AutoLoopViewPager.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+               //TODO:页面跳转
+            }
+        });
+    }
+    /**
+     * 轮播图片适配器
+     */
+    private static class AutoLoopViewAdapter extends PagerAdapter {
+        private int  count = 100;
+        private Queue<ImageView> views;
+        private List<SongList.ObjEntity.ListMusicEntity> listMusicEntity;
+        private Context context;
+        public AutoLoopViewAdapter(Context ct, List<SongList.ObjEntity.ListMusicEntity> listMusicEntity){
+            views = new LinkedList<>();
+            this.listMusicEntity = listMusicEntity;
+            context = ct;
+        }
+        @Override
+        public int getCount() {
+            return listMusicEntity.size();
+        }
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+        @Override
+        public Object instantiateItem(ViewGroup container, final int position) {
+            ImageView  image = views.poll();
+
+            if(image == null){
+                image  = new ImageView(context);
+                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                image.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                        , ViewGroup.LayoutParams.MATCH_PARENT));
+                image.setId(count ++);
+            }
+            ImageManager.getInstance().displayImage(listMusicEntity.get(position).getMusicPicPath(), image,
+                    ImageManager.getNewsHeadOptions());
+            container.addView(image);
+            return image;
+        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            ImageView image = (ImageView) object;
+            views.add(image);
+            container.removeView(image);
+        }
     }
 }

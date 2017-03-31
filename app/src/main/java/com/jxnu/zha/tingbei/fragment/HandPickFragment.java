@@ -145,7 +145,7 @@ public class HandPickFragment extends BaseFragment
     private void showAutoLoopViewPage(final List<Recommend.ObjEntity> data){
 
         // 固定ViewPager高度为屏幕宽度的一半
-        mLoopView.getLayoutParams().height = DeviceUtil.getDeviceWidth(father) / 2;
+        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
         mAdpGallery = new AutoLoopViewAdapter(father, data);
         mLoopView.setAdapter(mAdpGallery);
         mLoopView.setBoundaryCaching(true);
@@ -188,26 +188,26 @@ public class HandPickFragment extends BaseFragment
         }
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView  mage = views.poll();
+            ImageView  image = views.poll();
 
-            if(mage == null){
-                mage  = new ImageView(context);
-                mage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                mage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+            if(image == null){
+                image  = new ImageView(context);
+                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                image.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                         , ViewGroup.LayoutParams.MATCH_PARENT));
-                mage.setId(count ++);
+                image.setId(count ++);
             }
             Log.e("handPick","url = " + listRecommend.get(position).getPicPathSmall());
-            ImageManager.getInstance().displayImage(listRecommend.get(position).getPicPathSmall(), mage,
+            ImageManager.getInstance().displayImage(listRecommend.get(position).getPicPathSmall(), image,
                     ImageManager.getNewsHeadOptions());
-            container.addView(mage);
-            return mage;
+            container.addView(image);
+            return image;
         }
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            ImageView mage = (ImageView) object;
-            views.add(mage);
-            container.removeView(mage);
+            ImageView image = (ImageView) object;
+            views.add(image);
+            container.removeView(image);
         }
     }
 }

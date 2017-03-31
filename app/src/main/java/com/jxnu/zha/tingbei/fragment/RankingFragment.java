@@ -48,8 +48,8 @@ public class RankingFragment extends BaseFragment {
                 map.put("appid", HttpTools.APP_ID);
                 map.put("row","1");
                 map.put("page","1");
-                map.put("labelid","f39c8ce35219a0b501523ef231c90701");
-                String source = HttpTools.httpPost(RoutConstant.getSongListByLabelId,map);
+//                map.put("labelid","f39c8ce35219a0b501523ef231c90701");
+                String source = HttpTools.httpPost(RoutConstant.getSongListByRecommend,map);
                 Log.e(TAG,"source = " + source);
             }
         });

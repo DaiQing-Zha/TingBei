@@ -85,7 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     private static final int ORANGE_WARM = 0xffffc107;
     private static final int GREEN_INFO = 0xff4caf50;
 
-    protected void showSnackBarMsg(EAlertStyle eAlertStyle,String message){
+    public void showSnackBarMsg(EAlertStyle eAlertStyle,String message){
         int colorResId;
         switch (eAlertStyle){
             case ALERT:
@@ -150,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity{
      * @param error
      * @return
      */
-    protected String getVolleyErrorMessage(@NonNull String error){
+    public String getVolleyErrorMessage(@NonNull String error){
         String errorMessage = "";
         if (error.contains("TimeoutError")){
             errorMessage = getString(R.string.http_timeOut);
