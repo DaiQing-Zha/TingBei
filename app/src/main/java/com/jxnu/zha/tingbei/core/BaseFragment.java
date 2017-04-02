@@ -1,11 +1,10 @@
 package com.jxnu.zha.tingbei.core;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,35 +89,28 @@ public abstract class BaseFragment extends AbstractFragment{
     /**
      * 读取数据
      * @param serializable
+     * @param cacheKey
      * @return
      */
-    protected Entity readData(Serializable serializable) {
-        return null;
-    }
-
-    /**
-     * 获取缓存key
-     * @return
-     */
-    protected String getCacheKey(Entity entity) {
+    protected Entity readData(Serializable serializable,String cacheKey) {
         return null;
     }
 
     /**
      * 保存缓存文件
      * @param entity
+     * @param cacheKey
      */
-    protected void saveCache(Entity entity) {
-        new SaveObjectTaskAsync(father, entity, getCacheKey(entity)).execute();
+    protected void saveCacheFile(Entity entity,String cacheKey) {
+        new SaveCacheTaskAsync(father, entity, cacheKey).execute();
     }
     /**
      * 读取缓存文件
      * @param cacheKey
-     * @param errorInfo
      */
-    protected void readCacheData(String cacheKey,String errorInfo) {
-        cancelReadCache();
-        mCacheTask = new CacheTaskAsync(father,errorInfo).execute(cacheKey);
+    protected void readCacheFile(String cacheKey) {
+//        cancelReadCache();
+        mCacheTask = new ReadCacheTaskAsync(father).execute(cacheKey);
     }
     /**
      * 取消读取缓存文件
@@ -133,33 +125,35 @@ public abstract class BaseFragment extends AbstractFragment{
      * 数据加载成功
      * @param entity
      */
-    protected void executeOnLoadDataSuccess(Entity entity) {}
+    protected void executeOnLoadFileSuccess(Entity entity) {}
+
     /**
      * 数据加载失败
-     * @param errorInfo
+     * @param cacheKey
      */
-    protected void executeOnLoadDataFailure(String errorInfo) {}
+    protected void executeOnLoadFileFailure(String cacheKey) {}
     /**
      * 读取缓存文件
      */
-    private class CacheTaskAsync extends AsyncTask<String,Void,Entity>{
+    private class ReadCacheTaskAsync extends AsyncTask<String,Void,Entity>{
         private final WeakReference<Context> mContext;
-        private String errorInfo;
-        public CacheTaskAsync(Context context) {
-            this.mContext = new WeakReference<Context>(context);
-        }
-        public CacheTaskAsync(Context context,String errorInfo) {
-            this.mContext = new WeakReference<Context>(context);
-            this.errorInfo = errorInfo;
+        public ReadCacheTaskAsync(Context context) {
+            Log.e("mainmainQWE","创建读");
+            this.mContext = new WeakReference<>(context);
         }
         @Override
         protected Entity doInBackground(String... params) {
             if (mContext != null){
                 Serializable serializable = CacheManager.readObject(mContext.get(),params[0]);
                 if (serializable == null) {
-                    return null;
+                    Entity entity = new Entity();
+                    entity.setCacheKey(params[0]);
+                    entity.setHaveCache(false);
+                    Log.e("mainmainQWE","返回空");
+                    return entity;
                 }else{
-                    return readData(serializable);
+                    Log.e("mainmainQWE","返回读");
+                    return readData(serializable,params[0]);
                 }
             }
             return null;
@@ -167,10 +161,10 @@ public abstract class BaseFragment extends AbstractFragment{
         @Override
         protected void onPostExecute(Entity entity) {
             super.onPostExecute(entity);
-            if (entity != null){
-                executeOnLoadDataSuccess(entity);
+            if (entity.isHaveCache()){
+                executeOnLoadFileSuccess(entity);
             }else{
-                executeOnLoadDataFailure(errorInfo);
+                executeOnLoadFileFailure(entity.getCacheKey());
             }
         }
     }
@@ -178,12 +172,12 @@ public abstract class BaseFragment extends AbstractFragment{
     /**
      * 保存对象异步类
      */
-    protected class SaveObjectTaskAsync extends AsyncTask<Void,Void,Void> {
+    protected class SaveCacheTaskAsync extends AsyncTask<Void,Void,Void> {
         private final WeakReference<Context> mContext;
         private final Serializable serializable;
         private final String key;
-        public SaveObjectTaskAsync(Context context, Serializable serializable, String key) {
-            mContext = new WeakReference<Context>(context);
+        public SaveCacheTaskAsync(Context context, Serializable serializable, String key) {
+            mContext = new WeakReference<>(context);
             this.serializable = serializable;
             this.key = key;
         }

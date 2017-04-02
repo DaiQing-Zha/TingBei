@@ -9,6 +9,8 @@ public class Entity extends BaseBean {
 
     private int code;
     private String msg;
+    private String cacheKey;
+    private boolean isHaveCache = true;
 
     public int getCode() {
         return code;
@@ -24,5 +26,21 @@ public class Entity extends BaseBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getCacheKey() {
+        return cacheKey;
+    }
+
+    public void setCacheKey(String cacheKey) {
+        this.cacheKey = cacheKey;
+    }
+
+    public boolean isHaveCache() {
+        return isHaveCache;
+    }
+
+    public void setHaveCache(boolean haveCache) {
+        isHaveCache = haveCache;
     }
 }

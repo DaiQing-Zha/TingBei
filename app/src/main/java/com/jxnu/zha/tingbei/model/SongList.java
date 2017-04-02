@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class SongList extends Entity{
         return obj;
     }
 
-    public static class ObjEntity {
+    public static class ObjEntity implements Serializable{
         /**
          * context : 铃音包中振铃随心下，全免
          * id : f39c8ce354368a940154368abe280000
@@ -118,7 +119,7 @@ public class SongList extends Entity{
             return listMusic;
         }
 
-        public static class ListMusicEntity {
+        public static class ListMusicEntity implements Serializable{
             /**
              * addTime : 2016-04-26 09:37:30
              * cooperation : 移动
@@ -333,7 +334,7 @@ public class SongList extends Entity{
                 return setRingTone;
             }
 
-            public static class SetRingToneEntity {
+            public static class SetRingToneEntity implements Serializable{
                 /**
                  * addTime : 2016-04-26 09:37:30
                  * cooperation : 移动

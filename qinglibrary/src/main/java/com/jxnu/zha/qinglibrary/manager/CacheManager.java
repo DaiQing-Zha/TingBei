@@ -36,6 +36,7 @@ public class CacheManager {
      */
     public static boolean saveObject(Context context, Serializable serializable
             ,String file){
+        Log.e("mainQWE","file = " + file);
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try{

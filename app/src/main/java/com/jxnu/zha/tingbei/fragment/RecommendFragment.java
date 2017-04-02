@@ -1,7 +1,6 @@
 package com.jxnu.zha.tingbei.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -15,7 +14,6 @@ import com.jxnu.zha.qinglibrary.util.DeviceUtil;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
-import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
 import com.jxnu.zha.tingbei.adapter.HotRecommendAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -23,8 +21,6 @@ import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
-import com.jxnu.zha.tingbei.model.MusicListRelease;
-import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.SongLabel;
 import com.jxnu.zha.tingbei.model.SongList;
 import com.jxnu.zha.tingbei.widgets.HorizontalListView;
@@ -53,6 +49,8 @@ public class RecommendFragment extends BaseFragment {
     @BindView(R.id.indy)
     CirclePageIndicator mCirclePageIndicator;
     private AutoLoopViewAdapter mAdpGallery;
+    private int mSongListRow = 1;
+    private int mSongListPage = 1;
 
     List<SongLabel.ObjEntity> lstHotRecommend;
     private String TAG = "RECOMMEND_";
@@ -76,8 +74,8 @@ public class RecommendFragment extends BaseFragment {
             public void run() {
                 Map map = new HashMap();
                 map.put("appid", HttpTools.APP_ID);
-                map.put("row", "1");
-                map.put("page", "1");
+                map.put("row", mSongListRow);
+                map.put("page", mSongListPage);
                 String source = HttpTools.httpPost(RoutConstant.getSongListByRecommend,map);
                 try{
                     final SongList songList = new Gson().fromJson(source,SongList.class);
@@ -86,12 +84,12 @@ public class RecommendFragment extends BaseFragment {
                         @Override
                         public void run() {
                             showAutoLoopViewPage(songList.getObj().get(0).getListMusic());
-                            saveCache(songList);
+                            saveCacheFile(songList,getSongListCacheKey());
                         }
                     });
                 }catch (Exception e){
                     Log.e(TAG,"------------exception = " + e.toString());
-                    readCacheData(getCacheKey(new SongList()),source);
+                    readCacheFile(getSongListCacheKey());
                 }
             }
         });
@@ -110,13 +108,13 @@ public class RecommendFragment extends BaseFragment {
                         for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
                             lstHotRecommend.add(songLabel.getObj().get(i));
                         }
-                        saveCache(songLabel);
+                        saveCacheFile(songLabel,getSongLabelCacheKey());
                         refreshHotRecommend();
                     }else{
-                        readCacheData(getCacheKey(new SongLabel()),source);
+                        readCacheFile(getSongLabelCacheKey());
                     }
                 }catch (Exception e){
-                    readCacheData(getCacheKey(new SongLabel()),source);
+                    readCacheFile(getSongLabelCacheKey());
                 }
             }
         });
@@ -132,53 +130,57 @@ public class RecommendFragment extends BaseFragment {
     }
 
     @Override
-    protected Entity readData(Serializable serializable) {
+    protected Entity readData(Serializable serializable,String cacheKey) {
         if (serializable instanceof SongLabel){
-            return (SongLabel) serializable;
+            SongLabel songLabel = (SongLabel) serializable;
+            songLabel.setCacheKey(cacheKey);
+            Log.e("mainQWE","readData = songLabel");
+            return songLabel;
         }
         if (serializable instanceof SongList){
-            return (SongList) serializable;
+            SongList songList = (SongList) serializable;
+            songList.setCacheKey(cacheKey);
+            Log.e("mainQWE","readData = songList");
+            return songList;
         }
-        return null;
+        Entity entity = new Entity();
+        entity.setCacheKey(cacheKey);
+        entity.setHaveCache(false);
+        return entity;
     }
-
     @Override
-    protected String getCacheKey(Entity entity) {
+    protected void executeOnLoadFileSuccess(Entity entity) {
+        super.executeOnLoadFileSuccess(entity);
         if (entity instanceof SongLabel){
-            return RoutConstant.getSongLabel.replace("/","_") + HttpTools.APP_ID;
-        }
-        if (entity instanceof SongList){
-            return RoutConstant.getSongListByRecommend.replace("/","_") + HttpTools.APP_ID;
-        }
-        return "";
-    }
-
-    @Override
-    protected void executeOnLoadDataSuccess(Entity entity) {
-        super.executeOnLoadDataSuccess(entity);
-        SongLabel songLabel = (SongLabel) entity;
-        if (entity instanceof  SongLabel){
+            SongLabel songLabel = (SongLabel) entity;
             for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
                 lstHotRecommend.add(songLabel.getObj().get(i));
             }
             refreshHotRecommend();
         }
         if (entity instanceof SongList){
-            Log.e(TAG,"----------------------true is true");
-            showAutoLoopViewPage(((SongList)entity).getObj().get(0).getListMusic());
+            SongList songList = (SongList) entity;
+            showAutoLoopViewPage(songList.getObj().get(0).getListMusic());
         }
     }
 
     @Override
-    protected void executeOnLoadDataFailure(String errorInfo) {
-        super.executeOnLoadDataFailure(errorInfo);
-        for (int i = 0; i < mHotRecommendNum; i ++){
-            SongLabel.ObjEntity objEntity = new SongLabel.ObjEntity();
-            objEntity.setId("0");
-            objEntity.setName("未知");
-            lstHotRecommend.add(objEntity);
+    protected void executeOnLoadFileFailure(String cacheKey) {
+        Log.e("mainQWE","cacheKey = " + cacheKey);
+        super.executeOnLoadFileFailure(cacheKey);
+        if (cacheKey.equals(getSongLabelCacheKey())){
+            for (int i = 0; i < mHotRecommendNum; i ++){
+                SongLabel.ObjEntity objEntity = new SongLabel.ObjEntity();
+                objEntity.setId("0");
+                objEntity.setName("未知");
+                lstHotRecommend.add(objEntity);
+            }
+            mHotRecommendAdapter.notifyDataSetChanged();
         }
-        mHotRecommendAdapter.notifyDataSetChanged();
+        if (cacheKey.equals(getSongListCacheKey())){
+            readCacheFile(cacheKey);
+        }
+
     }
     /**
      * 显示首页轮播图片
@@ -246,5 +248,21 @@ public class RecommendFragment extends BaseFragment {
             views.add(image);
             container.removeView(image);
         }
+    }
+
+    /**
+     * 获取songlist的缓存key
+     * @return
+     */
+    private String getSongListCacheKey(){
+        return RoutConstant.getSongListByRecommend.replace("/","_") + HttpTools.APP_ID;
+    }
+
+    /**
+     * 获取songlabel的缓存key
+     * @return
+     */
+    private String getSongLabelCacheKey(){
+        return RoutConstant.getSongLabel.replace("/","_") + HttpTools.APP_ID;
     }
 }
