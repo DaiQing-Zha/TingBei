@@ -2,6 +2,7 @@ package com.jxnu.zha.tingbei.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,9 +30,12 @@ import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
+import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.RecommendGroup;
+import com.jxnu.zha.tingbei.model.SongLabel;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +55,7 @@ public class HandPickFragment extends BaseFragment
     private AutoLoopViewAdapter mAdpGallery;
     private CirclePageIndicator mCirclePageIndicator;
     private String mIndexTopId;
+    private static String TAG = "HandPickFragment";
     /**
      * 获取推荐页分组
      */
@@ -59,8 +64,9 @@ public class HandPickFragment extends BaseFragment
             , new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            Log.e("handPick","response = " + response);
+            Log.e(TAG,"response = " + response);
             RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
+            saveCacheFile(recommendGroup,getRecommendGroupCacheKey());
             mIndexTopId = recommendGroup.getObj().get(1).getId();
             mRQueue.add(requestRecommend);
             mRfContent.setRefreshing(false);
@@ -69,6 +75,7 @@ public class HandPickFragment extends BaseFragment
         @Override
         public void onErrorResponse(VolleyError error) {
             mRfContent.setRefreshing(false);
+            readCacheFile(getRecommendGroupCacheKey());
         }
     }){
         @Override
@@ -86,15 +93,16 @@ public class HandPickFragment extends BaseFragment
             , new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            Log.e("handPick","response = " + response);
+            Log.e(TAG,"response = " + response);
             Recommend recommend = new Gson().fromJson(response,Recommend.class);
             showAutoLoopViewPage(recommend.getObj());
-
+            saveCacheFile(recommend,getRecommendCacheKey());
         }
     }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            readCacheFile(getRecommendCacheKey());
+            Log.e(TAG,"getRecommend error ");
         }
     }){
         @Override
@@ -118,24 +126,10 @@ public class HandPickFragment extends BaseFragment
         mLoopView = findWidget(rootView,R.id.autoLoop);
         mCirclePageIndicator = findWidget(rootView,R.id.indy);
         mRfContent.setOnRefreshListener(this);
-        getSongLabel();
-
     }
     @Override
     public void onRefresh() {
         mRQueue.add(requestRecommendGroup);
-    }
-
-    private void getSongLabel(){
-        ThreadPool.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                Map map = new HashMap();
-                map.put("appid",HttpTools.APP_ID);
-                String source = HttpTools.httpPost(RoutConstant.getSongLabel,map);
-                Log.e("handPick1","source = " + source);
-            }
-        });
     }
 
     /**
@@ -163,6 +157,47 @@ public class HandPickFragment extends BaseFragment
                 father.startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected Entity readData(Serializable serializable, String cacheKey) {
+        if (serializable instanceof RecommendGroup){
+            RecommendGroup recommendGroup = (RecommendGroup) serializable;
+            recommendGroup.setCacheKey(cacheKey);
+            return recommendGroup;
+        }
+        if (serializable instanceof Recommend){
+            Recommend recommend = (Recommend) serializable;
+            recommend.setCacheKey(cacheKey);
+            return recommend;
+        }
+        Entity entity = new Entity();
+        entity.setCacheKey(cacheKey);
+        entity.setHaveCache(false);
+        return entity;
+    }
+
+    @Override
+    protected void executeOnLoadFileSuccess(Entity entity) {
+        if (entity instanceof RecommendGroup){
+            RecommendGroup recommendGroup = (RecommendGroup) entity;
+            mIndexTopId = recommendGroup.getObj().get(1).getId();
+            mRQueue.add(requestRecommend);
+            Log.e(TAG,"recommendGroup---------------------------------");
+        }
+        if (entity instanceof Recommend){
+            Recommend recommend = (Recommend) entity;
+            showAutoLoopViewPage(recommend.getObj());
+            Log.e(TAG,"Recommend---------------------------------");
+        }
+    }
+
+    @Override
+    protected void executeOnLoadFileFailure(String cacheKey) {
+        if (cacheKey.equals(getRecommendGroupCacheKey())){
+        }
+        if (cacheKey.equals(getRecommendCacheKey())){
+        }
     }
 
     /**
@@ -197,7 +232,7 @@ public class HandPickFragment extends BaseFragment
                         , ViewGroup.LayoutParams.MATCH_PARENT));
                 image.setId(count ++);
             }
-            Log.e("handPick","url = " + listRecommend.get(position).getPicPathSmall());
+            Log.e(TAG,"url = " + listRecommend.get(position).getPicPathSmall());
             ImageManager.getInstance().displayImage(listRecommend.get(position).getPicPathSmall(), image,
                     ImageManager.getNewsHeadOptions());
             container.addView(image);
@@ -209,5 +244,20 @@ public class HandPickFragment extends BaseFragment
             views.add(image);
             container.removeView(image);
         }
+    }
+
+    /**
+     * 获取recommendGroup的缓存key
+     * @return
+     */
+    private String getRecommendGroupCacheKey(){
+        return RoutConstant.getRecommendGroupOnInter.replace("/","_") + HttpTools.APP_ID;
+    }
+    /**
+     * 获取recommend的缓存key
+     * @return
+     */
+    private String getRecommendCacheKey(){
+        return RoutConstant.getRecommendByGroupId.replace("/","_") + HttpTools.APP_ID;
     }
 }

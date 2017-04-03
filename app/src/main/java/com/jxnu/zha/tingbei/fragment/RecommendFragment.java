@@ -134,13 +134,13 @@ public class RecommendFragment extends BaseFragment {
         if (serializable instanceof SongLabel){
             SongLabel songLabel = (SongLabel) serializable;
             songLabel.setCacheKey(cacheKey);
-            Log.e("mainQWE","readData = songLabel");
+//            Log.e("mainQWE","readData = songLabel");
             return songLabel;
         }
         if (serializable instanceof SongList){
             SongList songList = (SongList) serializable;
             songList.setCacheKey(cacheKey);
-            Log.e("mainQWE","readData = songList");
+//            Log.e("mainQWE","readData = songList");
             return songList;
         }
         Entity entity = new Entity();
@@ -166,7 +166,7 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     protected void executeOnLoadFileFailure(String cacheKey) {
-        Log.e("mainQWE","cacheKey = " + cacheKey);
+//        Log.e("mainQWE","cacheKey = " + cacheKey);
         super.executeOnLoadFileFailure(cacheKey);
         if (cacheKey.equals(getSongLabelCacheKey())){
             for (int i = 0; i < mHotRecommendNum; i ++){
@@ -180,7 +180,6 @@ public class RecommendFragment extends BaseFragment {
         if (cacheKey.equals(getSongListCacheKey())){
             readCacheFile(cacheKey);
         }
-
     }
     /**
      * 显示首页轮播图片
@@ -251,7 +250,7 @@ public class RecommendFragment extends BaseFragment {
     }
 
     /**
-     * 获取songlist的缓存key
+     * 获取SongList的缓存key
      * @return
      */
     private String getSongListCacheKey(){
@@ -259,7 +258,7 @@ public class RecommendFragment extends BaseFragment {
     }
 
     /**
-     * 获取songlabel的缓存key
+     * 获取SongLabel的缓存key
      * @return
      */
     private String getSongLabelCacheKey(){
