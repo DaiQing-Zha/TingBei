@@ -5,6 +5,7 @@
     <dimen name="autoLoopViewPager_height">200dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="comm_size18">18sp</dimen>
     <dimen name="comm_size16">16sp</dimen>
     <dimen name="comm_size14">14sp</dimen>
 

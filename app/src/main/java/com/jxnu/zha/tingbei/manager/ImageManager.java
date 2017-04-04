@@ -49,4 +49,17 @@ public class ImageManager {
 		return userImageOptions;
 	}
 
+	private static DisplayImageOptions radioIconOptions;
+	public static DisplayImageOptions getRadioIconOptions() {
+		if (radioIconOptions == null) {
+			radioIconOptions = new DisplayImageOptions.Builder()
+					.showImageForEmptyUri(R.mipmap.ic_radio_icon)
+					.showImageOnFail(R.mipmap.ic_radio_icon)
+					.cacheInMemory(true) // 缓存内存
+					.cacheOnDisc(true)// 缓存文件
+					.build();
+		}
+		return radioIconOptions;
+	}
+
 }

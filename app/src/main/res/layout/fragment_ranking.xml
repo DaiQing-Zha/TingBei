@@ -2,7 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button android:id="@+id/btn_ranking"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="测试榜单"/>
+    <ScrollView
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/rankingFragment_recommendBand"
+                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
+                android:background="@color/colorPrimary"/>
+            <ListView android:id="@+id/lst_bandList1"
+                android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/rankingFragment_noRecommendBand"
+                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
+                android:background="@color/colorPrimary"/>
+            <ListView android:id="@+id/lst_bandList2"
+                android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/rankingFragment_labelBand"
+                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
+                android:background="@color/colorPrimary"/>
+            <ListView android:id="@+id/lst_bandList3"
+                android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
