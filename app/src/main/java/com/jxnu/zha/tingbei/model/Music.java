@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,54 +8,36 @@ import java.util.List;
  * email:13767191284@163.com
  * description:
  */
-public class Music {
+public class Music extends Entity{
+
+
     /**
-     * code : 0
-     * msg : 查询成功
-     * obj : [{"id":"f39c8ce34eb3d0a2014ebe2120c314ab","initialId":"560fa0bcdc76d8dc91f4598c43c22ff4","initialSingerId":"336595","lrcPath":"http://open.migu.cn:8100/material/lyric/2013/12/10/1312100151474334.lrc?m","musicPath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC/Mp3_64_22_16/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=56254794-f233-4bc6-bad9-3fa3a389836a","musicPathBak":"http://115.28.12.99/resource/musicbak/20151110/f39c8ce34eb3d0a2014ebe2120c314ab.mp3","musicSingerPicPath":"","name":"等着回头的爱情","setRingCall":[{"cooperation":"移动","id":"f39c8ce34eb3d0a2014ebe2120c314ae","initialid":"560fa0bcdc76d8dc91f4598c43c22ff4","ringCallPath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e"}],"setRingTone":[{"cooperation":"移动","id":"f39c8ce34eb3d0a2014ebe2120c314ad","initialid":"560fa0bcdc76d8dc91f4598c43c22ff4","ringTonePath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e"}],"singerName":"梦飞"}]
+     * obj : [{"id":"402880e54cefbea5014cefc59606013e","initialId":"7515fc3c868b4001a8062126274e192e","initialSingerId":"1000225665","lrcPath":"http://open.migu.cn:8100/material/lyric/2013/12/16/9563951387292653874.lrc?m","musicPath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/6%E6%9C%88%E6%89%B9%E9%87%8F/2013/06/2013%E5%B9%B403%E6%9C%8818%E6%97%A5%E5%9B%BD%E6%B3%B0%E8%AF%8D%E6%9B%B2%E9%A2%84%E7%95%99%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A515110%E9%A6%96/%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC/Mp3_64_22_16/Recorder+Music+English+Lane+P+Arnold+M+Pitfield+T+Gregson+E+Lyon+D+Parrott+I+Turner+Royal+Ballet+Sinfonia+G+Sutherland+Prelude-Turner+John+%E7%BA%A6%E7%BF%B0+%E7%89%B9%E7%BA%B3.mp3?channelid=08&msisdn=106ba6e0-a2f8-4c11-90c4-ac487674d19c","musicPathBak":"http://www.nnshow.cn/resource/musicbak/20150611/402880e54cefbea5014cefc59606013e.mp3","musicSingerPicPath":"","name":"Recorder Music English Lane P Arnold M Pitfield T Gregson E Lyon D Parrott I Turner Royal Ballet Sinfonia G Sutherland Prelude","setRingCall":[{"cooperation":"移动","id":"402880e54cefbea5014cefc596070140","initialid":"7515fc3c868b4001a8062126274e192e","ringCallPath":""}],"setRingTone":[{"cooperation":"移动","id":"402880e54cefbea5014cefc59607013f","initialid":"7515fc3c868b4001a8062126274e192e","ringTonePath":""}],"singerName":"Turner John "}]
      */
 
-    private int code;
-    private String msg;
     private List<ObjEntity> obj;
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     public void setObj(List<ObjEntity> obj) {
         this.obj = obj;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
     }
 
     public List<ObjEntity> getObj() {
         return obj;
     }
 
-    public static class ObjEntity {
+    public static class ObjEntity implements Serializable{
         /**
-         * id : f39c8ce34eb3d0a2014ebe2120c314ab
-         * initialId : 560fa0bcdc76d8dc91f4598c43c22ff4
-         * initialSingerId : 336595
-         * lrcPath : http://open.migu.cn:8100/material/lyric/2013/12/10/1312100151474334.lrc?m
-         * musicPath : http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC/Mp3_64_22_16/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=56254794-f233-4bc6-bad9-3fa3a389836a
-         * musicPathBak : http://115.28.12.99/resource/musicbak/20151110/f39c8ce34eb3d0a2014ebe2120c314ab.mp3
+         * id : 402880e54cefbea5014cefc59606013e
+         * initialId : 7515fc3c868b4001a8062126274e192e
+         * initialSingerId : 1000225665
+         * lrcPath : http://open.migu.cn:8100/material/lyric/2013/12/16/9563951387292653874.lrc?m
+         * musicPath : http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/6%E6%9C%88%E6%89%B9%E9%87%8F/2013/06/2013%E5%B9%B403%E6%9C%8818%E6%97%A5%E5%9B%BD%E6%B3%B0%E8%AF%8D%E6%9B%B2%E9%A2%84%E7%95%99%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A515110%E9%A6%96/%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC/Mp3_64_22_16/Recorder+Music+English+Lane+P+Arnold+M+Pitfield+T+Gregson+E+Lyon+D+Parrott+I+Turner+Royal+Ballet+Sinfonia+G+Sutherland+Prelude-Turner+John+%E7%BA%A6%E7%BF%B0+%E7%89%B9%E7%BA%B3.mp3?channelid=08&msisdn=106ba6e0-a2f8-4c11-90c4-ac487674d19c
+         * musicPathBak : http://www.nnshow.cn/resource/musicbak/20150611/402880e54cefbea5014cefc59606013e.mp3
          * musicSingerPicPath :
-         * name : 等着回头的爱情
-         * setRingCall : [{"cooperation":"移动","id":"f39c8ce34eb3d0a2014ebe2120c314ae","initialid":"560fa0bcdc76d8dc91f4598c43c22ff4","ringCallPath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e"}]
-         * setRingTone : [{"cooperation":"移动","id":"f39c8ce34eb3d0a2014ebe2120c314ad","initialid":"560fa0bcdc76d8dc91f4598c43c22ff4","ringTonePath":"http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e"}]
-         * singerName : 梦飞
+         * name : Recorder Music English Lane P Arnold M Pitfield T Gregson E Lyon D Parrott I Turner Royal Ballet Sinfonia G Sutherland Prelude
+         * setRingCall : [{"cooperation":"移动","id":"402880e54cefbea5014cefc596070140","initialid":"7515fc3c868b4001a8062126274e192e","ringCallPath":""}]
+         * setRingTone : [{"cooperation":"移动","id":"402880e54cefbea5014cefc59607013f","initialid":"7515fc3c868b4001a8062126274e192e","ringTonePath":""}]
+         * singerName : Turner John
          */
 
         private String id;
@@ -157,12 +140,12 @@ public class Music {
             return setRingTone;
         }
 
-        public static class SetRingCallEntity {
+        public static class SetRingCallEntity implements Serializable{
             /**
              * cooperation : 移动
-             * id : f39c8ce34eb3d0a2014ebe2120c314ae
-             * initialid : 560fa0bcdc76d8dc91f4598c43c22ff4
-             * ringCallPath : http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e
+             * id : 402880e54cefbea5014cefc596070140
+             * initialid : 7515fc3c868b4001a8062126274e192e
+             * ringCallPath :
              */
 
             private String cooperation;
@@ -203,12 +186,12 @@ public class Music {
             }
         }
 
-        public static class SetRingToneEntity {
+        public static class SetRingToneEntity implements Serializable{
             /**
              * cooperation : 移动
-             * id : f39c8ce34eb3d0a2014ebe2120c314ad
-             * initialid : 560fa0bcdc76d8dc91f4598c43c22ff4
-             * ringTonePath : http://tyst.migu.cn/public/ringmaker01/n4/karakalupload/2013/12/2013%E5%B9%B412%E6%9C%8805%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E9%83%AD%E6%9E%97%E9%A3%9E%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A51%E9%A6%96/%E5%BD%A9%E9%93%83/6_mp3-128kbps/%E7%AD%89%E7%9D%80%E5%9B%9E%E5%A4%B4%E7%9A%84%E7%88%B1%E6%83%85-%E6%A2%A6%E9%A3%9E.mp3?channelid=08&msisdn=b6fb82d0-6ee4-4dc1-8df8-02146064c21e
+             * id : 402880e54cefbea5014cefc59607013f
+             * initialid : 7515fc3c868b4001a8062126274e192e
+             * ringTonePath :
              */
 
             private String cooperation;

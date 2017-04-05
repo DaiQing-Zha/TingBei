@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
+import com.jxnu.zha.tingbei.activity.SingerActivity;
 import com.jxnu.zha.tingbei.adapter.SingerTypesAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -37,6 +39,7 @@ import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.RadioList;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.RecommendGroup;
+import com.jxnu.zha.tingbei.model.Singer;
 import com.jxnu.zha.tingbei.model.SingerTypes;
 import com.jxnu.zha.tingbei.model.SongLabel;
 
@@ -144,6 +147,16 @@ public class HandPickFragment extends BaseFragment
         mGridViewSinger.setAdapter(singerTypesAdapter);
         mRfContent.setOnRefreshListener(this);
         getSingerTypes();
+        mGridViewSinger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(father, SingerActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("typeId",singerLst.get(position).getId());
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public void onRefresh() {

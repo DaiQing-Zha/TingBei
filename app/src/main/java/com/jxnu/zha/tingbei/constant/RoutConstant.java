@@ -67,4 +67,16 @@ public class RoutConstant {
      * 获取歌手类型
      */
     public final static String getSingerTypesOnInter = "inter/getSingerTypesOnInter";
+    /**
+     * 根据歌手ID获取歌手信息
+     */
+    public final static String getSingerById = "inter/getSingerById";
+    /**
+     * 根据歌手类型获取歌手信息
+     */
+    public final static String getSingerBySingerType = "inter/getSingerBySingerType";
+    /**
+     * 根据歌手ID获取歌曲信息
+     */
+    public final static String getMusicBySingerId = "inter/getMusicBySingerId";
 }
