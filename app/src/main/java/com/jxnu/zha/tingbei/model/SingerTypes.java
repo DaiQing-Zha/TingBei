@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,74 +8,52 @@ import java.util.List;
  * email:13767191284@163.com
  * description:
  */
-public class SingerTypes {
+public class SingerTypes extends Entity{
+
+
     /**
-     * code : 0
-     * msg : 查询成功
-     * obj : [{"dicValue":"盗版","id":"11","index_":"4"},{"dicValue":"欧美","id":"4","index_":"4"},{"dicValue":"好的","id":"12","index_":"1"},{"dicValue":"日韩","id":"3","index_":"1"},{"dicValue":"港台","id":"2","index_":"1"},{"dicValue":"大陆","id":"1","index_":"1"}]
+     * dicValue : 欧美男歌手
+     * id : 23
+     * index_ : 9
      */
 
-    private int code;
-    private String msg;
-    private List<ObjEntity> obj;
+    private List<ObjBean> obj;
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public void setObj(List<ObjEntity> obj) {
-        this.obj = obj;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public List<ObjEntity> getObj() {
+    public List<ObjBean> getObj() {
         return obj;
     }
 
-    public static class ObjEntity {
-        /**
-         * dicValue : 盗版
-         * id : 11
-         * index_ : 4
-         */
+    public void setObj(List<ObjBean> obj) {
+        this.obj = obj;
+    }
 
+    public static class ObjBean implements Serializable{
         private String dicValue;
         private String id;
         private String index_;
 
-        public void setDicValue(String dicValue) {
-            this.dicValue = dicValue;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setIndex_(String index_) {
-            this.index_ = index_;
-        }
-
         public String getDicValue() {
             return dicValue;
+        }
+
+        public void setDicValue(String dicValue) {
+            this.dicValue = dicValue;
         }
 
         public String getId() {
             return id;
         }
 
+        public void setId(String id) {
+            this.id = id;
+        }
+
         public String getIndex_() {
             return index_;
+        }
+
+        public void setIndex_(String index_) {
+            this.index_ = index_;
         }
     }
 }

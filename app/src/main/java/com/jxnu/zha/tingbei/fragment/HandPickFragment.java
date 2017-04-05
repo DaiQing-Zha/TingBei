@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,22 +27,28 @@ import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
+import com.jxnu.zha.tingbei.adapter.SingerTypesAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
+import com.jxnu.zha.tingbei.model.RadioList;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.RecommendGroup;
+import com.jxnu.zha.tingbei.model.SingerTypes;
 import com.jxnu.zha.tingbei.model.SongLabel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import butterknife.BindView;
 
 /**
  * Created by DaiQing.Zha on 2017/3/26.
@@ -54,6 +62,12 @@ public class HandPickFragment extends BaseFragment
     private AutoLoopViewPager mLoopView;
     private AutoLoopViewAdapter mAdpGallery;
     private CirclePageIndicator mCirclePageIndicator;
+    @BindView(R.id.tv_singer)
+    TextView mTvSinger;
+    @BindView(R.id.gridView_singer)
+    GridView mGridViewSinger;
+    private List<SingerTypes.ObjBean> singerLst;
+    private SingerTypesAdapter singerTypesAdapter;
     private String mIndexTopId;
     private static String TAG = "HandPickFragment";
     /**
@@ -125,7 +139,11 @@ public class HandPickFragment extends BaseFragment
         mRfContent = findWidget(rootView,R.id.rf_content);
         mLoopView = findWidget(rootView,R.id.autoLoop);
         mCirclePageIndicator = findWidget(rootView,R.id.indy);
+        singerLst = new ArrayList<>();
+        singerTypesAdapter = new SingerTypesAdapter(father,singerLst);
+        mGridViewSinger.setAdapter(singerTypesAdapter);
         mRfContent.setOnRefreshListener(this);
+        getSingerTypes();
     }
     @Override
     public void onRefresh() {
@@ -171,6 +189,11 @@ public class HandPickFragment extends BaseFragment
             recommend.setCacheKey(cacheKey);
             return recommend;
         }
+        if (serializable instanceof SingerTypes){
+            SingerTypes singerTypes = (SingerTypes) serializable;
+            singerTypes.setCacheKey(cacheKey);
+            return singerTypes;
+        }
         Entity entity = new Entity();
         entity.setCacheKey(cacheKey);
         entity.setHaveCache(false);
@@ -190,6 +213,11 @@ public class HandPickFragment extends BaseFragment
             showAutoLoopViewPage(recommend.getObj());
             Log.e(TAG,"Recommend---------------------------------");
         }
+        if (entity instanceof SingerTypes){
+            SingerTypes singerTypes = (SingerTypes) entity;
+            singerLst.addAll(singerTypes.getObj());
+            singerTypesAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -199,7 +227,30 @@ public class HandPickFragment extends BaseFragment
         if (cacheKey.equals(getRecommendCacheKey())){
         }
     }
-
+    private void getSingerTypes(){
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                String source = HttpTools.httpPost(RoutConstant.getSingerTypesOnInter,map);
+                try{
+                    SingerTypes singerTypes = new Gson().fromJson(source,SingerTypes.class);
+                    saveCacheFile(singerTypes,getSingerTypesCacheKey());
+                    singerLst.addAll(singerTypes.getObj());
+                    father.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            singerTypesAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }catch (Exception e){
+                    readCacheFile(getSingerTypesCacheKey());
+                }
+                Log.e(TAG,"source = " + source);
+            }
+        });
+    }
     /**
      * 轮播图片适配器
      */
@@ -259,5 +310,13 @@ public class HandPickFragment extends BaseFragment
      */
     private String getRecommendCacheKey(){
         return RoutConstant.getRecommendByGroupId.replace("/","_") + HttpTools.APP_ID;
+    }
+
+    /**
+     * 获取歌手类型
+     * @return
+     */
+    private String getSingerTypesCacheKey(){
+        return RoutConstant.getSingerTypesOnInter.replace("/","_") + HttpTools.APP_ID;
     }
 }

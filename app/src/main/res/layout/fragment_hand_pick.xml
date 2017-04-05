@@ -19,6 +19,13 @@
                 android:layout_gravity="bottom" android:padding="4dp"
                 app:centered="true" />
         </FrameLayout>
+        <TextView android:id="@+id/tv_singer"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/handPickFragment_singer"/>
+        <GridView android:id="@+id/gridView_singer"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:numColumns="3" android:columnWidth="2dip">
+        </GridView>
     </LinearLayout>
 
 </com.jxnu.zha.qinglibrary.widget.RefreshLayout>
