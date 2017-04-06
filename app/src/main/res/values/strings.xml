@@ -15,7 +15,7 @@
     <string name="mainFragment_ranking">排行</string>
     <string name="mainFragment_radio">电台</string>
 
-    <string name="handPickFragment_singer">歌手</string>
+    <string name="handPickFragment_singerTypes">歌手分类</string>
 
     <string name="recommendFragment_hotRecommend">热门推荐</string>
 

@@ -155,7 +155,6 @@ public class RecommendFragment extends BaseFragment {
         if (serializable instanceof SongList){
             SongList songList = (SongList) serializable;
             songList.setCacheKey(cacheKey);
-//            Log.e("mainQWE","readData = songList");
             return songList;
         }
         Entity entity = new Entity();
@@ -181,7 +180,6 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     protected void executeOnLoadFileFailure(String cacheKey) {
-//        Log.e("mainQWE","cacheKey = " + cacheKey);
         super.executeOnLoadFileFailure(cacheKey);
         if (cacheKey.equals(getSongLabelCacheKey())){
             for (int i = 0; i < mHotRecommendNum; i ++){
@@ -203,7 +201,8 @@ public class RecommendFragment extends BaseFragment {
     private void showAutoLoopViewPage(final List<SongList.ObjEntity.ListMusicEntity> listMusicEntity){
 
         // 固定ViewPager高度为屏幕宽度的一半
-        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
+//        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
+        mLoopView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.autoLoopViewPager_height);
         mAdpGallery = new AutoLoopViewAdapter(father, listMusicEntity);
         mLoopView.setAdapter(mAdpGallery);
         mLoopView.setBoundaryCaching(true);

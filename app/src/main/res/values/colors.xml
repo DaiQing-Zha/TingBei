@@ -7,4 +7,9 @@
 
     <color name="color_commWhite">#FFFFFF</color>
     <color name="color_commBlack33">#333333</color>
+    <color name="color_commGrayE0">#E0E0E0</color>
+    <color name="color_commGrayF0">#F0F0F0</color>
+    <color name="color_commGrayD0">#d0d0d0</color>
+    <color name="color_commGray9D">#9D9D9D</color>
+    <color name="color_commLightGreen">#00BB00</color>
 </resources>

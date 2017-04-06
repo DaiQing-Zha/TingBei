@@ -16,15 +16,20 @@
             android:layout_gravity="bottom" android:padding="4dp"
             app:centered="true" />
     </FrameLayout>
-    <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_marginLeft="8dip" android:textColor="@color/color_commBlack33"
-        android:textSize="@dimen/comm_size14" android:text="@string/recommendFragment_hotRecommend"/>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical"
+        android:padding="6dip" android:background="@color/color_commGrayE0">
+        <ImageView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@mipmap/ic_recommend_hot"/>
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+            android:text="@string/recommendFragment_hotRecommend"/>
+    </LinearLayout>
     <com.jxnu.zha.tingbei.widgets.HorizontalListView android:id="@+id/hzLst"
         android:layout_width="match_parent" android:layout_height="75dip">
 
     </com.jxnu.zha.tingbei.widgets.HorizontalListView>
-    <ImageView
-        android:layout_width="match_parent" android:layout_height="match_parent"
-        android:background="#FF0000"/>
 </LinearLayout>

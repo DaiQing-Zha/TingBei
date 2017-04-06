@@ -2,7 +2,6 @@ package com.jxnu.zha.tingbei.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,7 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.jxnu.zha.qinglibrary.util.DeviceUtil;
 import com.jxnu.zha.qinglibrary.widget.RefreshLayout;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
@@ -36,12 +32,9 @@ import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
-import com.jxnu.zha.tingbei.model.RadioList;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.model.RecommendGroup;
-import com.jxnu.zha.tingbei.model.Singer;
 import com.jxnu.zha.tingbei.model.SingerTypes;
-import com.jxnu.zha.tingbei.model.SongLabel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,16 +54,17 @@ import butterknife.BindView;
 public class HandPickFragment extends BaseFragment
         implements SwipeRefreshLayout.OnRefreshListener{
 
-    private RefreshLayout mRfContent;
-    private AutoLoopViewPager mLoopView;
-    private AutoLoopViewAdapter mAdpGallery;
-    private CirclePageIndicator mCirclePageIndicator;
-    @BindView(R.id.tv_singer)
-    TextView mTvSinger;
+    @BindView(R.id.rf_content)
+    RefreshLayout mRfContent;
+    @BindView(R.id.autoLoop)
+    AutoLoopViewPager mLoopView;
+    @BindView(R.id.indy)
+    CirclePageIndicator mCirclePageIndicator;
     @BindView(R.id.gridView_singer)
-    GridView mGridViewSinger;
-    private List<SingerTypes.ObjBean> singerLst;
-    private SingerTypesAdapter singerTypesAdapter;
+    GridView mGVSingerTypes;
+    private List<SingerTypes.ObjBean> mSingerTypes;
+    private AutoLoopViewAdapter mAutoLoopViewAdapter;
+    private SingerTypesAdapter mSingerTypesAdapter;
     private String mIndexTopId;
     private static String TAG = "HandPickFragment";
     /**
@@ -137,42 +131,71 @@ public class HandPickFragment extends BaseFragment
 
     @Override
     public void builderView(View rootView) {
-
-        mRQueue.add(requestRecommendGroup);//http://blog.csdn.net/baidu_31093133/article/details/51525113?locationNum=7&fps=1 q1
-        mRfContent = findWidget(rootView,R.id.rf_content);
-        mLoopView = findWidget(rootView,R.id.autoLoop);
-        mCirclePageIndicator = findWidget(rootView,R.id.indy);
-        singerLst = new ArrayList<>();
-        singerTypesAdapter = new SingerTypesAdapter(father,singerLst);
-        mGridViewSinger.setAdapter(singerTypesAdapter);
+        mSingerTypes = new ArrayList<>();
+        mSingerTypesAdapter = new SingerTypesAdapter(father, mSingerTypes);
+        mGVSingerTypes.setAdapter(mSingerTypesAdapter);
         mRfContent.setOnRefreshListener(this);
-        getSingerTypes();
-        mGridViewSinger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGVSingerTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(father, SingerActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("typeId",singerLst.get(position).getId());
+                bundle.putString("typeId", mSingerTypes.get(position).getId());
                 intent.putExtra("bundle",bundle);
                 startActivity(intent);
             }
         });
+        getRecommendGroup();
+        getSingerTypes();
     }
     @Override
     public void onRefresh() {
+        getRecommendGroup();
+        getSingerTypes();
+    }
+    /**
+     * 获取推荐分组
+     */
+    private void getRecommendGroup(){
         mRQueue.add(requestRecommendGroup);
     }
-
+    /**
+     * 获取歌手类型
+     */
+    private void getSingerTypes(){
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                String source = HttpTools.httpPost(RoutConstant.getSingerTypesOnInter,map);
+                try{
+                    SingerTypes singerTypes = new Gson().fromJson(source,SingerTypes.class);
+                    saveCacheFile(singerTypes,getSingerTypesCacheKey());
+                    mSingerTypes.clear();
+                    mSingerTypes.addAll(singerTypes.getObj());
+                    father.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSingerTypesAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }catch (Exception e){
+                    readCacheFile(getSingerTypesCacheKey());
+                }
+                Log.e(TAG,"source = " + source);
+            }
+        });
+    }
     /**
      * 显示首页轮播图片
      * @param data
      */
     private void showAutoLoopViewPage(final List<Recommend.ObjEntity> data){
 
-        // 固定ViewPager高度为屏幕宽度的一半
-        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
-        mAdpGallery = new AutoLoopViewAdapter(father, data);
-        mLoopView.setAdapter(mAdpGallery);
+        mLoopView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.autoLoopViewPager_height);
+        mAutoLoopViewAdapter = new AutoLoopViewAdapter(father, data);
+        mLoopView.setAdapter(mAutoLoopViewAdapter);
         mLoopView.setBoundaryCaching(true);
         mLoopView.setAutoScrollDurationFactor(10d);
         mLoopView.setInterval(3000);
@@ -228,41 +251,34 @@ public class HandPickFragment extends BaseFragment
         }
         if (entity instanceof SingerTypes){
             SingerTypes singerTypes = (SingerTypes) entity;
-            singerLst.addAll(singerTypes.getObj());
-            singerTypesAdapter.notifyDataSetChanged();
+            mSingerTypes.addAll(singerTypes.getObj());
+            mSingerTypesAdapter.notifyDataSetChanged();
         }
     }
-
     @Override
     protected void executeOnLoadFileFailure(String cacheKey) {
-        if (cacheKey.equals(getRecommendGroupCacheKey())){
-        }
-        if (cacheKey.equals(getRecommendCacheKey())){
-        }
+
     }
-    private void getSingerTypes(){
-        ThreadPool.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                Map map = new HashMap();
-                map.put("appid",HttpTools.APP_ID);
-                String source = HttpTools.httpPost(RoutConstant.getSingerTypesOnInter,map);
-                try{
-                    SingerTypes singerTypes = new Gson().fromJson(source,SingerTypes.class);
-                    saveCacheFile(singerTypes,getSingerTypesCacheKey());
-                    singerLst.addAll(singerTypes.getObj());
-                    father.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            singerTypesAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }catch (Exception e){
-                    readCacheFile(getSingerTypesCacheKey());
-                }
-                Log.e(TAG,"source = " + source);
-            }
-        });
+    /**
+     * 获取recommendGroup的缓存key
+     * @return
+     */
+    private String getRecommendGroupCacheKey(){
+        return RoutConstant.getRecommendGroupOnInter.replace("/","_") + HttpTools.APP_ID;
+    }
+    /**
+     * 获取recommend的缓存key
+     * @return
+     */
+    private String getRecommendCacheKey(){
+        return RoutConstant.getRecommendByGroupId.replace("/","_") + HttpTools.APP_ID;
+    }
+    /**
+     * 获取歌手类型
+     * @return
+     */
+    private String getSingerTypesCacheKey(){
+        return RoutConstant.getSingerTypesOnInter.replace("/","_") + HttpTools.APP_ID;
     }
     /**
      * 轮播图片适配器
@@ -308,28 +324,5 @@ public class HandPickFragment extends BaseFragment
             views.add(image);
             container.removeView(image);
         }
-    }
-
-    /**
-     * 获取recommendGroup的缓存key
-     * @return
-     */
-    private String getRecommendGroupCacheKey(){
-        return RoutConstant.getRecommendGroupOnInter.replace("/","_") + HttpTools.APP_ID;
-    }
-    /**
-     * 获取recommend的缓存key
-     * @return
-     */
-    private String getRecommendCacheKey(){
-        return RoutConstant.getRecommendByGroupId.replace("/","_") + HttpTools.APP_ID;
-    }
-
-    /**
-     * 获取歌手类型
-     * @return
-     */
-    private String getSingerTypesCacheKey(){
-        return RoutConstant.getSingerTypesOnInter.replace("/","_") + HttpTools.APP_ID;
     }
 }

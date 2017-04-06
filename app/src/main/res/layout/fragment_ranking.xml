@@ -8,25 +8,46 @@
         <LinearLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/rankingFragment_recommendBand"
-                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
-                android:background="@color/colorPrimary"/>
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="6dip" android:background="@color/color_commGrayE0">
+                <ImageView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_ranking_recommend"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                    android:text="@string/rankingFragment_recommendBand"/>
+            </LinearLayout>
             <ListView android:id="@+id/lst_bandList1"
                 android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/rankingFragment_noRecommendBand"
-                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
-                android:background="@color/colorPrimary"/>
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="6dip" android:background="@color/color_commGrayE0">
+                <ImageView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_ranking_no_recommend"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                    android:text="@string/rankingFragment_noRecommendBand"/>
+            </LinearLayout>
             <ListView android:id="@+id/lst_bandList2"
                 android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/rankingFragment_labelBand"
-                android:textSize="@dimen/comm_size18" android:textColor="@color/color_commWhite"
-                android:background="@color/colorPrimary"/>
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="6dip" android:background="@color/color_commGrayE0">
+                <ImageView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_ranking_label"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                    android:text="@string/rankingFragment_labelBand"/>
+            </LinearLayout>
             <ListView android:id="@+id/lst_bandList3"
                 android:layout_width="match_parent" android:layout_height="wrap_content"></ListView>
         </LinearLayout>

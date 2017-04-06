@@ -1,5 +1,7 @@
 package com.jxnu.zha.tingbei;
 
+import com.jxnu.zha.qinglibrary.util.DensityUtil;
+
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -51,5 +53,9 @@ public class ExampleUnitTest {
                 e1.printStackTrace();
             }
         }
+    }
+
+    @Test
+    public void testHeight(){
     }
 }

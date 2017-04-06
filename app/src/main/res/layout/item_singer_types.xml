@@ -4,5 +4,6 @@
     android:layout_height="match_parent">
     <TextView android:id="@+id/tvSingerTypeName"
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:padding="8dip" android:background="@color/color_commGray" />
+        android:padding="8dip" android:textSize="@dimen/comm_size16"
+        android:textColor="@color/color_commLightGreen" android:background="@color/color_commGrayF0" />
 </LinearLayout>

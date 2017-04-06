@@ -95,6 +95,7 @@ public class SingerActivity extends AbstractActivity implements View.OnClickList
         mSingerLst = new ArrayList<>();
         mSingerAdapter = new SingerAdapter(this,mSingerLst);
         mLstSinger.setAdapter(mSingerAdapter);
+        mLoadStatusBox.loading();
         mRQueue.add(singerList);
         mLstSinger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

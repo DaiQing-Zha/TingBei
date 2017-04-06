@@ -53,7 +53,7 @@
     <!-- 选择false时会有滑动动画 -->
     <bool name="default_circle_indicator_snap">false</bool>
     <!-- 未选中时周围圈的颜色 -->
-    <color name="default_circle_indicator_stroke_color">#FF0000</color>
+    <color name="default_circle_indicator_stroke_color">#CCCCCC</color>
     <bool name="default_circle_indicator_centered">true</bool>
     <color name="default_circle_indicator_fill_color">#FFFFFFFF</color>
     <!-- FF0000 -->

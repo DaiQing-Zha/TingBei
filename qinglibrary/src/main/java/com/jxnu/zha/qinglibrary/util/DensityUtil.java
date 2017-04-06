@@ -74,7 +74,16 @@ public class DensityUtil {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (pxVal / scale);
     }
-
+    /**
+     * dp转px
+     * @param context
+     * @param dpVal
+     * @return
+     */
+    public static float dp2px(Context context, float dpVal) {
+        final float scale=context.getResources().getDisplayMetrics().density;
+        return (int)(dpVal*scale+0.5f);
+    }
     /**
      * px转sp
      *

@@ -19,9 +19,18 @@
                 android:layout_gravity="bottom" android:padding="4dp"
                 app:centered="true" />
         </FrameLayout>
-        <TextView android:id="@+id/tv_singer"
+        <LinearLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/handPickFragment_singer"/>
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:padding="6dip" android:background="@color/color_commGrayE0">
+            <ImageView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:src="@mipmap/ic_hand_pick_singer_classify"/>
+            <TextView android:id="@+id/tv_singer"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                android:text="@string/handPickFragment_singerTypes"/>
+        </LinearLayout>
         <GridView android:id="@+id/gridView_singer"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:numColumns="3" android:columnWidth="2dip">

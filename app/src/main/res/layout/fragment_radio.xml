@@ -6,17 +6,34 @@
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip" android:textColor="@color/color_commBlack33"
-            android:textSize="@dimen/comm_size14" android:text="@string/radioFragment_hotRecommend"/>
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:padding="6dip" android:background="@color/color_commGrayE0">
+            <ImageView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:src="@mipmap/ic_ranking_recommend"/>
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                android:text="@string/radioFragment_hotRecommend"/>
+        </LinearLayout>
+
         <GridView android:id="@+id/gridView_hotRecommend"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:numColumns="2"></GridView>
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip" android:textColor="@color/color_commBlack33"
-            android:textSize="@dimen/comm_size14" android:text="@string/radioFragment_labelRadio"/>
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:padding="6dip" android:background="@color/color_commGrayE0">
+            <ImageView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:src="@mipmap/ic_ranking_label"/>
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
+                android:text="@string/radioFragment_labelRadio"/>
+        </LinearLayout>
         <GridView android:id="@+id/gridView_labelRadio"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:numColumns="2"></GridView>
