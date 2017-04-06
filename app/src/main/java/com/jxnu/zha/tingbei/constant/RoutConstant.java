@@ -79,4 +79,8 @@ public class RoutConstant {
      * 根据歌手ID获取歌曲信息
      */
     public final static String getMusicBySingerId = "inter/getMusicBySingerId";
+    /**
+     * 根据歌曲ID获取彩铃及振铃信息
+     */
+    public final static String getRingInfoByMusicId = "inter/getRingInfoByMusicId";
 }

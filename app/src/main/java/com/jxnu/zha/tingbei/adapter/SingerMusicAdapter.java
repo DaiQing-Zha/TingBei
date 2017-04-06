@@ -43,7 +43,7 @@ public class SingerMusicAdapter extends BaseCustomAdapter {
             helper = (ViewHelper) convertView.getTag();
         }
         Music.ObjEntity objEntity = musicLst.get(position);
-        ImageManager.getInstance().displayImage(objEntity.getMusicSingerPicPath(), helper.imgMusicIcon,
+        ImageManager.getInstance().displayImage(objEntity.getMusicPathBak(), helper.imgMusicIcon,
                 ImageManager.getRadioIconOptions());
         helper.tvMusicName.setText(objEntity.getName());
         return convertView;

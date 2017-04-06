@@ -1,12 +1,14 @@
 package com.jxnu.zha.tingbei.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -14,6 +16,8 @@ import com.jxnu.zha.qinglibrary.util.DeviceUtil;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.activity.LabelSongListActivity;
+import com.jxnu.zha.tingbei.activity.SingerMusicActivity;
 import com.jxnu.zha.tingbei.adapter.HotRecommendAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -21,6 +25,7 @@ import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
+import com.jxnu.zha.tingbei.model.LabelSongList;
 import com.jxnu.zha.tingbei.model.SongLabel;
 import com.jxnu.zha.tingbei.model.SongList;
 import com.jxnu.zha.tingbei.widgets.HorizontalListView;
@@ -65,6 +70,16 @@ public class RecommendFragment extends BaseFragment {
         lstHotRecommend = new ArrayList<>();
         mHotRecommendAdapter = new HotRecommendAdapter(father, lstHotRecommend);
         mHzLstHotRecommend.setAdapter(mHotRecommendAdapter);
+        mHzLstHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(father, LabelSongListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("labelid",lstHotRecommend.get(i).getId());
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
+            }
+        });
         getDefaultRecommend();
         getHotRecommend();
     }

@@ -39,7 +39,10 @@
         <activity android:name=".activity.SingerActivity">
         </activity>
         <activity android:name=".activity.SingerMusicActivity">
-
+        </activity>
+        <activity android:name=".activity.LabelSongListActivity">
+        </activity>
+        <activity android:name=".activity.RingInfoActivity">
         </activity>
     </application>
 
