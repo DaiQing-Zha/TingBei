@@ -3,7 +3,6 @@ package com.jxnu.zha.tingbei.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,7 +25,6 @@ import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import cz.msebera.android.httpclient.Header;
 
 public class MusicDetailActivity extends AbstractActivity implements View.OnClickListener{
 
@@ -90,10 +87,11 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     protected void init() {
         Intent intent = getIntent();
         Recommend.ObjEntity objEntity = (Recommend.ObjEntity) intent.getSerializableExtra("obj");
+        setTitle(objEntity.getTitle());
         mReleaseId = objEntity.getMusicListReleaseId();
         mPicPath = objEntity.getPicPath();
         ImageManager.getInstance().displayImage(mPicPath, mImgTopBg,
-                ImageManager.getNewsHeadOptions());
+                ImageManager.getBackPictureOptions());
         mLoadStatusBox.setOnClickListener(this);
         mObjBeanList = new ArrayList<>();
         mMusicListAdapter = new MusicListAdapter(this,mObjBeanList);

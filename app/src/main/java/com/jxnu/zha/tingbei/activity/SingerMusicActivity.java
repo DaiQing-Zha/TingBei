@@ -103,6 +103,7 @@ public class SingerMusicActivity extends AbstractActivity implements View.OnClic
                 Intent intent = new Intent(SingerMusicActivity.this, RingInfoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("musicId",mMusicLst.get(position).getId());
+                bundle.putString("musicName",mMusicLst.get(position).getName());
                 intent.putExtra("bundle",bundle);
                 startActivity(intent);
             }

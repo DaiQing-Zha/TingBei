@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -12,13 +14,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
+import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.RingInfo;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.jxnu.zha.tingbei.widgets.CircleImageView;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -29,11 +34,21 @@ import butterknife.BindView;
 /**
  * Created by DaiQing.Zha on 2017/4/6 0006.
  */
-public class RingInfoActivity extends AbstractActivity {
+public class RingInfoActivity extends AbstractActivity implements View.OnClickListener{
 
-    @BindView(R.id.tv_cooperation)
-    TextView tv_cooperation;
+    @BindView(R.id.img_musicBg)
+    ImageView img_musicBg;
+    @BindView(R.id.img_singerIcon)
+    CircleImageView img_singerIcon;
+    @BindView(R.id.tv_musicName)
+    TextView tv_musicName;
+    @BindView(R.id.tv_singerName)
+    TextView tv_singerName;
+
+    @BindView(R.id.loadStatusBox)
+    LoadStatusBox mLoadStatusBox;
     private String musicId;
+    private String musicName;
     private String TAG = "RingInfoActivity";
     StringRequest ringInfoQueue = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getRingInfoByMusicId)
@@ -41,8 +56,14 @@ public class RingInfoActivity extends AbstractActivity {
         @Override
         public void onResponse(String response) {
             Log.e(TAG,"response = " + response);
+            mLoadStatusBox.loadSuccess();
             RingInfo ringInfo = new Gson().fromJson(response,RingInfo.class);
-            tv_cooperation.setText(ringInfo.getObj().getCooperation());
+            ImageManager.getInstance().displayImage(ringInfo.getObj().getMusicPicPath(), img_musicBg,
+                    ImageManager.getBackPictureOptions());
+            ImageManager.getInstance().displayImage(ringInfo.getObj().getMusicSingerPicPath(), img_singerIcon,
+                    ImageManager.getUserImageOptions());
+            tv_musicName.setText(ringInfo.getObj().getName());
+            tv_singerName.setText(ringInfo.getObj().getSingerName());
             saveCache(ringInfo);
         }
     }, new Response.ErrorListener() {
@@ -74,11 +95,15 @@ public class RingInfoActivity extends AbstractActivity {
         Bundle bundle = intent.getBundleExtra("bundle");
         if (bundle != null){
             musicId = bundle.getString("musicId");
+            musicName = bundle.getString("musicName");
         }
+        setTitle(musicName);
+        mLoadStatusBox.setOnClickListener(this);
         getRingInfo();
     }
 
     private void getRingInfo(){
+        mLoadStatusBox.loading();
         mRQueue.add(ringInfoQueue);
     }
 
@@ -95,13 +120,29 @@ public class RingInfoActivity extends AbstractActivity {
     @Override
     protected void executeOnLoadDataSuccess(Entity entity) {
         super.executeOnLoadDataSuccess(entity);
+        mLoadStatusBox.loadSuccess();
         RingInfo ringInfo = (RingInfo) entity;
-        tv_cooperation.setText(ringInfo.getObj().getCooperation());
+        ImageManager.getInstance().displayImage(ringInfo.getObj().getMusicPicPath(), img_musicBg,
+                ImageManager.getBackPictureOptions());
+        ImageManager.getInstance().displayImage(ringInfo.getObj().getMusicSingerPicPath(), img_singerIcon,
+                ImageManager.getUserImageOptions());
+        tv_musicName.setText(ringInfo.getObj().getName());
+        tv_singerName.setText(ringInfo.getObj().getSingerName());
     }
 
     @Override
     protected void executeOnLoadDataFailure(String errorInfo) {
         super.executeOnLoadDataFailure(errorInfo);
+        mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
         showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.loadStatusBox:
+                getRingInfo();
+                break;
+        }
     }
 }

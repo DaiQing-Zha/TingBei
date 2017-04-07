@@ -44,6 +44,8 @@
         </activity>
         <activity android:name=".activity.RingInfoActivity">
         </activity>
+        <activity android:name=".activity.RecommendSongActivity">
+        </activity>
     </application>
 
 </manifest>

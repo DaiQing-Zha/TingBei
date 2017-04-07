@@ -46,7 +46,7 @@ public class LabelSongListAdapter extends BaseCustomAdapter {
         }
         LabelSongList.ObjBean objBean = labelSongLst.get(position);
         ImageManager.getInstance().displayImage(objBean.getPicPathSmall(), helper.img_songIcon,
-                ImageManager.getRadioIconOptions());
+                ImageManager.getMusicIconOptions());
         helper.tv_titleName.setText(objBean.getTitle());
         return convertView;
     }

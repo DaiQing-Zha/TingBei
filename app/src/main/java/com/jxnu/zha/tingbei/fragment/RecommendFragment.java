@@ -12,12 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.jxnu.zha.qinglibrary.util.DeviceUtil;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.activity.LabelSongListActivity;
-import com.jxnu.zha.tingbei.activity.SingerMusicActivity;
+import com.jxnu.zha.tingbei.activity.RecommendSongActivity;
 import com.jxnu.zha.tingbei.adapter.HotRecommendAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -25,7 +24,6 @@ import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
-import com.jxnu.zha.tingbei.model.LabelSongList;
 import com.jxnu.zha.tingbei.model.SongLabel;
 import com.jxnu.zha.tingbei.model.SongList;
 import com.jxnu.zha.tingbei.widgets.HorizontalListView;
@@ -53,6 +51,7 @@ public class RecommendFragment extends BaseFragment {
     AutoLoopViewPager mLoopView;
     @BindView(R.id.indy)
     CirclePageIndicator mCirclePageIndicator;
+    private SongList songList;
     private AutoLoopViewAdapter mAdpGallery;
     private int mSongListRow = 1;
     private int mSongListPage = 1;
@@ -76,6 +75,7 @@ public class RecommendFragment extends BaseFragment {
                 Intent intent = new Intent(father, LabelSongListActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("labelid",lstHotRecommend.get(i).getId());
+                bundle.putString("labelName",lstHotRecommend.get(i).getName());
                 intent.putExtra("bundle",bundle);
                 startActivity(intent);
             }
@@ -93,7 +93,7 @@ public class RecommendFragment extends BaseFragment {
                 map.put("page", mSongListPage);
                 String source = HttpTools.httpPost(RoutConstant.getSongListByRecommend,map);
                 try{
-                    final SongList songList = new Gson().fromJson(source,SongList.class);
+                    songList = new Gson().fromJson(source,SongList.class);
                     Log.e(TAG,"------------songList = " + songList.getObj().size());
                     father.runOnUiThread(new Runnable() {
                         @Override
@@ -214,7 +214,11 @@ public class RecommendFragment extends BaseFragment {
         mLoopView.setOnItemClickListener(new AutoLoopViewPager.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-               //TODO:页面跳转
+                Intent intent = new Intent(father, RecommendSongActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("song",listMusicEntity.get(position));
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
             }
         });
     }
@@ -251,7 +255,7 @@ public class RecommendFragment extends BaseFragment {
                 image.setId(count ++);
             }
             ImageManager.getInstance().displayImage(listMusicEntity.get(position).getMusicPicPath(), image,
-                    ImageManager.getNewsHeadOptions());
+                    ImageManager.getBackPictureOptions());
             container.addView(image);
             return image;
         }

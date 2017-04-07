@@ -1,11 +1,8 @@
 package com.jxnu.zha.tingbei.manager;
-import android.graphics.Bitmap;
 
 import com.jxnu.zha.tingbei.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 public class ImageManager {
 	/**
@@ -21,11 +18,11 @@ public class ImageManager {
 	 * 新闻图片缓存设置
 	 */
 
-	private static DisplayImageOptions newsHeadOptions;
+	private static DisplayImageOptions backPictureOptions;
 
-	public static DisplayImageOptions getNewsHeadOptions() {
-		if (newsHeadOptions == null) {
-			newsHeadOptions = new DisplayImageOptions.Builder()
+	public static DisplayImageOptions getBackPictureOptions() {
+		if (backPictureOptions == null) {
+			backPictureOptions = new DisplayImageOptions.Builder()
 					.showImageForEmptyUri(R.mipmap.ic_default_unload)
 					.showImageOnFail(R.mipmap.ic_default_unload)
 					.showImageOnLoading(R.mipmap.ic_default_unload)
@@ -33,7 +30,7 @@ public class ImageManager {
 					.cacheOnDisc(true)// 缓存文件
 					.build();
 		}
-		return newsHeadOptions;
+		return backPictureOptions;
 	}
 
 	private static DisplayImageOptions userImageOptions;
@@ -60,6 +57,32 @@ public class ImageManager {
 					.build();
 		}
 		return radioIconOptions;
+	}
+
+	private static DisplayImageOptions musicIconOptions;
+	public static DisplayImageOptions getMusicIconOptions() {
+		if (musicIconOptions == null) {
+			musicIconOptions = new DisplayImageOptions.Builder()
+					.showImageForEmptyUri(R.mipmap.ic_music_icon)
+					.showImageOnFail(R.mipmap.ic_music_icon)
+					.cacheInMemory(true) // 缓存内存
+					.cacheOnDisc(true)// 缓存文件
+					.build();
+		}
+		return musicIconOptions;
+	}
+
+	private static DisplayImageOptions userIconOptions;
+	public static DisplayImageOptions getUserIconOptions() {
+		if (userIconOptions == null) {
+			userIconOptions = new DisplayImageOptions.Builder()
+					.showImageForEmptyUri(R.mipmap.ic_defalut_signer)
+					.showImageOnFail(R.mipmap.ic_defalut_signer)
+					.cacheInMemory(true) // 缓存内存
+					.cacheOnDisc(true)// 缓存文件
+					.build();
+		}
+		return userIconOptions;
 	}
 
 }

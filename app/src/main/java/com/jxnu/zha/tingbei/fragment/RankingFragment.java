@@ -148,8 +148,6 @@ public class RankingFragment extends BaseFragment {
             }
         });
     }
-
-
     @Override
     protected Entity readData(Serializable serializable, String cacheKey) {
         if (serializable instanceof BangList) {

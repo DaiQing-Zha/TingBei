@@ -36,21 +36,21 @@ public class RadioListAdapter extends BaseCustomAdapter {
         if (convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_hot_recommed_radio,null);
             helper = new ViewHelper();
-            helper.imgRadioIcon = (CircleImageView) convertView.findViewById(R.id.img_radioIcon);
+            helper.imgRadioIcon = (ImageView) convertView.findViewById(R.id.img_radioIcon);
             helper.tvRadioName = (TextView) convertView.findViewById(R.id.tv_radioName);
             convertView.setTag(helper);
         }else{
             helper = (ViewHelper) convertView.getTag();
         }
         RadioList.ObjEntity objEntity = radioList.get(position);
-        ImageManager.getInstance().displayImage(objEntity.getPicPathSmall(), helper.imgRadioIcon,
+        ImageManager.getInstance().displayImage(objEntity.getPicPath(), helper.imgRadioIcon,
                 ImageManager.getRadioIconOptions());
         helper.tvRadioName.setText(objEntity.getName());
         return convertView;
     }
 
     class ViewHelper{
-        CircleImageView imgRadioIcon;
+        ImageView imgRadioIcon;
         TextView tvRadioName;
     }
 }

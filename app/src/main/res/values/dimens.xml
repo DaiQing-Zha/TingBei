@@ -14,4 +14,6 @@
     <dimen name="item_marginHorizontal">8dip</dimen>
 
     <dimen name="musicDetail_topImgHeight">180dip</dimen>
+    <dimen name="ringInfo_topImgHeight">180dip</dimen>
+    <dimen name="recommendSong_topImgHeight">180dip</dimen>
 </resources>

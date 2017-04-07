@@ -45,6 +45,7 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
     private List<LabelSongList.ObjBean> mLabelSongLst;
     private LabelSongListAdapter mSongListAdapter;
     private String labelId;
+    private String labelName;
     private String TAG = "LabelSongActivity";
     StringRequest songListQueue = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getSongListByLabelId)
@@ -89,7 +90,9 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
         Bundle bundle = intent.getBundleExtra("bundle");
         if (bundle != null){
             labelId = bundle.getString("labelid");
+            labelName = bundle.getString("labelName");
         }
+        setTitle(labelName);
         mLoadStatusBox.setOnClickListener(this);
         mLabelSongLst = new ArrayList<>();
         mSongListAdapter = new LabelSongListAdapter(this,mLabelSongLst);

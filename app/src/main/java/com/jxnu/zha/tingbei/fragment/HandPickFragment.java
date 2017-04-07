@@ -315,7 +315,7 @@ public class HandPickFragment extends BaseFragment
             }
             Log.e(TAG,"url = " + listRecommend.get(position).getPicPathSmall());
             ImageManager.getInstance().displayImage(listRecommend.get(position).getPicPathSmall(), image,
-                    ImageManager.getNewsHeadOptions());
+                    ImageManager.getBackPictureOptions());
             container.addView(image);
             return image;
         }
