@@ -20,11 +20,11 @@ import java.util.List;
  * email:13767191284@163.com
  * description:
  */
-public class SingerAdapter extends BaseCustomAdapter {
+public class TypeSingerAdapter extends BaseCustomAdapter {
     private Context context;
     private List<Singer.ObjEntity> singerLst;
 
-    public SingerAdapter(Context context, List<Singer.ObjEntity> singerLst) {
+    public TypeSingerAdapter(Context context, List<Singer.ObjEntity> singerLst) {
         super(context, singerLst);
         this.context = context;
         this.singerLst = singerLst;

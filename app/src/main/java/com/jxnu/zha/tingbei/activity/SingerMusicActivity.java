@@ -45,6 +45,7 @@ public class SingerMusicActivity extends AbstractActivity implements View.OnClic
     private List<Music.ObjEntity> mMusicLst;
     private SingerMusicAdapter mSingerMusicAdapter;
     private String singerId;
+    private String singerName;
     private String TAG = "SingerMusicActivity";
     StringRequest musicListQueue = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getMusicBySingerId)
@@ -89,7 +90,9 @@ public class SingerMusicActivity extends AbstractActivity implements View.OnClic
         Bundle bundle = intent.getBundleExtra("bundle");
         if (bundle != null){
             singerId = bundle.getString("singerId");
+            singerName = bundle.getString("singerName");
         }
+        setTitle(singerName);
         mLoadStatusBox.setOnClickListener(this);
         mMusicLst = new ArrayList<>();
         mSingerMusicAdapter = new SingerMusicAdapter(this,mMusicLst);

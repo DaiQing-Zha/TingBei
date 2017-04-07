@@ -16,12 +16,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
-import com.jxnu.zha.tingbei.adapter.SingerAdapter;
+import com.jxnu.zha.tingbei.adapter.TypeSingerAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.model.Entity;
-import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Singer;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 
@@ -38,26 +37,27 @@ import butterknife.BindView;
  * email:13767191284@163.com
  * description:
  */
-public class SingerActivity extends AbstractActivity implements View.OnClickListener{
+public class TypeSingerActivity extends AbstractActivity implements View.OnClickListener{
 
     @BindView(R.id.lst_singerList)
-    ListView mLstSinger;
+    ListView mListViewSinger;
     @BindView(R.id.loadStatusBox)
     LoadStatusBox mLoadStatusBox;
-    private List<Singer.ObjEntity> mSingerLst;
-    private SingerAdapter mSingerAdapter;
+    private List<Singer.ObjEntity> mLstSinger;
+    private TypeSingerAdapter mSingerAdapter;
     private String typeId = "";
+    private String typeName = "";
     /**
      * 获取推荐页分组
      */
-    StringRequest singerList = new StringRequest(Request.Method.POST
+    StringRequest singerListRequest = new StringRequest(Request.Method.POST
             , HttpTools.getAbsoluteUrl(RoutConstant.getSingerBySingerType)
             , new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
             mLoadStatusBox.loadSuccess();
             Singer singer = new Gson().fromJson(response,Singer.class);
-            mSingerLst.addAll(singer.getObj());
+            mLstSinger.addAll(singer.getObj());
             mSingerAdapter.notifyDataSetChanged();
             saveCache(singer);
         }
@@ -91,23 +91,33 @@ public class SingerActivity extends AbstractActivity implements View.OnClickList
         Bundle bundle = intent.getBundleExtra("bundle");
         if (bundle != null){
             typeId = bundle.getString("typeId");
+            typeName = bundle.getString("typeName");
         }
-        mSingerLst = new ArrayList<>();
-        mSingerAdapter = new SingerAdapter(this,mSingerLst);
-        mLstSinger.setAdapter(mSingerAdapter);
-        mLoadStatusBox.loading();
-        mRQueue.add(singerList);
-        mLstSinger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setTitle(typeName);
+        mLstSinger = new ArrayList<>();
+        mSingerAdapter = new TypeSingerAdapter(this,mLstSinger);
+        mListViewSinger.setAdapter(mSingerAdapter);
+        mListViewSinger.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SingerActivity.this, SingerMusicActivity.class);
+                Intent intent = new Intent(TypeSingerActivity.this, SingerMusicActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("singerId",mSingerLst.get(position).getId());
+                bundle.putString("singerId",mLstSinger.get(position).getId());
+                bundle.putString("singerName",mLstSinger.get(position).getName());
                 intent.putExtra("bundle",bundle);
                 startActivity(intent);
             }
         });
         mLoadStatusBox.setOnClickListener(this);
+        getSingerListByTypes();
+    }
+
+    /**
+     * 根据类型获取歌手列表
+     */
+    private void getSingerListByTypes(){
+        mLoadStatusBox.loading();
+        mRQueue.add(singerListRequest);
     }
 
     @Override
@@ -125,7 +135,7 @@ public class SingerActivity extends AbstractActivity implements View.OnClickList
         super.executeOnLoadDataSuccess(entity);
         mLoadStatusBox.loadSuccess();
         Singer singer = (Singer) entity;
-        mSingerLst.addAll(singer.getObj());
+        mLstSinger.addAll(singer.getObj());
         mSingerAdapter.notifyDataSetChanged();
     }
 
@@ -141,7 +151,7 @@ public class SingerActivity extends AbstractActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.loadStatusBox:
                 mLoadStatusBox.loading();
-                mRQueue.add(singerList);
+                mRQueue.add(singerListRequest);
                 break;
         }
     }

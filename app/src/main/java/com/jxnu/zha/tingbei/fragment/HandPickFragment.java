@@ -24,7 +24,7 @@ import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.CirclePageIndicator;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
-import com.jxnu.zha.tingbei.activity.SingerActivity;
+import com.jxnu.zha.tingbei.activity.TypeSingerActivity;
 import com.jxnu.zha.tingbei.adapter.SingerTypesAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -138,9 +138,10 @@ public class HandPickFragment extends BaseFragment
         mGVSingerTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(father, SingerActivity.class);
+                Intent intent = new Intent(father, TypeSingerActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("typeId", mSingerTypes.get(position).getId());
+                bundle.putString("typeName", mSingerTypes.get(position).getDicValue());
                 intent.putExtra("bundle",bundle);
                 startActivity(intent);
             }
