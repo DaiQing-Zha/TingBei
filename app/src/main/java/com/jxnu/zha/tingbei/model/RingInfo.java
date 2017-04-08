@@ -62,6 +62,9 @@ public class RingInfo extends Entity{
         private String singerName;
         private String singerNameSpell;
         private String valueFrom;
+        private List<SetRingCallBean> setRingCall;
+        private List<SetRingToneBean> setRingTone;
+
         /**
          * cooperation : 移动
          * id : 402880e54cefbea5014cefc596070140
@@ -69,15 +72,12 @@ public class RingInfo extends Entity{
          * ringCallPath :
          */
 
-        private List<SetRingCallBean> setRingCall;
         /**
          * cooperation : 移动
          * id : 402880e54cefbea5014cefc59607013f
          * initialid : 7515fc3c868b4001a8062126274e192e
          * ringTonePath :
          */
-
-        private List<SetRingToneBean> setRingTone;
 
         public String getAddTime() {
             return addTime;

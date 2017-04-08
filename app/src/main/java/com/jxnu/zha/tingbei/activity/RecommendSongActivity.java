@@ -24,7 +24,7 @@ public class RecommendSongActivity extends AbstractActivity {
     ImageView img_songBg;
     @BindView(R.id.img_singerIcon)
     CircleImageView img_singerIcon;
-    @BindView(R.id.tv_songName)
+    @BindView(R.id.tv_musicName)
     TextView tv_songName;
     @BindView(R.id.tv_singerName)
     TextView tv_singerName;

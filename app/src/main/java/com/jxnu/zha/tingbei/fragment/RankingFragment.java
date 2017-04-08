@@ -1,14 +1,17 @@
 package com.jxnu.zha.tingbei.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.activity.BangDetailActivity;
 import com.jxnu.zha.tingbei.adapter.RecommendBandAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
@@ -57,6 +60,29 @@ public class RankingFragment extends BaseFragment {
         mLstRecommendBang.setAdapter(mRecommendBandAdapter);
         mLstNoRecommendBang.setAdapter(mNoRecommendBandAdapter);
         mLstLabelBang.setAdapter(mLabelBandAdapter);
+        mLstRecommendBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                Intent intent = new Intent(father, BangDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bang",objEntity);;
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
+            }
+        });
+        mLstLabelBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
+        mLstNoRecommendBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
         getRecommendBand();
         getNoRecommendBand();
         getLabelBand();

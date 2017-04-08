@@ -36,7 +36,7 @@ public class RecommendBandAdapter extends BaseCustomAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_recommend_bang,null);
             helper = new ViewHelper();
             helper.imgSongIcon = (ImageView) convertView.findViewById(R.id.img_songIcon);
-            helper.tvSongName = (TextView) convertView.findViewById(R.id.tv_songName);
+            helper.tvSongName = (TextView) convertView.findViewById(R.id.tv_musicName);
             helper.tvSongSinger = (TextView) convertView.findViewById(R.id.tv_songSinger);
             convertView.setTag(helper);
         }else{

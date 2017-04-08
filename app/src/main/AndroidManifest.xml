@@ -46,6 +46,8 @@
         </activity>
         <activity android:name=".activity.RecommendSongActivity">
         </activity>
+        <activity android:name=".activity.BangDetailActivity">
+        </activity>
     </application>
 
 </manifest>
