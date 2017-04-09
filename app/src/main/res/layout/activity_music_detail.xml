@@ -22,5 +22,5 @@
             </FrameLayout>
         </LinearLayout>
     </ScrollView>
-
+    <include layout="@layout/layout_music_bottom"/>
 </RelativeLayout>

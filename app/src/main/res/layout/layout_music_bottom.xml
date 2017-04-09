@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_bottomMusicPlayer"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="6dip" android:orientation="vertical"
+    android:layout_alignParentBottom="true" android:visibility="gone">
+    <SeekBar
+        android:id="@+id/music_progress"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:max="100" android:splitTrack="false" />
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <ImageView android:id="@+id/img_playerState"
+            android:layout_width="30dip" android:layout_height="30dip"
+            android:src="@mipmap/ic_play_pause"/>
+        <TextView android:id="@+id/tv_musicName"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginLeft="8dip"/>
+    </LinearLayout>
+
+</LinearLayout>
+

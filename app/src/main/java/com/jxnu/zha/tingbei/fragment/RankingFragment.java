@@ -64,6 +64,7 @@ public class RankingFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                Log.e(TAG,"-----------------------tuijian = " + objEntity.toString());
                 Intent intent = new Intent(father, BangDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("bang",objEntity);;
@@ -74,13 +75,25 @@ public class RankingFragment extends BaseFragment {
         mLstLabelBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                Log.e(TAG,"-----------------------tuijian = " + objEntity.toString());
+                Intent intent = new Intent(father, BangDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bang",objEntity);;
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
             }
         });
         mLstNoRecommendBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                Log.e(TAG,"-----------------------tuijian = " + objEntity.toString());
+                Intent intent = new Intent(father, BangDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bang",objEntity);;
+                intent.putExtra("bundle",bundle);
+                startActivity(intent);
             }
         });
         getRecommendBand();
@@ -88,6 +101,9 @@ public class RankingFragment extends BaseFragment {
         getLabelBand();
     }
 
+    /**
+     * 推荐榜单
+     */
     private void getRecommendBand(){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override
@@ -117,6 +133,9 @@ public class RankingFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 非推荐榜单
+     */
     private void getNoRecommendBand(){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override
@@ -146,6 +165,9 @@ public class RankingFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 标签榜单
+     */
     private void getLabelBand(){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override

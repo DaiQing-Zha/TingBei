@@ -7,4 +7,6 @@
 
     <color name="loadState_pressedBg">#20000000</color>
     <color name="loadState_unPressedBg">#00000000</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

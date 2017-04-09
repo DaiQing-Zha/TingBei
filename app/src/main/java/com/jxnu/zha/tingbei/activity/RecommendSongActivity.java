@@ -1,10 +1,14 @@
 package com.jxnu.zha.tingbei.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jxnu.zha.qinglibrary.manager.UIManager;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.manager.ImageManager;

@@ -34,6 +34,22 @@ public class BangList extends Entity{
     }
 
     public static class ObjEntity implements Serializable{
+
+        @Override
+        public String toString() {
+            return "ObjEntity{" +
+                    "context='" + context + '\'' +
+                    ", id='" + id + '\'' +
+                    ", index_='" + index_ + '\'' +
+                    ", name='" + name + '\'' +
+                    ", openUrl='" + openUrl + '\'' +
+                    ", picPath='" + picPath + '\'' +
+                    ", picPathSmall='" + picPathSmall + '\'' +
+                    ", title='" + title + '\'' +
+                    ", listMusic=" + listMusic +
+                    '}';
+        }
+
         /**
          * context : 华语音乐排行榜1
          * id : f39c8ce34e28edd8014e2d514bde0078

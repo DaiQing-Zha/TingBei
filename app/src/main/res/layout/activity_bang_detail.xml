@@ -4,9 +4,9 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="com.jxnu.zha.tingbei.activity.MusicDetailActivity"
     android:id="@+id/ll_mainBody" >
-    <ScrollView
+    <ScrollView android:layout_above="@+id/ll_bottomMusicPlayer"
         android:layout_width="match_parent" android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true" >
         <LinearLayout
             android:layout_width="match_parent" android:layout_height="match_parent"
             android:orientation="vertical">
@@ -18,5 +18,5 @@
             </ListView>
         </LinearLayout>
     </ScrollView>
-
+    <include layout="@layout/layout_music_bottom"/>
 </RelativeLayout>

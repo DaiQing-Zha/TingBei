@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,9 +25,12 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.manager.ThreadPool;
+import com.jxnu.zha.tingbei.model.BangList;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
+import com.jxnu.zha.tingbei.music.util.Player;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 
 import java.io.Serializable;
@@ -42,12 +49,20 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     LoadStatusBox mLoadStatusBox;
     @BindView(R.id.lst_musicList)
     ListView mLstMusicList;
+    @BindView(R.id.ll_bottomMusicPlayer)
+    LinearLayout ll_bottomMusicPlayer;
+    @BindView(R.id.img_playerState)
+    ImageView img_playerState;
+    @BindView(R.id.tv_musicName)
+    TextView tv_musicName;
     final String TAG = "musicDetail";
     private String mReleaseId = "";
     private String mPicPath = "";
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
-
+    private Player player;
+    private SeekBar musicProgress;
+    private boolean isPlaying = false;  //是否正在播放
     /**
      * 获取推荐页分组
      */
@@ -96,7 +111,34 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         mObjBeanList = new ArrayList<>();
         mMusicListAdapter = new MusicListAdapter(this,mObjBeanList);
         mLstMusicList.setAdapter(mMusicListAdapter);
+        musicProgress = (SeekBar) findViewById(R.id.music_progress);
+        player = new Player(musicProgress);
+        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         getMusicListRelease();
+        mLstMusicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
+                ll_bottomMusicPlayer.setVisibility(View.VISIBLE);
+                img_playerState.setImageResource(R.mipmap.ic_play_playing);
+                isPlaying = true;
+                tv_musicName.setText(musicBean.getName());
+                playMusic(musicBean.getMusicPath());
+            }
+        });
+        img_playerState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPlaying = !isPlaying;
+                if (isPlaying){
+                    img_playerState.setImageResource(R.mipmap.ic_play_playing);
+                    player.play();
+                }else{
+                    img_playerState.setImageResource(R.mipmap.ic_play_pause);
+                    player.pause();
+                }
+            }
+        });
     }
 
     @Override
@@ -141,5 +183,42 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         super.executeOnLoadDataFailure(errorInfo);
         mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
         showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+    }
+
+    class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
+        int progress;
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            // 原本是(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
+            this.progress = progress * player.mediaPlayer.getDuration()
+                    / seekBar.getMax();
+        }
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // seekTo()的参数是相对与影片时间的数字，而不是与seekBar.getMax()相对的数字
+            player.mediaPlayer.seekTo(progress);
+        }
+    }
+    /**
+     * 播放音乐
+     * @param musicUrl
+     */
+    private void playMusic(final String musicUrl){
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                player.playUrl(musicUrl);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        player.stop();
     }
 }

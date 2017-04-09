@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -88,5 +89,24 @@ public class MainActivity extends AbstractActivity {
                 return true;
             }
         });
+    }
+
+    /**
+     * 当用户点击返回键的时候，让app退出到后台继续运行，而不是退出应用
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (isTaskRoot()) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) { //防止调用两次
+                moveTaskToBack(false);
+                return true;
+            }
+            return super.dispatchKeyEvent(event);
+        } else {
+            finish();
+            return super.dispatchKeyEvent(event);
+        }
     }
 }

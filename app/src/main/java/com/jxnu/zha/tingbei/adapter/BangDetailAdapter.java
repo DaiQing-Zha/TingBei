@@ -24,7 +24,7 @@ public class BangDetailAdapter extends BaseCustomAdapter {
 
     public BangDetailAdapter(Context context,  List<BangList.ObjEntity.ListMusicEntity> listMusicEntity) {
         super(context, listMusicEntity);
-        context = context;
+        this.context = context;
         this.listMusicEntity = listMusicEntity;
     }
 
