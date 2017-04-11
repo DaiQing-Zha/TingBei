@@ -252,6 +252,7 @@ public class HandPickFragment extends BaseFragment
         }
         if (entity instanceof SingerTypes){
             SingerTypes singerTypes = (SingerTypes) entity;
+            mSingerTypes.clear();
             mSingerTypes.addAll(singerTypes.getObj());
             mSingerTypesAdapter.notifyDataSetChanged();
         }

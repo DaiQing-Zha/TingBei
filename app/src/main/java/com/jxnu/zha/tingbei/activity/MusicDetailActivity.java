@@ -31,7 +31,9 @@ import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.music.util.Player;
+import com.jxnu.zha.tingbei.music.util.Player1;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.jxnu.zha.tingbei.widgets.CircleProgressView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,13 +57,14 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     ImageView img_playerState;
     @BindView(R.id.tv_musicName)
     TextView tv_musicName;
+    @BindView(R.id.circleProgressView)
+    CircleProgressView circleProgressView;
     final String TAG = "musicDetail";
     private String mReleaseId = "";
     private String mPicPath = "";
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
-    private Player player;
-    private SeekBar musicProgress;
+    private Player1 player;
     private boolean isPlaying = false;  //是否正在播放
     /**
      * 获取推荐页分组
@@ -111,16 +114,14 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         mObjBeanList = new ArrayList<>();
         mMusicListAdapter = new MusicListAdapter(this,mObjBeanList);
         mLstMusicList.setAdapter(mMusicListAdapter);
-        musicProgress = (SeekBar) findViewById(R.id.music_progress);
-        player = new Player(musicProgress);
-        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
+        player = new Player1(circleProgressView);
         getMusicListRelease();
         mLstMusicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
                 ll_bottomMusicPlayer.setVisibility(View.VISIBLE);
-                img_playerState.setImageResource(R.mipmap.ic_play_playing);
+                img_playerState.setImageResource(R.mipmap.ic_play_playing1);
                 isPlaying = true;
                 tv_musicName.setText(musicBean.getName());
                 playMusic(musicBean.getMusicPath());
@@ -131,10 +132,10 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             public void onClick(View v) {
                 isPlaying = !isPlaying;
                 if (isPlaying){
-                    img_playerState.setImageResource(R.mipmap.ic_play_playing);
+                    img_playerState.setImageResource(R.mipmap.ic_play_playing1);
                     player.play();
                 }else{
-                    img_playerState.setImageResource(R.mipmap.ic_play_pause);
+                    img_playerState.setImageResource(R.mipmap.ic_play_pause1);
                     player.pause();
                 }
             }

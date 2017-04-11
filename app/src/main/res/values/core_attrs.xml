@@ -13,7 +13,16 @@
         <attr name="pstsShouldExpand" format="boolean" />
         <attr name="pstsTextAllCaps" format="boolean" />
     </declare-styleable>
-
+    <declare-styleable name="CircleProgressView">
+        <attr name="outCircleWidth" format="dimension|reference" />
+        <attr name="outCircleColor" format="color|reference" />
+        <attr name="innerCircleColor" format="color|reference" />
+        <attr name="sectorColor" format="color|reference" />
+        <attr name="defaultRes" format="reference"/>
+        <attr name="isTextShow" format="boolean"/>
+        <attr name="textSize" format="dimension|reference"/>
+        <attr name="textColor" format="color|reference"/>
+    </declare-styleable>
     <declare-styleable name="PagerSlidingTabStrip_textcolor">
 
     </declare-styleable>
