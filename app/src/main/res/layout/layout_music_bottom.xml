@@ -3,7 +3,7 @@
     android:id="@+id/ll_bottomMusicPlayer"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:padding="6dip" android:orientation="vertical"
-    android:layout_alignParentBottom="true" android:visibility="gone">
+    android:layout_alignParentBottom="true" android:visibility="visible">
     <SeekBar
         android:id="@+id/music_progress"
         android:layout_width="match_parent" android:layout_height="wrap_content"

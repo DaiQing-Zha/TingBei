@@ -20,6 +20,7 @@ import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.jxnu.zha.tingbei.utils.StaticValue;
 
 import butterknife.ButterKnife;
 
@@ -43,6 +44,12 @@ public abstract class BaseActivity extends AppCompatActivity{
             setContentView(R.layout.layout_core_template);
             initWidget();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StaticValue.NowActivity = this;
     }
 
     public void setContentView(int layoutResID){

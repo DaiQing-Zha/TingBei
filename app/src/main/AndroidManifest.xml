@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
         android:name=".core.BaseApplication"
         android:allowBackup="true"
@@ -25,7 +25,7 @@
             android:name="server_mode"
             android:value="DEBUG" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

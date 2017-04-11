@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,6 +37,7 @@ import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.music.util.Player;
 import com.jxnu.zha.tingbei.music.util.Player1;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
+import com.jxnu.zha.tingbei.utils.StaticValue;
 import com.jxnu.zha.tingbei.widgets.CircleProgressView;
 
 import java.io.Serializable;
@@ -100,6 +105,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_detail);
+        createFloatView();
     }
     @Override
     protected void init() {
@@ -221,5 +227,23 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         player.stop();
+    }
+    /**
+     * 浮动视野
+     */
+    public static View mFloatView;
+    /**
+     * 根视野
+     */
+    public static FrameLayout mContentContainer;
+    private void createFloatView(){
+        mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_music_bottom,null);
+        ViewGroup mDecorView = (ViewGroup) StaticValue.NowActivity.getWindow().getDecorView();
+        mContentContainer = (FrameLayout)((ViewGroup)mDecorView.getChildAt(0)).getChildAt(1);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //获取当前正在播放的音乐
+        layoutParams.gravity = Gravity.BOTTOM;//设置对齐位置
+        mContentContainer.addView(mFloatView,layoutParams);
     }
 }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -62,6 +63,8 @@ public class HandPickFragment extends BaseFragment
     CirclePageIndicator mCirclePageIndicator;
     @BindView(R.id.gridView_singer)
     GridView mGVSingerTypes;
+    @BindView(R.id.ll_kk)
+    LinearLayout ll_kk;
     private List<SingerTypes.ObjBean> mSingerTypes;
     private AutoLoopViewAdapter mAutoLoopViewAdapter;
     private SingerTypesAdapter mSingerTypesAdapter;
@@ -148,6 +151,7 @@ public class HandPickFragment extends BaseFragment
         });
         getRecommendGroup();
         getSingerTypes();
+        addPlayerUI();
     }
     @Override
     public void onRefresh() {
@@ -326,5 +330,13 @@ public class HandPickFragment extends BaseFragment
             views.add(image);
             container.removeView(image);
         }
+    }
+
+    private void addPlayerUI(){
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        View view = LayoutInflater.from(father).inflate(R.layout.layout_music_bottom,null);
+        view.setLayoutParams(lp);
+        ll_kk.addView(view);
     }
 }
