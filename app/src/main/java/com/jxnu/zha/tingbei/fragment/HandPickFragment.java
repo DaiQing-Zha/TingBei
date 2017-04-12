@@ -78,7 +78,7 @@ public class HandPickFragment extends BaseFragment
             , new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            Log.e(TAG,"response = " + response);
+//            Log.e(TAG,"response = " + response);
             RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
             saveCacheFile(recommendGroup,getRecommendGroupCacheKey());
             mIndexTopId = recommendGroup.getObj().get(1).getId();
@@ -246,12 +246,12 @@ public class HandPickFragment extends BaseFragment
             RecommendGroup recommendGroup = (RecommendGroup) entity;
             mIndexTopId = recommendGroup.getObj().get(1).getId();
             mRQueue.add(requestRecommend);
-            Log.e(TAG,"recommendGroup---------------------------------");
+//            Log.e(TAG,"recommendGroup---------------------------------");
         }
         if (entity instanceof Recommend){
             Recommend recommend = (Recommend) entity;
             showAutoLoopViewPage(recommend.getObj());
-            Log.e(TAG,"Recommend---------------------------------");
+//            Log.e(TAG,"Recommend---------------------------------");
         }
         if (entity instanceof SingerTypes){
             SingerTypes singerTypes = (SingerTypes) entity;

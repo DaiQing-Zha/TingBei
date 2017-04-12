@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -105,7 +106,6 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     public void onCreate() {
         Log.e("mainSERVER","-----------------onCreate-----------------");
         super.onCreate();
-        musicList = new ArrayList<>();
         init();
     }
 
@@ -127,6 +127,13 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.img_playerState:  //暂停和开始
+                if (isPlaying){
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_pause1);
+                    pauseMusic();
+                }else{
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing1);
+                    playMusic();
+                }
                 break;
             case R.id.ll_bottomMusicPlayer: //整个播放条
                 break;
@@ -137,6 +144,8 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * 初始化操作
      */
     private void init(){
+        musicList = new ArrayList<>();
+        isPlaying = false;
         try {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置媒体流类型
@@ -166,7 +175,12 @@ public class MusicPlayerService extends Service implements View.OnClickListener
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        isPlaying = false;
+        if (musicList.size() <= 0){
+            mContentContainer.removeView(mFloatView);
+        }else{
+            playMusic(mCurrentPlayPosition + 1);
+        }
     }
 
     @Override
@@ -221,9 +235,13 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param position
      */
     private void playMusic(int position){
+        isPlaying = true;
         try {
-//            createFloatView();
+            if (circleProgressView == null){
+                createFloatView();
+            }
             Mp3Info mp3Info = musicList.get(position);
+            setPlayBarValue(mp3Info);
             mediaPlayer.reset();
             mediaPlayer.setDataSource(mp3Info.getMusicUrl()); // 设置数据源
             mediaPlayer.prepare(); // prepare自动播放
@@ -247,6 +265,31 @@ public class MusicPlayerService extends Service implements View.OnClickListener
         startTimer();
     }
 
+    /**
+     * 开始播放音乐
+     */
+    private void playMusic(){
+        mediaPlayer.start();
+        isPlaying = true;
+    }
+    /**
+     * 暂停播放
+     */
+    private void pauseMusic(){
+        mediaPlayer.pause();
+        isPlaying = false;
+    }
+
+    /**
+     * 停止播放
+     */
+    private void stopMusic(){
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
     /**
      * 启动定时器
      */
@@ -291,6 +334,9 @@ public class MusicPlayerService extends Service implements View.OnClickListener
         }
     }
 
+    /**
+     * 更新UI
+     */
     private void refreshUI(){
         if (mediaPlayer == null)
             return;
@@ -298,32 +344,12 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             handler.sendEmptyMessage(0); // 发送消息
         }
     }
-    /**
-     * 暂停播放
-     */
-    private void pauseMusic(){
-        mediaPlayer.pause();
-    }
-
-    /**
-     * 停止播放
-     */
-    private void stopMusic(){
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
-
 
     /**
      * 设置播放栏的值
      * @param mp3Info
-     * @param mediaPlayer
      */
-    private void setPlayBarValue(Mp3Info mp3Info,MediaPlayer mediaPlayer){
+    private void setPlayBarValue(Mp3Info mp3Info){
         tvMusicName.setText(mp3Info.getMusicName());
         tvMusicSinger.setText(mp3Info.getSingerName());
         imgMusicPlay.setImageResource(R.mipmap.ic_play_playing1);
@@ -352,6 +378,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      */
     public void createFloatView(){
         if(musicList.size() > 0) {
+            Log.e("mainSERVER","---start createFloatView---" + com.jxnu.zha.qinglibrary.util.DateUtils.formatDate(System.currentTimeMillis(), com.jxnu.zha.qinglibrary.util.DateUtils.TYPE_01));
             mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_music_play_bar,null);
             ViewGroup mDecorView = (ViewGroup) StaticValue.NowActivity.getWindow().getDecorView();
             mContentContainer = (FrameLayout)((ViewGroup)mDecorView.getChildAt(0)).getChildAt(1);
@@ -361,15 +388,17 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             tvMusicName = (TextView)mFloatView.findViewById(R.id.tv_musicName);
             tvMusicSinger = (TextView)mFloatView.findViewById(R.id.tv_singerName);
             mFloatView.findViewById(R.id.ll_bottomMusicPlayer).setOnClickListener(this);
+            imgMusicPlay.setImageResource(R.mipmap.ic_play_pause1);
             imgMusicPlay.setOnClickListener(this);
             //获取当前正在播放的音乐
             layoutParams.gravity = Gravity.BOTTOM;//设置对齐位置
             mContentContainer.addView(mFloatView,layoutParams);
-            if(! mediaPlayer.isPlaying()) {
+            if(!mediaPlayer.isPlaying()) {
                 //没有正在播放的，准备当前位置的音乐，设置值
                 playMusic(-1);
             }
-            setPlayBarValue(musicList.get(mCurrentPlayPosition),mediaPlayer);
+            setPlayBarValue(musicList.get(mCurrentPlayPosition));
+            Log.e("mainSERVER","---end createFloatView---" + com.jxnu.zha.qinglibrary.util.DateUtils.formatDate(System.currentTimeMillis(), com.jxnu.zha.qinglibrary.util.DateUtils.TYPE_01));
         }
     }
 

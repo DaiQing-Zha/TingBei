@@ -57,20 +57,11 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     LoadStatusBox mLoadStatusBox;
     @BindView(R.id.lst_musicList)
     ListView mLstMusicList;
-    @BindView(R.id.ll_bottomMusicPlayer)
-    LinearLayout ll_bottomMusicPlayer;
-    @BindView(R.id.img_playerState)
-    ImageView img_playerState;
-    @BindView(R.id.tv_musicName)
-    TextView tv_musicName;
-    @BindView(R.id.circleProgressView)
-    CircleProgressView circleProgressView;
     final String TAG = "musicDetail";
     private String mReleaseId = "";
     private String mPicPath = "";
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
-    private Player1 player;
     /**
      * 获取推荐页分组
      */
@@ -119,32 +110,18 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         mObjBeanList = new ArrayList<>();
         mMusicListAdapter = new MusicListAdapter(this,mObjBeanList);
         mLstMusicList.setAdapter(mMusicListAdapter);
-        player = new Player1(circleProgressView);
         getMusicListRelease();
         mLstMusicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
-                Mp3Info mp3Info = new Mp3Info();
+                final Mp3Info mp3Info = new Mp3Info();
                 mp3Info.setMusicName(musicBean.getName());
                 mp3Info.setMusicUrl(musicBean.getMusicPath());
                 mp3Info.setSingerName(musicBean.getSingerName());
                 musicIBind.addPlayList(mp3Info);
             }
         });
-//        img_playerState.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                isPlaying = !isPlaying;
-//                if (isPlaying){
-//                    img_playerState.setImageResource(R.mipmap.ic_play_playing1);
-//                    player.play();
-//                }else{
-//                    img_playerState.setImageResource(R.mipmap.ic_play_pause1);
-//                    player.pause();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -191,22 +168,8 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
     }
 
-    /**
-     * 播放音乐
-     * @param musicUrl
-     */
-    private void playMusic(final String musicUrl){
-        ThreadPool.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                player.playUrl(musicUrl);
-            }
-        });
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        player.stop();
     }
 }
