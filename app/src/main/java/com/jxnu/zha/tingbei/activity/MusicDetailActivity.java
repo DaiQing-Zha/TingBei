@@ -34,6 +34,7 @@ import com.jxnu.zha.tingbei.model.BangList;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
+import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.music.util.Player;
 import com.jxnu.zha.tingbei.music.util.Player1;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
@@ -70,7 +71,6 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
     private Player1 player;
-    private boolean isPlaying = false;  //是否正在播放
     /**
      * 获取推荐页分组
      */
@@ -105,7 +105,6 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_detail);
-        createFloatView();
     }
     @Override
     protected void init() {
@@ -126,26 +125,26 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
-                ll_bottomMusicPlayer.setVisibility(View.VISIBLE);
-                img_playerState.setImageResource(R.mipmap.ic_play_playing1);
-                isPlaying = true;
-                tv_musicName.setText(musicBean.getName());
-                playMusic(musicBean.getMusicPath());
+                Mp3Info mp3Info = new Mp3Info();
+                mp3Info.setMusicName(musicBean.getName());
+                mp3Info.setMusicUrl(musicBean.getMusicPath());
+                mp3Info.setSingerName(musicBean.getSingerName());
+                musicIBind.addPlayList(mp3Info);
             }
         });
-        img_playerState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isPlaying = !isPlaying;
-                if (isPlaying){
-                    img_playerState.setImageResource(R.mipmap.ic_play_playing1);
-                    player.play();
-                }else{
-                    img_playerState.setImageResource(R.mipmap.ic_play_pause1);
-                    player.pause();
-                }
-            }
-        });
+//        img_playerState.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isPlaying = !isPlaying;
+//                if (isPlaying){
+//                    img_playerState.setImageResource(R.mipmap.ic_play_playing1);
+//                    player.play();
+//                }else{
+//                    img_playerState.setImageResource(R.mipmap.ic_play_pause1);
+//                    player.pause();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -192,24 +191,6 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
     }
 
-    class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
-        int progress;
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                                      boolean fromUser) {
-            // 原本是(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
-            this.progress = progress * player.mediaPlayer.getDuration()
-                    / seekBar.getMax();
-        }
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            // seekTo()的参数是相对与影片时间的数字，而不是与seekBar.getMax()相对的数字
-            player.mediaPlayer.seekTo(progress);
-        }
-    }
     /**
      * 播放音乐
      * @param musicUrl
@@ -227,23 +208,5 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         player.stop();
-    }
-    /**
-     * 浮动视野
-     */
-    public static View mFloatView;
-    /**
-     * 根视野
-     */
-    public static FrameLayout mContentContainer;
-    private void createFloatView(){
-        mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_music_bottom,null);
-        ViewGroup mDecorView = (ViewGroup) StaticValue.NowActivity.getWindow().getDecorView();
-        mContentContainer = (FrameLayout)((ViewGroup)mDecorView.getChildAt(0)).getChildAt(1);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        //获取当前正在播放的音乐
-        layoutParams.gravity = Gravity.BOTTOM;//设置对齐位置
-        mContentContainer.addView(mFloatView,layoutParams);
     }
 }

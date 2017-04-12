@@ -21,7 +21,7 @@
                 </ListView>
                 <include layout="@layout/view_load_state" />
             </FrameLayout>
-            <include layout="@layout/layout_music_bottom1" />
+            <include layout="@layout/layout_music_play_bar" />
         </RelativeLayout>
     </ScrollView>
 

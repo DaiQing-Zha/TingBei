@@ -1,7 +1,11 @@
 package com.jxnu.zha.tingbei.core;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -19,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.service.MusicPlayerService;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 import com.jxnu.zha.tingbei.utils.StaticValue;
 
@@ -36,6 +41,28 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected TipInfoLayout mTipInfoLayout;
     protected Fragment mFragmentContent;
     protected RequestQueue mRQueue;
+    public static Intent mMusicServiceIntent;    //音乐服务的Intent
+
+    /**
+     * 音乐服务Bind对象
+     */
+    public static MusicPlayerService.MusicIBind musicIBind;
+    /**
+     * 服务连接对象
+     */
+    public ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //绑定成功后，取得MusicService提供的接口
+            musicIBind = (MusicPlayerService.MusicIBind) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +75,19 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        super.onResume();
         StaticValue.NowActivity = this;
+        overridePendingTransition(0, 0);//设置返回没有动画
+        mMusicServiceIntent = new Intent(this,MusicPlayerService.class);
+        startService(mMusicServiceIntent);
+        bindService(mMusicServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        overridePendingTransition(0, 0);        //设置返回没有动画
+        unbindService(mServiceConnection); //取消服务绑定
+        super.onPause();
     }
 
     public void setContentView(int layoutResID){

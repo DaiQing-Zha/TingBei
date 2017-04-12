@@ -25,7 +25,7 @@
             android:name="server_mode"
             android:value="DEBUG" />
 
-        <activity android:name=".activity.TestActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,6 +48,9 @@
         </activity>
         <activity android:name=".activity.BangDetailActivity">
         </activity>
+        <!--声明服务-->
+        <service android:name=".service.MusicPlayerService">
+        </service>
     </application>
 
 </manifest>

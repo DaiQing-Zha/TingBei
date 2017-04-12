@@ -3,7 +3,7 @@
     android:id="@+id/ll_bottomMusicPlayer"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical" android:layout_alignParentEnd="true"
-    android:layout_alignParentBottom="true" android:visibility="gone">
+    android:layout_alignParentBottom="true" android:visibility="visible">
     <View
         android:layout_width="match_parent" android:layout_height="0.5dip"
         android:background="@color/color_commGrayF2"/>
@@ -20,6 +20,10 @@
                 android:layout_gravity="center" android:src="@mipmap/ic_play_pause1"/>
         </FrameLayout>
         <TextView android:id="@+id/tv_musicName"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:singleLine="true" android:layout_marginLeft="8dip"
+            android:textSize="@dimen/comm_size16" android:textColor="@color/color_commBlack33"/>
+        <TextView android:id="@+id/tv_singerName"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:singleLine="true" android:layout_marginLeft="8dip"/>
     </LinearLayout>

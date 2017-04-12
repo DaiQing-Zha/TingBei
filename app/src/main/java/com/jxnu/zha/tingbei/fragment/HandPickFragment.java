@@ -151,7 +151,6 @@ public class HandPickFragment extends BaseFragment
         });
         getRecommendGroup();
         getSingerTypes();
-        addPlayerUI();
     }
     @Override
     public void onRefresh() {
@@ -330,13 +329,5 @@ public class HandPickFragment extends BaseFragment
             views.add(image);
             container.removeView(image);
         }
-    }
-
-    private void addPlayerUI(){
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        View view = LayoutInflater.from(father).inflate(R.layout.layout_music_bottom,null);
-        view.setLayoutParams(lp);
-        ll_kk.addView(view);
     }
 }

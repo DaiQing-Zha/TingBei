@@ -19,7 +19,7 @@ public class StaticValue{
 	/**
 	 * 当前活动
 	 */
-	public static AppCompatActivity NowActivity;
+	public static BaseActivity NowActivity;
 	/**
 	 * 主视野
 	 */
