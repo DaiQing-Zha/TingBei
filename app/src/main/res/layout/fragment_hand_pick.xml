@@ -31,10 +31,10 @@
                 android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
                 android:text="@string/handPickFragment_singerTypes"/>
         </LinearLayout>
-        <GridView android:id="@+id/gridView_singer"
+        <ListView android:id="@+id/lst_singer"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:numColumns="3" android:columnWidth="2dip">
-        </GridView>
+            android:columnWidth="2dip">
+        </ListView>
     </LinearLayout>
 
 </com.jxnu.zha.qinglibrary.widget.RefreshLayout>

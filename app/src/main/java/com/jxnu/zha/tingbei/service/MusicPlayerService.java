@@ -136,21 +136,21 @@ public class MusicPlayerService extends Service implements View.OnClickListener
                 break;
             case R.id.img_playState:
                 if (isPlaying){
-                    imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause2);
-                    imgMusicPlay.setImageResource(R.mipmap.ic_play_pause1);
+                    imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing_2);
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
                     pauseMusic();
                 }else{
-                    imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing2);
-                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing1);
+                    imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause_2);
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
                     playMusic();
                 }
                 break;
             case R.id.img_playerState:  //暂停和开始
                 if (isPlaying){
-                    imgMusicPlay.setImageResource(R.mipmap.ic_play_pause1);
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
                     pauseMusic();
                 }else{
-                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing1);
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
                     playMusic();
                 }
                 break;
@@ -160,7 +160,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
                 break;
             case R.id.img_nextMusic:
                 mCurrentPlayPosition = mCurrentPlayPosition + 1;
-                playMusic(mCurrentPlayPosition );
+                playMusic(mCurrentPlayPosition);
                 break;
             case R.id.ll_bottomMusicPlayer: //整个播放条
                 alertDialog();
@@ -202,16 +202,12 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             // 添加动画
             fullScreenDialog.getWindow().setWindowAnimations(R.style.action_sheet_animation);
         }
-        if (isPlaying){
-            imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing2);
-        }else{
-            imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause2);
+        try{
+            Mp3Info mp3Info = musicList.get(mCurrentPlayPosition);
+            refreshDialog(mp3Info);
+        }catch (Exception e){
+
         }
-        Mp3Info mp3Info = musicList.get(mCurrentPlayPosition);
-        tvDialogMusicName.setText(mp3Info.getMusicName());
-        tvDialogSingerName.setText(mp3Info.getSingerName());
-        ImageManager.getInstance().displayImage(mp3Info.getMusicPicPath(), imgDialogMusicIcon,
-                ImageManager.getMusicBgIconOptions());
         new Thread() {
             public void run() {
                 SystemClock.sleep(100);
@@ -235,20 +231,22 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置媒体流类型
             mediaPlayer.setOnBufferingUpdateListener(this);
             mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnCompletionListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    long playPos;
     Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             int position = mediaPlayer.getCurrentPosition();
             int duration = mediaPlayer.getDuration();
             if (duration > 0) {
                 // 计算进度（获取进度条最大刻度*当前音乐播放位置 / 当前音乐时长）
-                long pos = circleProgressView.getMaxProgress() * position / duration;
-                circleProgressView.setProgress((int) pos);
+                playPos = circleProgressView.getMaxProgress() * position / duration;
+                circleProgressView.setProgress((int) playPos);
                 if (seekBarDialogMusicProgress != null){
-                    seekBarDialogMusicProgress.setProgress((int) pos);
+                    seekBarDialogMusicProgress.setProgress((int) playPos);
                 }
                 circleProgressView.refreshUI();
             }
@@ -267,11 +265,13 @@ public class MusicPlayerService extends Service implements View.OnClickListener
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        Log.e("mainHHH","music play complete···");
         isPlaying = false;
         if (musicList.size() <= 0){
             mContentContainer.removeView(mFloatView);
         }else{
-            playMusic(mCurrentPlayPosition + 1);
+            mCurrentPlayPosition = mCurrentPlayPosition + 1;
+            playMusic(mCurrentPlayPosition);
         }
     }
 
@@ -303,8 +303,11 @@ public class MusicPlayerService extends Service implements View.OnClickListener
          * 添加音乐到播放列表，添加一首,并且播放这首歌
          * @param mp3s
          */
-        public void addPlayList(Mp3Info mp3s){
-            addMusicToList(mp3s);
+        public void addMusicPlayList(Mp3Info mp3s){
+            addMusicToPlayListInner(mp3s);
+        }
+        public void addMusicsToPlayList(ArrayList<Mp3Info> mp3Infos){
+            addMusicsToPlayListInner(mp3Infos);
         }
         /**
          * 获取音乐列表
@@ -331,6 +334,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param position
      */
     private void playMusic(final int position){
+        Log.e("mainHHH","position = " + position);
         isPlaying = true;
         try{
             final Mp3Info mp3Info = musicList.get(position);
@@ -338,6 +342,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
                 createFloatView();
             }
             setPlayBarValue(mp3Info);
+            refreshDialog(mp3Info);
             ThreadPool.getInstance().addTask(new Runnable() {
                 @Override
                 public void run() {
@@ -440,13 +445,30 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     }
 
     /**
+     * 更新dialog
+     * @param mp3Info
+     */
+    private void refreshDialog(Mp3Info mp3Info){
+        if (isPlaying){
+            imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause_2);
+        }else{
+            imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing_2);
+        }
+        seekBarDialogMusicProgress.setProgress((int) playPos);
+        tvDialogMusicName.setText(mp3Info.getMusicName());
+        tvDialogSingerName.setText(mp3Info.getSingerName());
+        ImageManager.getInstance().displayImage(mp3Info.getMusicPicPath(), imgDialogMusicIcon,
+                ImageManager.getMusicBgIconOptions());
+    }
+
+    /**
      * 设置播放栏的值
      * @param mp3Info
      */
     private void setPlayBarValue(Mp3Info mp3Info){
         tvMusicName.setText(mp3Info.getMusicName());
         tvMusicSinger.setText(mp3Info.getSingerName());
-        imgMusicPlay.setImageResource(R.mipmap.ic_play_playing1);
+        imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
         refreshUI();
     }
 
@@ -457,13 +479,38 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     public List<Mp3Info> getMusicList() {
         return musicList;
     }
+
+    /**
+     * 添加音乐到播放列表
+     */
+    private void addMusicsToPlayListInner(ArrayList<Mp3Info> mp3s){
+        try{
+            musicList.clear();
+            for (int i = 0; i < mp3s.size(); i ++){
+                Log.e("mainSERVER","------------------- i = " + i);
+                if(!musicIsRepeat(mp3s.get(i))) {
+                    musicList.add(mp3s.get(i));
+                }
+            }
+            for (int i = 0; i < musicList.size(); i ++){
+                Log.e("mainHHH","musicName2 = " + musicList.get(i).getMusicName());
+            }
+            Log.e("mainHHH","---------------------------------------------");
+        }catch (Exception e){
+            Log.e("mainSERVER","error = " + e.toString());
+        }
+    }
     /**
      * 添加音乐到播放列表,添加一首
      */
-    private void addMusicToList(Mp3Info mp3s){
-        if(!musicList.contains(mp3s)) {
+    private void addMusicToPlayListInner(Mp3Info mp3s){
+        if(!musicIsRepeat(mp3s)) {
             musicList.add(mp3s);
             mCurrentPlayPosition = musicList.size()-1;//赋值当前播放位置为现在的位置
+            Log.e("mainHHH","mCurrentPlayPosition1 = " + mCurrentPlayPosition);
+        }else{
+            mCurrentPlayPosition = getMusicInListPosition(mp3s);
+            Log.e("mainHHH","mCurrentPlayPosition2 = " + mCurrentPlayPosition);
         }
         playMusic(mCurrentPlayPosition);
     }
@@ -483,7 +530,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             tvMusicName = (TextView)mFloatView.findViewById(R.id.tv_musicName);
             tvMusicSinger = (TextView)mFloatView.findViewById(R.id.tv_singerName);
             mFloatView.findViewById(R.id.ll_bottomMusicPlayer).setOnClickListener(this);
-            imgMusicPlay.setImageResource(R.mipmap.ic_play_pause1);
+            imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
             imgMusicPlay.setOnClickListener(this);
             //获取当前正在播放的音乐
             layoutParams.gravity = Gravity.BOTTOM;//设置对齐位置
@@ -513,5 +560,36 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             // seekTo()的参数是相对与影片时间的数字，而不是与seekBar.getMax()相对的数字
             mediaPlayer.seekTo(progress);
         }
+    }
+
+    /**
+     * 判断歌曲是否重复
+     * @param mp3Info
+     * @return
+     */
+    private boolean musicIsRepeat(Mp3Info mp3Info){
+        String key = mp3Info.getMusicId();
+        for (int i = 0; i < musicList.size(); i ++){
+            if (key.equals(musicList.get(i).getMusicId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取音乐在列表中的位置
+     * @param mp3Info
+     * @return
+     */
+    private int getMusicInListPosition(Mp3Info mp3Info){
+        int pos = - 1;
+        String key = mp3Info.getMusicId();
+        for (int i = 0; i < musicList.size(); i ++){
+            if (key.equals(musicList.get(i).getMusicId())){
+                pos = i;
+            }
+        }
+        return pos;
     }
 }

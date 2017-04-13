@@ -4,17 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -29,17 +22,11 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
-import com.jxnu.zha.tingbei.manager.ThreadPool;
-import com.jxnu.zha.tingbei.model.BangList;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
 import com.jxnu.zha.tingbei.music.model.Mp3Info;
-import com.jxnu.zha.tingbei.music.util.Player;
-import com.jxnu.zha.tingbei.music.util.Player1;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
-import com.jxnu.zha.tingbei.utils.StaticValue;
-import com.jxnu.zha.tingbei.widgets.CircleProgressView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -74,6 +61,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
             mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
             mMusicListAdapter.notifyDataSetChanged();
+            addMusicPlayList(mObjBeanList);
             saveCache(musicListRelease);
         }
     }, new Response.ErrorListener() {
@@ -92,6 +80,31 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             return map;
         }
     };
+
+    /**
+     * 将音乐添加至播放列表
+     * @param mObjBeanList
+     */
+    private void addMusicPlayList(List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList) {
+        ArrayList<Mp3Info> arrayList = new ArrayList<>();
+        for (int i = 0; i < mObjBeanList.size(); i ++){
+            MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(i);
+            Mp3Info mp3Info = new Mp3Info();
+            mp3Info.setMusicId(musicBean.getId());
+            mp3Info.setMusicName(musicBean.getName());
+            mp3Info.setMusicUrl(musicBean.getMusicPath());
+            mp3Info.setSingerName(musicBean.getSingerName());
+            mp3Info.setMusicPicPath(musicBean.getMusicPicPath());
+            mp3Info.setSingerPicPath(musicBean.getMusicSingerPicPath());
+            arrayList.add(mp3Info);
+        }
+        for (int i = 0; i < arrayList.size(); i ++){
+            Log.e("mainHHH","musicName1 = " + arrayList.get(i).getMusicName());
+        }
+        Log.e("mainHHH","---------------------------------------------");
+        musicIBind.addMusicsToPlayList(arrayList);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,12 +129,13 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
                 final Mp3Info mp3Info = new Mp3Info();
+                mp3Info.setMusicId(musicBean.getId());
                 mp3Info.setMusicName(musicBean.getName());
                 mp3Info.setMusicUrl(musicBean.getMusicPath());
                 mp3Info.setSingerName(musicBean.getSingerName());
                 mp3Info.setMusicPicPath(musicBean.getMusicPicPath());
                 mp3Info.setSingerPicPath(musicBean.getMusicSingerPicPath());
-                musicIBind.addPlayList(mp3Info);
+                musicIBind.addMusicPlayList(mp3Info);
             }
         });
     }
@@ -161,6 +175,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         MusicListRelease musicListRelease = (MusicListRelease) entity;
         mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
         mMusicListAdapter.notifyDataSetChanged();
+        addMusicPlayList(mObjBeanList);
     }
 
     @Override

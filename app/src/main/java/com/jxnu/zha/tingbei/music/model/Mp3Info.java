@@ -5,6 +5,7 @@ package com.jxnu.zha.tingbei.music.model;
  */
 public class Mp3Info {
 
+    private String musicId;
     private String musicPicPath;
     private String musicPicPathSmall;
     private String singerPicPath;
@@ -27,6 +28,14 @@ public class Mp3Info {
     private String singerName;
 
     public Mp3Info() {
+    }
+
+    public String getMusicId() {
+        return musicId;
+    }
+
+    public void setMusicId(String musicId) {
+        this.musicId = musicId;
     }
 
     public String getMusicPicPath() {

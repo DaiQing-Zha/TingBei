@@ -67,10 +67,10 @@ public class MainActivity extends AbstractActivity {
                 index = 0;
                 break;
             case R.id.action_switchTheme:
-                index = 1;
+//                index = 1;
                 break;
             case R.id.action_setting:
-                index = 2;
+//                index = 2;
                 break;
         }
         switchFragmentContent(R.id.tipInfo_layout,fragments[index]);

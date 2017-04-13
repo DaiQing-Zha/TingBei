@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -61,8 +63,8 @@ public class HandPickFragment extends BaseFragment
     AutoLoopViewPager mLoopView;
     @BindView(R.id.indy)
     CirclePageIndicator mCirclePageIndicator;
-    @BindView(R.id.gridView_singer)
-    GridView mGVSingerTypes;
+    @BindView(R.id.lst_singer)
+    ListView mLstSingerTypes;
     @BindView(R.id.ll_kk)
     LinearLayout ll_kk;
     private List<SingerTypes.ObjBean> mSingerTypes;
@@ -136,9 +138,9 @@ public class HandPickFragment extends BaseFragment
     public void builderView(View rootView) {
         mSingerTypes = new ArrayList<>();
         mSingerTypesAdapter = new SingerTypesAdapter(father, mSingerTypes);
-        mGVSingerTypes.setAdapter(mSingerTypesAdapter);
+        mLstSingerTypes.setAdapter(mSingerTypesAdapter);
         mRfContent.setOnRefreshListener(this);
-        mGVSingerTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mLstSingerTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(father, TypeSingerActivity.class);
@@ -149,6 +151,26 @@ public class HandPickFragment extends BaseFragment
                 startActivity(intent);
             }
         });
+
+        mLstSingerTypes.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                boolean enable = false;
+                if(mLstSingerTypes != null && mLstSingerTypes.getChildCount() > 0){
+                    // check if the first item of the list is visible
+                    boolean firstItemVisible = mLstSingerTypes.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = mLstSingerTypes.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                mRfContent.setEnabled(enable);
+            }});
+
         getRecommendGroup();
         getSingerTypes();
     }

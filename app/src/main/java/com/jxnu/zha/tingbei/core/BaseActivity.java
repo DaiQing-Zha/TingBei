@@ -69,13 +69,17 @@ public abstract class BaseActivity extends AppCompatActivity{
             setContentView(R.layout.layout_core_template);
             initWidget();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         StaticValue.NowActivity = this;
         overridePendingTransition(0, 0);//设置返回没有动画
         mMusicServiceIntent = new Intent(this,MusicPlayerService.class);
         startService(mMusicServiceIntent);
         bindService(mMusicServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
     }
-
     @Override
     protected void onDestroy() {
         overridePendingTransition(0, 0);        //设置返回没有动画
