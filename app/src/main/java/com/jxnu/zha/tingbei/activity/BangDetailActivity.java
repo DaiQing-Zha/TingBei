@@ -1,6 +1,5 @@
 package com.jxnu.zha.tingbei.activity;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,11 +11,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.jxnu.zha.qinglibrary.manager.UIManager;
-import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.adapter.BangDetailAdapter;
-import com.jxnu.zha.tingbei.adapter.MusicListAdapter;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
@@ -99,7 +95,7 @@ public class BangDetailActivity extends AbstractActivity{
                 }
             }
         });
-        musicProgress = (SeekBar) findViewById(R.id.music_progress);
+        musicProgress = (SeekBar) findViewById(R.id.seekbar_musicProgress);
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
     }

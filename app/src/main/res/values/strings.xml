@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">lebaniu</string>
+    <string name="app_name">lebashow</string>
     <string name="musicDetail_title">MusicDetailActivity</string>
 
     <string name="menuDrawer_login">点击登录</string>

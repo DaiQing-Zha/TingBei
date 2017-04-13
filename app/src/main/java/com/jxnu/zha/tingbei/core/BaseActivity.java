@@ -51,13 +51,11 @@ public abstract class BaseActivity extends AppCompatActivity{
      * 服务连接对象
      */
     public ServiceConnection mServiceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             //绑定成功后，取得MusicService提供的接口
             musicIBind = (MusicPlayerService.MusicIBind) service;
         }
-
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
@@ -71,23 +69,18 @@ public abstract class BaseActivity extends AppCompatActivity{
             setContentView(R.layout.layout_core_template);
             initWidget();
         }
-    }
-
-    @Override
-    protected void onResume() {
         StaticValue.NowActivity = this;
         overridePendingTransition(0, 0);//设置返回没有动画
         mMusicServiceIntent = new Intent(this,MusicPlayerService.class);
         startService(mMusicServiceIntent);
         bindService(mMusicServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
-        super.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onDestroy() {
         overridePendingTransition(0, 0);        //设置返回没有动画
         unbindService(mServiceConnection); //取消服务绑定
-        super.onPause();
+        super.onDestroy();
     }
 
     public void setContentView(int layoutResID){

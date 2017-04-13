@@ -85,4 +85,17 @@ public class ImageManager {
 		return userIconOptions;
 	}
 
+	private static DisplayImageOptions musicBgIconOptions;
+	public static DisplayImageOptions getMusicBgIconOptions() {
+		if (musicBgIconOptions == null) {
+			musicBgIconOptions = new DisplayImageOptions.Builder()
+					.showImageForEmptyUri(R.mipmap.ic_default_music_bg)
+					.showImageOnFail(R.mipmap.ic_default_music_bg)
+					.cacheInMemory(true) // 缓存内存
+					.cacheOnDisc(true)// 缓存文件
+					.build();
+		}
+		return musicBgIconOptions;
+	}
+
 }

@@ -119,6 +119,8 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
                 mp3Info.setMusicName(musicBean.getName());
                 mp3Info.setMusicUrl(musicBean.getMusicPath());
                 mp3Info.setSingerName(musicBean.getSingerName());
+                mp3Info.setMusicPicPath(musicBean.getMusicPicPath());
+                mp3Info.setSingerPicPath(musicBean.getMusicSingerPicPath());
                 musicIBind.addPlayList(mp3Info);
             }
         });

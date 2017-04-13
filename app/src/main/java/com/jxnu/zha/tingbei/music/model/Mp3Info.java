@@ -4,6 +4,11 @@ package com.jxnu.zha.tingbei.music.model;
  * Created by DaiQing.Zha on 2017/4/12 0012.
  */
 public class Mp3Info {
+
+    private String musicPicPath;
+    private String musicPicPathSmall;
+    private String singerPicPath;
+    private String singerPicPathSmall;
     /**
      * 歌曲路径
      */
@@ -24,11 +29,36 @@ public class Mp3Info {
     public Mp3Info() {
     }
 
-    public Mp3Info(String musicUrl, String musicLocalUrl, String musicName, String singerName) {
-        this.musicUrl = musicUrl;
-        this.musicLocalUrl = musicLocalUrl;
-        this.musicName = musicName;
-        this.singerName = singerName;
+    public String getMusicPicPath() {
+        return musicPicPath;
+    }
+
+    public void setMusicPicPath(String musicPicPath) {
+        this.musicPicPath = musicPicPath;
+    }
+
+    public String getMusicPicPathSmall() {
+        return musicPicPathSmall;
+    }
+
+    public void setMusicPicPathSmall(String musicPicPathSmall) {
+        this.musicPicPathSmall = musicPicPathSmall;
+    }
+
+    public String getSingerPicPath() {
+        return singerPicPath;
+    }
+
+    public void setSingerPicPath(String singerPicPath) {
+        this.singerPicPath = singerPicPath;
+    }
+
+    public String getSingerPicPathSmall() {
+        return singerPicPathSmall;
+    }
+
+    public void setSingerPicPathSmall(String singerPicPathSmall) {
+        this.singerPicPathSmall = singerPicPathSmall;
     }
 
     public String getMusicUrl() {
