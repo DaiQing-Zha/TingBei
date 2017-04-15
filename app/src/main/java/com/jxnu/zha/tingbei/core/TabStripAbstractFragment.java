@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.core;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.jxnu.zha.qinglibrary.util.DensityUtil;
 
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.utils.ThemeUtil;
 import com.jxnu.zha.tingbei.widgets.PagerSlidingTabStrip;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -34,8 +36,45 @@ public abstract class TabStripAbstractFragment extends AbstractFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
+		mTabs.setIndicatorColor(getIndicatorColor());
 		mViewPager = (ViewPager) view.findViewById(R.id.tabsContent);
 		init();
+	}
+
+	private int getIndicatorColor(){
+		int color = getResources().getColor(R.color.color_tabStripTextColorSelected);
+		try{
+			int themeStyle = ThemeUtil.style;
+			switch (themeStyle){
+				case R.style.BlueTheme:
+					color = getResources().getColor(R.color.blue);
+					break;
+				case R.style.BrownTheme:
+					color = getResources().getColor(R.color.brown);
+					break;
+				case R.style.redTheme:
+					color = getResources().getColor(R.color.red);
+					break;
+				case R.style.BlueGreyTheme:
+					color = getResources().getColor(R.color.blue_grey);
+					break;
+				case R.style.YellowTheme:
+					color = getResources().getColor(R.color.yellow);
+					break;
+				case R.style.DeepPurpleTheme:
+					color = getResources().getColor(R.color.deep_purple);
+					break;
+				case R.style.PinkTheme:
+					color = getResources().getColor(R.color.pink);
+					break;
+				case R.style.GreenTheme:
+					color = getResources().getColor(R.color.color_tabStripTextColorSelected);
+					break;
+			}
+		}catch (Exception e){
+			color = getResources().getColor(R.color.color_tabStripTextColorSelected);
+		}
+		return color;
 	}
 	
 	/**
@@ -79,7 +118,7 @@ public abstract class TabStripAbstractFragment extends AbstractFragment {
 			int color;
 			TextView tv = (TextView) mTabsLinearLayout.getChildAt(i);
 			if (i == position) {
-				color = getResources().getColor(R.color.color_tabStripTextColorSelected);
+				color = getIndicatorColor();
 			} else {
 				color = getResources().getColor(R.color.color_tabStripTextColorUnSelected);
 			}

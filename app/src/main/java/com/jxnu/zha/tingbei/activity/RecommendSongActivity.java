@@ -12,7 +12,9 @@ import com.jxnu.zha.qinglibrary.manager.UIManager;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.model.RingInfo;
 import com.jxnu.zha.tingbei.model.SongList;
+import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.widgets.CircleImageView;
 
 import butterknife.BindView;
@@ -53,7 +55,23 @@ public class RecommendSongActivity extends AbstractActivity {
                 tv_songName.setText(objEntity.getName());
                 tv_singerName.setText(objEntity.getSingerName());
                 setTitle(objEntity.getName());
+                addMusicToList(objEntity);
             }
         }
+    }
+
+    /**
+     * 添加一首歌曲
+     * @param objEntity
+     */
+    private void addMusicToList(SongList.ObjEntity.ListMusicEntity objEntity){
+        Mp3Info mp3Info = new Mp3Info();
+        mp3Info.setMusicId(objEntity.getId());
+        mp3Info.setMusicName(objEntity.getName());
+        mp3Info.setMusicUrl(objEntity.getMusicPath());
+        mp3Info.setSingerName(objEntity.getSingerName());
+        mp3Info.setMusicPicPath(objEntity.getMusicPicPath());
+        mp3Info.setSingerPicPath(objEntity.getMusicSingerPicPath());
+        musicIBind.addMusicPlayList(mp3Info);
     }
 }

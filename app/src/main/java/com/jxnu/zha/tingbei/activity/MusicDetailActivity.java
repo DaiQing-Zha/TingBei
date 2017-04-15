@@ -61,7 +61,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
             mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
             mMusicListAdapter.notifyDataSetChanged();
-            addMusicPlayList(mObjBeanList);
+//            addMusicsPlayList(mObjBeanList);
             saveCache(musicListRelease);
         }
     }, new Response.ErrorListener() {
@@ -85,7 +85,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
      * 将音乐添加至播放列表
      * @param mObjBeanList
      */
-    private void addMusicPlayList(List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList) {
+    private void addMusicsPlayList(List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList) {
         ArrayList<Mp3Info> arrayList = new ArrayList<>();
         for (int i = 0; i < mObjBeanList.size(); i ++){
             MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(i);
@@ -128,7 +128,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(position);
-                final Mp3Info mp3Info = new Mp3Info();
+                Mp3Info mp3Info = new Mp3Info();
                 mp3Info.setMusicId(musicBean.getId());
                 mp3Info.setMusicName(musicBean.getName());
                 mp3Info.setMusicUrl(musicBean.getMusicPath());
@@ -175,7 +175,7 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         MusicListRelease musicListRelease = (MusicListRelease) entity;
         mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
         mMusicListAdapter.notifyDataSetChanged();
-        addMusicPlayList(mObjBeanList);
+//        addMusicsPlayList(mObjBeanList);
     }
 
     @Override

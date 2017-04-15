@@ -1,5 +1,7 @@
 package com.jxnu.zha.tingbei.activity;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,16 +9,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
+import com.jxnu.zha.qinglibrary.util.SharedPreferenceUtil;
 import com.jxnu.zha.tingbei.R;
+import com.jxnu.zha.tingbei.adapter.ThemeSelectAdapter;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
-import com.jxnu.zha.tingbei.core.BaseActivity;
 import com.jxnu.zha.tingbei.fragment.MainFragment;
 
-import butterknife.BindView;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AbstractActivity {
 
@@ -68,6 +76,7 @@ public class MainActivity extends AbstractActivity {
                 break;
             case R.id.action_switchTheme:
 //                index = 1;
+                selectTheme();
                 break;
             case R.id.action_setting:
 //                index = 2;
@@ -108,5 +117,42 @@ public class MainActivity extends AbstractActivity {
             finish();
             return super.dispatchKeyEvent(event);
         }
+    }
+
+    /**
+     * 选择主题
+     */
+    private void selectTheme() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.mainFragment_changeTheme);
+        Integer[] themeIcon = new Integer[]{R.drawable.theme_blue_round, R.drawable.theme_brown_round, R.drawable.theme_red_round,
+                R.drawable.theme_blue_grey_round, R.drawable.theme_yellow_round, R.drawable.theme_deep_purple_round,
+                R.drawable.theme_pink_round, R.drawable.theme_green_round};
+        List<Integer> list = Arrays.asList(themeIcon);
+        ThemeSelectAdapter adapter = new ThemeSelectAdapter(this,list);
+        final int selectedTheme = (int) SharedPreferenceUtil.get(this, getString(R.string.mainFragment_selectedTheme), 0);
+        adapter.setSelectedItem(selectedTheme);
+
+        GridView gridView = (GridView) LayoutInflater.from(this)
+                .inflate(R.layout.theme_bg_gridview, null);
+        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+        gridView.setCacheColorHint(0);
+        gridView.setAdapter(adapter);
+        builder.setView(gridView);
+        final AlertDialog dialog = builder.show();
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                if (selectedTheme != position) {
+
+                    SharedPreferenceUtil.put(MainActivity.this, getString(R.string.mainFragment_selectedTheme), position);
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 }

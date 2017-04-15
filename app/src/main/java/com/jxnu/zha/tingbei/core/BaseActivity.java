@@ -26,6 +26,7 @@ import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.service.MusicPlayerService;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 import com.jxnu.zha.tingbei.utils.StaticValue;
+import com.jxnu.zha.tingbei.utils.ThemeUtil;
 
 import butterknife.ButterKnife;
 
@@ -63,6 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        ThemeUtil.selectTheme(this);
         super.onCreate(savedInstanceState);
         mRQueue = Volley.newRequestQueue(this);
         if(mIsTemplate){

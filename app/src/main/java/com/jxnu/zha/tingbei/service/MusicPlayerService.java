@@ -151,6 +151,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
                     pauseMusic();
                 }else{
                     imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
+                    Log.e("mainSERVER","--------------state2-----------");
                     playMusic();
                 }
                 break;
@@ -244,6 +245,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             if (duration > 0) {
                 // 计算进度（获取进度条最大刻度*当前音乐播放位置 / 当前音乐时长）
                 playPos = circleProgressView.getMaxProgress() * position / duration;
+                if (playPos >= 99) playPos = 100;
                 circleProgressView.setProgress((int) playPos);
                 if (seekBarDialogMusicProgress != null){
                     seekBarDialogMusicProgress.setProgress((int) playPos);
@@ -265,13 +267,26 @@ public class MusicPlayerService extends Service implements View.OnClickListener
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        Log.e("mainHHH","music play complete···");
         isPlaying = false;
         if (musicList.size() <= 0){
             mContentContainer.removeView(mFloatView);
         }else{
-            mCurrentPlayPosition = mCurrentPlayPosition + 1;
-            playMusic(mCurrentPlayPosition);
+            if (playPos >= 99 && musicList.size() > (mCurrentPlayPosition + 1)){
+                mCurrentPlayPosition = mCurrentPlayPosition + 1;
+                playMusic(mCurrentPlayPosition);
+            }else if (musicList.size() == (mCurrentPlayPosition + 1)){
+                imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+                playPos = 0;
+                if (seekBarDialogMusicProgress != null) seekBarDialogMusicProgress.setProgress(0);
+                if (circleProgressView != null) circleProgressView.setProgress(0);
+//                mContentContainer.removeView(mFloatView);
+            }else{
+
+            }
+//            Log.e("mainSERVER","music play complete···"
+//                    + " playPosition = " + mCurrentPlayPosition
+//                    + " progress = " + playPos
+//                    + " mediaPosition = " + mediaPlayer.getCurrentPosition());
         }
     }
 
@@ -334,7 +349,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param position
      */
     private void playMusic(final int position){
-        Log.e("mainHHH","position = " + position);
+        Log.e("mainSERVER","position = " + position);
         isPlaying = true;
         try{
             final Mp3Info mp3Info = musicList.get(position);
@@ -449,16 +464,20 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param mp3Info
      */
     private void refreshDialog(Mp3Info mp3Info){
-        if (isPlaying){
-            imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause_2);
-        }else{
-            imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing_2);
+        Log.e("mainSERVER","-------------------------------1");
+        if (imgDialogPlayState != null){
+            Log.e("mainSERVER","-------------------------------2");
+            if (isPlaying){
+                imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause_2);
+            }else{
+                imgDialogPlayState.setImageResource(R.mipmap.ic_play_playing_2);
+            }
+            seekBarDialogMusicProgress.setProgress((int) playPos);
+            tvDialogMusicName.setText(mp3Info.getMusicName());
+            tvDialogSingerName.setText(mp3Info.getSingerName());
+            ImageManager.getInstance().displayImage(mp3Info.getMusicPicPath(), imgDialogMusicIcon,
+                    ImageManager.getMusicBgIconOptions());
         }
-        seekBarDialogMusicProgress.setProgress((int) playPos);
-        tvDialogMusicName.setText(mp3Info.getMusicName());
-        tvDialogSingerName.setText(mp3Info.getSingerName());
-        ImageManager.getInstance().displayImage(mp3Info.getMusicPicPath(), imgDialogMusicIcon,
-                ImageManager.getMusicBgIconOptions());
     }
 
     /**
@@ -468,7 +487,12 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     private void setPlayBarValue(Mp3Info mp3Info){
         tvMusicName.setText(mp3Info.getMusicName());
         tvMusicSinger.setText(mp3Info.getSingerName());
-        imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
+        if (isPlaying){
+            imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
+        }else{
+            imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+        }
+        Log.e("mainSERVER","--------------state3-----------");
         refreshUI();
     }
 
@@ -520,7 +544,6 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      */
     public void createFloatView(){
         if(musicList.size() > 0) {
-            Log.e("mainSERVER","---start createFloatView---" + com.jxnu.zha.qinglibrary.util.DateUtils.formatDate(System.currentTimeMillis(), com.jxnu.zha.qinglibrary.util.DateUtils.TYPE_01));
             mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_music_play_bar,null);
             ViewGroup mDecorView = (ViewGroup) StaticValue.NowActivity.getWindow().getDecorView();
             mContentContainer = (FrameLayout)((ViewGroup)mDecorView.getChildAt(0)).getChildAt(1);
@@ -531,16 +554,13 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             tvMusicSinger = (TextView)mFloatView.findViewById(R.id.tv_singerName);
             mFloatView.findViewById(R.id.ll_bottomMusicPlayer).setOnClickListener(this);
             imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+            Log.e("mainSERVER","--------------state1-----------");
             imgMusicPlay.setOnClickListener(this);
             //获取当前正在播放的音乐
             layoutParams.gravity = Gravity.BOTTOM;//设置对齐位置
             mContentContainer.addView(mFloatView,layoutParams);
-            if(!mediaPlayer.isPlaying()) {
-                //没有正在播放的，准备当前位置的音乐，设置值
-                playMusic(-1);
-            }
             setPlayBarValue(musicList.get(mCurrentPlayPosition));
-            Log.e("mainSERVER","---end createFloatView---" + com.jxnu.zha.qinglibrary.util.DateUtils.formatDate(System.currentTimeMillis(), com.jxnu.zha.qinglibrary.util.DateUtils.TYPE_01));
+
         }
     }
     class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {

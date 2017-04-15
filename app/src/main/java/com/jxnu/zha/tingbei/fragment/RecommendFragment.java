@@ -20,6 +20,7 @@ import com.jxnu.zha.tingbei.activity.RecommendSongActivity;
 import com.jxnu.zha.tingbei.adapter.HotRecommendAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
+import com.jxnu.zha.tingbei.core.MainSubFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
@@ -43,7 +44,7 @@ import butterknife.BindView;
  * email:13767191284@163.com
  * description:推荐
  */
-public class RecommendFragment extends BaseFragment {
+public class RecommendFragment extends MainSubFragment {
     @BindView(R.id.hzLst)
     HorizontalListView mHzLstHotRecommend;
     HotRecommendAdapter mHotRecommendAdapter;
@@ -80,9 +81,10 @@ public class RecommendFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        getDefaultRecommend();
-        getHotRecommend();
+        initFlag = true;
+        lazyLoad();
     }
+
     private void getDefaultRecommend(){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override
@@ -119,6 +121,7 @@ public class RecommendFragment extends BaseFragment {
                 String source = HttpTools.httpPost(RoutConstant.getSongLabel,map);
                 try{
                     final SongLabel songLabel = new Gson().fromJson(source,SongLabel.class);
+                    lstHotRecommend.clear();
                     if (songLabel.getCode() == 0){
                         for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
                             lstHotRecommend.add(songLabel.getObj().get(i));
@@ -167,6 +170,7 @@ public class RecommendFragment extends BaseFragment {
         super.executeOnLoadFileSuccess(entity);
         if (entity instanceof SongLabel){
             SongLabel songLabel = (SongLabel) entity;
+            lstHotRecommend.clear();
             for (int i =0 ; i < songLabel.getObj().size() && i < mHotRecommendNum;i ++){  //最多添加十组
                 lstHotRecommend.add(songLabel.getObj().get(i));
             }
@@ -182,6 +186,7 @@ public class RecommendFragment extends BaseFragment {
     protected void executeOnLoadFileFailure(String cacheKey) {
         super.executeOnLoadFileFailure(cacheKey);
         if (cacheKey.equals(getSongLabelCacheKey())){
+            lstHotRecommend.clear();
             for (int i = 0; i < mHotRecommendNum; i ++){
                 SongLabel.ObjEntity objEntity = new SongLabel.ObjEntity();
                 objEntity.setId("0");
@@ -191,7 +196,7 @@ public class RecommendFragment extends BaseFragment {
             mHotRecommendAdapter.notifyDataSetChanged();
         }
         if (cacheKey.equals(getSongListCacheKey())){
-            readCacheFile(cacheKey);
+//            readCacheFile(cacheKey);
         }
     }
     /**
@@ -199,7 +204,7 @@ public class RecommendFragment extends BaseFragment {
      * @param listMusicEntity
      */
     private void showAutoLoopViewPage(final List<SongList.ObjEntity.ListMusicEntity> listMusicEntity){
-
+        if (!isAdded()) return;
         // 固定ViewPager高度为屏幕宽度的一半
 //        mLoopView.getLayoutParams().height = (int) (DeviceUtil.getDeviceWidth(father) / 2.5);
         mLoopView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.autoLoopViewPager_height);
@@ -222,6 +227,22 @@ public class RecommendFragment extends BaseFragment {
             }
         });
     }
+
+    @Override
+    protected void lazyLoad() {
+        if(initFlag && mIsVisible){
+            getDefaultRecommend();
+            getHotRecommend();
+        }else{
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
     /**
      * 轮播图片适配器
      */

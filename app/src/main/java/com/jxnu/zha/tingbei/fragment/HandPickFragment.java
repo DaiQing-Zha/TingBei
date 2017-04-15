@@ -31,6 +31,7 @@ import com.jxnu.zha.tingbei.activity.TypeSingerActivity;
 import com.jxnu.zha.tingbei.adapter.SingerTypesAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
+import com.jxnu.zha.tingbei.core.MainSubFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
@@ -54,7 +55,7 @@ import butterknife.BindView;
  * email:13767191284@163.com
  * description:精选
  */
-public class HandPickFragment extends BaseFragment
+public class HandPickFragment extends MainSubFragment
         implements SwipeRefreshLayout.OnRefreshListener{
 
     @BindView(R.id.rf_content)
@@ -170,9 +171,8 @@ public class HandPickFragment extends BaseFragment
                 }
                 mRfContent.setEnabled(enable);
             }});
-
-        getRecommendGroup();
-        getSingerTypes();
+        initFlag = true;
+        lazyLoad();
     }
     @Override
     public void onRefresh() {
@@ -218,7 +218,7 @@ public class HandPickFragment extends BaseFragment
      * @param data
      */
     private void showAutoLoopViewPage(final List<Recommend.ObjEntity> data){
-
+        if (!isAdded()) return;
         mLoopView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.autoLoopViewPager_height);
         mAutoLoopViewAdapter = new AutoLoopViewAdapter(father, data);
         mLoopView.setAdapter(mAutoLoopViewAdapter);
@@ -307,6 +307,22 @@ public class HandPickFragment extends BaseFragment
     private String getSingerTypesCacheKey(){
         return RoutConstant.getSingerTypesOnInter.replace("/","_") + HttpTools.APP_ID;
     }
+
+    @Override
+    protected void lazyLoad() {
+        if(initFlag && mIsVisible){
+            getRecommendGroup();
+            getSingerTypes();
+        }else{
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
     /**
      * 轮播图片适配器
      */

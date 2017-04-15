@@ -22,7 +22,8 @@ import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.LabelSongList;
-import com.jxnu.zha.tingbei.model.Music;
+import com.jxnu.zha.tingbei.model.SongList;
+import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 
 import java.io.Serializable;
@@ -100,7 +101,8 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
         mLstSong.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                LabelSongList.ObjBean objBean = mLabelSongLst.get(position);
+                addMusicToList(objBean);
             }
         });
         getSongList();
@@ -144,5 +146,20 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
         super.executeOnLoadDataFailure(errorInfo);
         mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
         showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+    }
+
+    /**
+     * 添加一首歌曲
+     * @param objBean
+     */
+    private void addMusicToList(LabelSongList.ObjBean objBean){
+        Mp3Info mp3Info = new Mp3Info();
+        mp3Info.setMusicId(objBean.getId());
+        mp3Info.setMusicName(objBean.getName());
+        mp3Info.setMusicUrl(objBean.getOpenUrl());
+        mp3Info.setSingerName("未知歌手");
+        mp3Info.setMusicPicPath(objBean.getPicPath());
+        mp3Info.setSingerPicPath(objBean.getPicPath());
+        musicIBind.addMusicPlayList(mp3Info);
     }
 }

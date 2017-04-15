@@ -21,7 +21,9 @@ import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.model.Entity;
+import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.RingInfo;
+import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 import com.jxnu.zha.tingbei.widgets.CircleImageView;
 
@@ -64,6 +66,7 @@ public class RingInfoActivity extends AbstractActivity implements View.OnClickLi
                     ImageManager.getUserImageOptions());
             tv_musicName.setText(ringInfo.getObj().getName());
             tv_singerName.setText(ringInfo.getObj().getSingerName());
+            addMusicToList(ringInfo);
             saveCache(ringInfo);
         }
     }, new Response.ErrorListener() {
@@ -128,6 +131,7 @@ public class RingInfoActivity extends AbstractActivity implements View.OnClickLi
                 ImageManager.getUserImageOptions());
         tv_musicName.setText(ringInfo.getObj().getName());
         tv_singerName.setText(ringInfo.getObj().getSingerName());
+        addMusicToList(ringInfo);
     }
 
     @Override
@@ -144,5 +148,21 @@ public class RingInfoActivity extends AbstractActivity implements View.OnClickLi
                 getRingInfo();
                 break;
         }
+    }
+
+    /**
+     * 添加一首歌曲
+     * @param ringInfo
+     */
+    private void addMusicToList(RingInfo ringInfo){
+        RingInfo.ObjBean objBean = ringInfo.getObj();
+        Mp3Info mp3Info = new Mp3Info();
+        mp3Info.setMusicId(objBean.getId());
+        mp3Info.setMusicName(objBean.getName());
+        mp3Info.setMusicUrl(objBean.getMusicPath());
+        mp3Info.setSingerName(objBean.getSingerName());
+        mp3Info.setMusicPicPath(objBean.getMusicPicPath());
+        mp3Info.setSingerPicPath(objBean.getMusicSingerPicPath());
+        musicIBind.addMusicPlayList(mp3Info);
     }
 }

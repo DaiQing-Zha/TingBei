@@ -1,14 +1,9 @@
 package com.jxnu.zha.tingbei.https;
 
 import com.jxnu.zha.qinglibrary.util.L;
-import com.jxnu.zha.tingbei.core.BaseApplication;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import java.util.Locale;
-
-import cz.msebera.android.httpclient.client.params.ClientPNames;
 
 /**
  * Created by DaiQing.Zha on 2017/3/30.

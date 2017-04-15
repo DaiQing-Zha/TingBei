@@ -26,4 +26,6 @@
     <string name="rankingFragment_noRecommendBand">非推荐榜单</string>
     <string name="rankingFragment_labelBand">标签榜单</string>
 
+    <string name="mainFragment_selectedTheme">selected_theme</string>
+    <string name="mainFragment_changeTheme">更换主题</string>
 </resources>

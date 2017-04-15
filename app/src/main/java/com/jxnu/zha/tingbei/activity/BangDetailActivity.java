@@ -17,6 +17,8 @@ import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.manager.ImageManager;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.BangList;
+import com.jxnu.zha.tingbei.model.MusicListRelease;
+import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.music.util.Player;
 
 import java.util.ArrayList;
@@ -33,18 +35,9 @@ public class BangDetailActivity extends AbstractActivity{
     ImageView mImgTopBg;
     @BindView(R.id.lst_bangList)
     ListView mLstBangList;
-    @BindView(R.id.ll_bottomMusicPlayer)
-    LinearLayout ll_bottomMusicPlayer;
-    @BindView(R.id.img_playerState)
-    ImageView img_playerState;
-    @BindView(R.id.tv_musicName)
-    TextView tv_musicName;
-    private boolean isPlaying = false;  //是否正在播放
     final String TAG = "BangDetailActivity";
     BangDetailAdapter bangDetailAdapter;
     List<BangList.ObjEntity.ListMusicEntity> listMusicEntity;
-    private Player player;
-    private SeekBar musicProgress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,65 +68,16 @@ public class BangDetailActivity extends AbstractActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BangList.ObjEntity.ListMusicEntity musicEntity = listMusicEntity.get(position);
-                ll_bottomMusicPlayer.setVisibility(View.VISIBLE);
-                img_playerState.setImageResource(R.mipmap.ic_play_playing);
-                isPlaying = true;
-                tv_musicName.setText(musicEntity.getName());
-                playMusic(musicEntity.getMusicPath());
+                Mp3Info mp3Info = new Mp3Info();
+                mp3Info.setMusicId(musicEntity.getId());
+                mp3Info.setMusicName(musicEntity.getName());
+                mp3Info.setMusicUrl(musicEntity.getMusicPath());
+                mp3Info.setSingerName(musicEntity.getSingerName());
+                mp3Info.setMusicPicPath(musicEntity.getMusicPicPath());
+                mp3Info.setSingerPicPath(musicEntity.getMusicSingerPicPath());
+                musicIBind.addMusicPlayList(mp3Info);
             }
         });
-        img_playerState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isPlaying = !isPlaying;
-                if (isPlaying){
-                    img_playerState.setImageResource(R.mipmap.ic_play_playing);
-                    player.play();
-                }else{
-                    img_playerState.setImageResource(R.mipmap.ic_play_pause);
-                    player.pause();
-                }
-            }
-        });
-        musicProgress = (SeekBar) findViewById(R.id.seekbar_musicProgress);
-        player = new Player(musicProgress);
-        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
-    }
 
-    /**
-     * 播放音乐
-     * @param musicUrl
-     */
-    private void playMusic(final String musicUrl){
-        ThreadPool.getInstance().addTask(new Runnable() {
-            @Override
-            public void run() {
-                player.playUrl(musicUrl);
-            }
-        });
-    }
-    class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
-        int progress;
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                                      boolean fromUser) {
-            // 原本是(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
-            this.progress = progress * player.mediaPlayer.getDuration()
-                    / seekBar.getMax();
-        }
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            // seekTo()的参数是相对与影片时间的数字，而不是与seekBar.getMax()相对的数字
-            player.mediaPlayer.seekTo(progress);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        player.stop();
     }
 }

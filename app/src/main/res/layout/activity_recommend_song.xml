@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout
+    <FrameLayout android:id="@+id/fr_topBg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/recommendSong_topImgHeight">
         <ImageView android:id="@+id/img_songBg"
@@ -25,4 +25,8 @@
                 android:textColor="@color/color_commWhite" android:textSize="@dimen/comm_size14"/>
         </RelativeLayout>
     </FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_below="@id/fr_topBg" android:src="@mipmap/ic_music_headset"
+        android:layout_marginTop="15dip" android:layout_centerHorizontal="true"/>
 </RelativeLayout>

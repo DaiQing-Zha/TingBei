@@ -12,6 +12,7 @@ import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.adapter.RadioListAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
+import com.jxnu.zha.tingbei.core.MainSubFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
@@ -30,7 +31,7 @@ import butterknife.BindView;
  * email:13767191284@163.com
  * description:
  */
-public class RadioFragment extends BaseFragment{
+public class RadioFragment extends MainSubFragment{
     @BindView(R.id.gridView_hotRecommend)
     GridView mGvHotRecommend;
     @BindView(R.id.gridView_labelRadio)
@@ -51,8 +52,8 @@ public class RadioFragment extends BaseFragment{
         mLabelRadioAdapter = new RadioListAdapter(father, mLabelRadioList);
         mGvHotRecommend.setAdapter(mHotRecommendRadioAdapter);
         mGvLabelRadio.setAdapter(mLabelRadioAdapter);
-        getHotRecommendRadio();
-        getLabelRadio();
+        initFlag = true;
+        lazyLoad();
     }
 
     /**
@@ -70,6 +71,7 @@ public class RadioFragment extends BaseFragment{
                 try{
                     RadioList radioList = new Gson().fromJson(source,RadioList.class);
                     radioList.setRadioListType(0);
+                    mHotRecommendRadioList.clear();
                     mHotRecommendRadioList.addAll(radioList.getObj());
                     saveCacheFile(radioList,getHotRecommendRadioCacheKey());
                     father.runOnUiThread(new Runnable() {
@@ -101,6 +103,7 @@ public class RadioFragment extends BaseFragment{
                 try{
                     RadioList radioList = new Gson().fromJson(source,RadioList.class);
                     radioList.setRadioListType(1);
+                    mLabelRadioList.clear();
                     mLabelRadioList.addAll(radioList.getObj());
                     saveCacheFile(radioList,getLabelRadioCacheKey());
                     father.runOnUiThread(new Runnable() {
@@ -136,11 +139,13 @@ public class RadioFragment extends BaseFragment{
         if (entity instanceof RadioList){
             if (((RadioList)entity).getRadioListType() == 0){
                 RadioList radioList = (RadioList) entity;
+                mHotRecommendRadioList.clear();
                 mHotRecommendRadioList.addAll(radioList.getObj());
                 mHotRecommendRadioAdapter.notifyDataSetChanged();
             }
             if (((RadioList)entity).getRadioListType() == 1){
                 RadioList radioList = (RadioList) entity;
+                mLabelRadioList.clear();
                 mLabelRadioList.addAll(radioList.getObj());
                 mLabelRadioAdapter.notifyDataSetChanged();
             }
@@ -157,5 +162,20 @@ public class RadioFragment extends BaseFragment{
     }
     private String getLabelRadioCacheKey(){
         return RoutConstant.getRadioListByLabelId.replace("/","_") + HttpTools.APP_ID;
+    }
+
+    @Override
+    protected void lazyLoad() {
+        if(initFlag && mIsVisible){
+            getHotRecommendRadio();
+            getLabelRadio();
+        }else{
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }

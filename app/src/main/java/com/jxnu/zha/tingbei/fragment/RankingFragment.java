@@ -15,6 +15,7 @@ import com.jxnu.zha.tingbei.activity.BangDetailActivity;
 import com.jxnu.zha.tingbei.adapter.RecommendBandAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.BaseFragment;
+import com.jxnu.zha.tingbei.core.MainSubFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.BangList;
@@ -33,7 +34,7 @@ import butterknife.BindView;
  * email:13767191284@163.com
  * description:排行
  */
-public class RankingFragment extends BaseFragment {
+public class RankingFragment extends MainSubFragment {
 
     @BindView(R.id.lst_bandList1)
     ListView mLstRecommendBang;
@@ -96,9 +97,8 @@ public class RankingFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        getRecommendBand();
-        getNoRecommendBand();
-        getLabelBand();
+        initFlag = true;
+        lazyLoad();
     }
 
     /**
@@ -116,6 +116,7 @@ public class RankingFragment extends BaseFragment {
                 try{
                     BangList bangList = new Gson().fromJson(source, BangList.class);
                     bangList.setBangListType(0);
+                    mRecommendBangList.clear();
                     mRecommendBangList.addAll(bangList.getObj());
                     saveCacheFile(bangList,getRecommendBandCacheKey());
                     father.runOnUiThread(new Runnable() {
@@ -148,6 +149,7 @@ public class RankingFragment extends BaseFragment {
                 try{
                     BangList bangList = new Gson().fromJson(source, BangList.class);
                     bangList.setBangListType(1);
+                    mNoRecommendBangList.clear();
                     mNoRecommendBangList.addAll(bangList.getObj());
                     saveCacheFile(bangList,getNoRecommendBandCacheKey());
                     father.runOnUiThread(new Runnable() {
@@ -180,6 +182,7 @@ public class RankingFragment extends BaseFragment {
                 try{
                     BangList bangList = new Gson().fromJson(source, BangList.class);
                     bangList.setBangListType(2);
+                    mLabelBangList.clear();
                     mLabelBangList.addAll(bangList.getObj());
                     saveCacheFile(bangList,getLabelBandCacheKey());
                     father.runOnUiThread(new Runnable() {
@@ -216,16 +219,19 @@ public class RankingFragment extends BaseFragment {
             int bangListType = ((BangList)entity).getBangListType();
             if (bangListType == 0){
                 BangList bangList = (BangList) entity;
+                mRecommendBangList.clear();
                 mRecommendBangList.addAll(bangList.getObj());
                 mRecommendBandAdapter.notifyDataSetChanged();
             }
             if (bangListType == 1){
                 BangList bangList = (BangList) entity;
+                mNoRecommendBangList.clear();
                 mNoRecommendBangList.addAll(bangList.getObj());
                 mNoRecommendBandAdapter.notifyDataSetChanged();
             }
             if (bangListType == 2){
                 BangList bangList = (BangList) entity;
+                mLabelBangList.clear();
                 mLabelBangList.addAll(bangList.getObj());
                 mLabelBandAdapter.notifyDataSetChanged();
             }
@@ -245,5 +251,21 @@ public class RankingFragment extends BaseFragment {
     }
     private String getLabelBandCacheKey(){
         return RoutConstant.getBangListByLabelId.replace("/","_") + HttpTools.APP_ID;
+    }
+
+    @Override
+    protected void lazyLoad() {
+        if(initFlag && mIsVisible){
+            getRecommendBand();
+            getNoRecommendBand();
+            getLabelBand();
+        }else{
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }
