@@ -28,8 +28,8 @@
             android:layout_marginLeft="5dip" android:textSize="@dimen/comm_size16"
             android:text="@string/recommendFragment_hotRecommend"/>
     </LinearLayout>
-    <com.jxnu.zha.tingbei.widgets.HorizontalListView android:id="@+id/hzLst"
-        android:layout_width="match_parent" android:layout_height="75dip">
+    <ListView android:id="@+id/lstHotRecommend"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    </com.jxnu.zha.tingbei.widgets.HorizontalListView>
+    </ListView>
 </LinearLayout>

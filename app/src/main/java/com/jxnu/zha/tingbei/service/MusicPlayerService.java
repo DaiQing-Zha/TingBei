@@ -101,6 +101,10 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * 判断定时器是否开启过，默认没开启
      */
     private boolean isTimerStarted = false;
+    /**
+     * 是否添加了歌曲
+     */
+    private boolean isAddMusic = false;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -274,19 +278,18 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             if (playPos >= 99 && musicList.size() > (mCurrentPlayPosition + 1)){
                 mCurrentPlayPosition = mCurrentPlayPosition + 1;
                 playMusic(mCurrentPlayPosition);
-            }else if (musicList.size() == (mCurrentPlayPosition + 1)){
-                imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
-                playPos = 0;
-                if (seekBarDialogMusicProgress != null) seekBarDialogMusicProgress.setProgress(0);
-                if (circleProgressView != null) circleProgressView.setProgress(0);
-//                mContentContainer.removeView(mFloatView);
-            }else{
-
+            }else if (musicList.size() <= (mCurrentPlayPosition + 1)){
+                if (!isAddMusic && playPos >= 99){
+                    imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+                    playPos = 0;
+                    if (seekBarDialogMusicProgress != null) seekBarDialogMusicProgress.setProgress(0);
+                    if (circleProgressView != null) circleProgressView.setProgress(0);
+                    Log.e("mainSERVER1","-------------------------------Mipmap4 = " + isPlaying);
+                }else{
+                    isPlaying = true;
+                    isAddMusic = false;
+                }
             }
-//            Log.e("mainSERVER","music play complete···"
-//                    + " playPosition = " + mCurrentPlayPosition
-//                    + " progress = " + playPos
-//                    + " mediaPosition = " + mediaPlayer.getCurrentPosition());
         }
     }
 
@@ -349,13 +352,14 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param position
      */
     private void playMusic(final int position){
-        Log.e("mainSERVER","position = " + position);
+
         isPlaying = true;
         try{
             final Mp3Info mp3Info = musicList.get(position);
             if (circleProgressView == null){
                 createFloatView();
             }
+            Log.e("mainSERVER1","-------------------------------Mipmap5 = " + isPlaying);
             setPlayBarValue(mp3Info);
             refreshDialog(mp3Info);
             ThreadPool.getInstance().addTask(new Runnable() {
@@ -464,9 +468,9 @@ public class MusicPlayerService extends Service implements View.OnClickListener
      * @param mp3Info
      */
     private void refreshDialog(Mp3Info mp3Info){
-        Log.e("mainSERVER","-------------------------------1");
+        Log.e("mainSERVER1","-------------------------------Mipmap1 = " + isPlaying);
         if (imgDialogPlayState != null){
-            Log.e("mainSERVER","-------------------------------2");
+            Log.e("mainSERVER1","-------------------------------Mipmap2 = " + isPlaying);
             if (isPlaying){
                 imgDialogPlayState.setImageResource(R.mipmap.ic_play_pause_2);
             }else{
@@ -487,12 +491,12 @@ public class MusicPlayerService extends Service implements View.OnClickListener
     private void setPlayBarValue(Mp3Info mp3Info){
         tvMusicName.setText(mp3Info.getMusicName());
         tvMusicSinger.setText(mp3Info.getSingerName());
+        Log.e("mainSERVER1","-------------------------------Mipmap3 = " + isPlaying);
         if (isPlaying){
             imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
         }else{
             imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
         }
-        Log.e("mainSERVER","--------------state3-----------");
         refreshUI();
     }
 
@@ -537,6 +541,7 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             Log.e("mainHHH","mCurrentPlayPosition2 = " + mCurrentPlayPosition);
         }
         playMusic(mCurrentPlayPosition);
+        isAddMusic = true;
     }
 
     /**
@@ -553,7 +558,11 @@ public class MusicPlayerService extends Service implements View.OnClickListener
             tvMusicName = (TextView)mFloatView.findViewById(R.id.tv_musicName);
             tvMusicSinger = (TextView)mFloatView.findViewById(R.id.tv_singerName);
             mFloatView.findViewById(R.id.ll_bottomMusicPlayer).setOnClickListener(this);
-            imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+            if (isPlaying){
+                imgMusicPlay.setImageResource(R.mipmap.ic_play_pause_1);
+            }else{
+                imgMusicPlay.setImageResource(R.mipmap.ic_play_playing_1);
+            }
             Log.e("mainSERVER","--------------state1-----------");
             imgMusicPlay.setOnClickListener(this);
             //获取当前正在播放的音乐

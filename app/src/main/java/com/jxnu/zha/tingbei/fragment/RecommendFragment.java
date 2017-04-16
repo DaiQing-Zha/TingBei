@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
@@ -45,8 +46,8 @@ import butterknife.BindView;
  * description:推荐
  */
 public class RecommendFragment extends MainSubFragment {
-    @BindView(R.id.hzLst)
-    HorizontalListView mHzLstHotRecommend;
+    @BindView(R.id.lstHotRecommend)
+    ListView mLstHotRecommend;
     HotRecommendAdapter mHotRecommendAdapter;
     @BindView(R.id.autoLoop)
     AutoLoopViewPager mLoopView;
@@ -69,8 +70,8 @@ public class RecommendFragment extends MainSubFragment {
     public void builderView(View rootView) {
         lstHotRecommend = new ArrayList<>();
         mHotRecommendAdapter = new HotRecommendAdapter(father, lstHotRecommend);
-        mHzLstHotRecommend.setAdapter(mHotRecommendAdapter);
-        mHzLstHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mLstHotRecommend.setAdapter(mHotRecommendAdapter);
+        mLstHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(father, LabelSongListActivity.class);
