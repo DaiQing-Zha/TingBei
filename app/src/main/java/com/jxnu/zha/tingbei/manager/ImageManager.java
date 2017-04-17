@@ -72,12 +72,25 @@ public class ImageManager {
 		return musicIconOptions;
 	}
 
+	private static DisplayImageOptions singerIconOptions;
+	public static DisplayImageOptions getSingerIconOptions() {
+		if (singerIconOptions == null) {
+			singerIconOptions = new DisplayImageOptions.Builder()
+					.showImageForEmptyUri(R.mipmap.ic_default_singer)
+					.showImageOnFail(R.mipmap.ic_default_singer)
+					.cacheInMemory(true) // 缓存内存
+					.cacheOnDisc(true)// 缓存文件
+					.build();
+		}
+		return singerIconOptions;
+	}
+
 	private static DisplayImageOptions userIconOptions;
 	public static DisplayImageOptions getUserIconOptions() {
 		if (userIconOptions == null) {
 			userIconOptions = new DisplayImageOptions.Builder()
-					.showImageForEmptyUri(R.mipmap.ic_defalut_signer)
-					.showImageOnFail(R.mipmap.ic_defalut_signer)
+					.showImageForEmptyUri(R.mipmap.ic_defalut_user)
+					.showImageOnFail(R.mipmap.ic_defalut_user)
 					.cacheInMemory(true) // 缓存内存
 					.cacheOnDisc(true)// 缓存文件
 					.build();

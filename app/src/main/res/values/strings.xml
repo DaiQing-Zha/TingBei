@@ -28,4 +28,7 @@
 
     <string name="mainFragment_selectedTheme">selected_theme</string>
     <string name="mainFragment_changeTheme">更换主题</string>
+
+    <string name="musicListDialog_musicList">歌单列表</string>
+    <string name="musicListDialog_clearMusic">清空</string>
 </resources>

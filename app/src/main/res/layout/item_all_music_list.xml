@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingTop="8dip" android:paddingBottom="8dip">
+    <TextView android:id="@+id/tv_musicName"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textSize="@dimen/comm_size16" android:textColor="@color/color_commBlack33"
+        android:layout_centerVertical="true"/>
+    <TextView android:id="@+id/tv_musicSinger"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textColor="@color/color_commGray9D" android:layout_toRightOf="@id/tv_musicName"
+        android:layout_marginLeft="3dip" android:layout_centerVertical="true"/>
+    <ImageView android:id="@+id/imgDeleteMusic"
+        android:layout_width="18dip" android:layout_height="18dip"
+        android:layout_alignParentRight="true" android:src="@mipmap/ic_default_delete"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>

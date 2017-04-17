@@ -16,7 +16,7 @@
             android:layout_width="38dip" android:layout_height="38dip">
             <com.jxnu.zha.tingbei.widgets.CircleProgressView android:id="@+id/circleProgressView"
                 android:layout_width="38dip" android:layout_height="38dip" />
-            <ImageView android:id="@+id/img_playerState"
+            <ImageView android:id="@+id/img_bottomBarPlayState"
                 android:layout_width="25dip" android:layout_height="25dip"
                 android:layout_gravity="center" />
         </FrameLayout>

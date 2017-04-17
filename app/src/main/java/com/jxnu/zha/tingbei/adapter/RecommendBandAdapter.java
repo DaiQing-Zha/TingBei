@@ -44,7 +44,7 @@ public class RecommendBandAdapter extends BaseCustomAdapter {
         }
         BangList.ObjEntity bean = bangList.get(position);
         ImageManager.getInstance().displayImage(bean.getPicPath(), helper.imgSongIcon,
-                ImageManager.getRadioIconOptions());
+                ImageManager.getMusicIconOptions());
         helper.tvSongName.setText(bean.getName());
         helper.tvSongSinger.setText(bean.getTitle());
         return convertView;
