@@ -23,6 +23,16 @@
         <item name="color">@android:color/white</item>//默认是黑色，这里设置为白色
     </style>
 
+    <style name="full_cus_btn">
+        <item name="android:textSize">@dimen/comm_size18</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:paddingBottom">3dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_commWhite</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

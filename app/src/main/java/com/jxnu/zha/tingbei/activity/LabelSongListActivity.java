@@ -22,7 +22,6 @@ import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.LabelSongList;
-import com.jxnu.zha.tingbei.model.SongList;
 import com.jxnu.zha.tingbei.music.model.Mp3Info;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 

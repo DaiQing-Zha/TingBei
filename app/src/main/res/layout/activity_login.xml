@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical">
+
+
+    <LinearLayout android:id="@+id/ll_loginHead"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center"
+        android:paddingTop="15dip" android:paddingBottom="10dip"
+        android:background="?attr/colorPrimary">
+
+        <ImageView android:id="@+id/img_loginHead"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@mipmap/ic_default_user"/>
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout android:id="@+id/tpLayout_loginUser"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip" android:layout_marginTop="15dip">
+
+        <com.jxnu.zha.qinglibrary.widget.ClearEditText android:id="@+id/clearET_loginUser"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="@string/login_accountHint" android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" android:singleLine="true"
+            android:textSize="16sp"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout android:id="@+id/tpLayout_loginPwd"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip">
+
+        <com.jxnu.zha.qinglibrary.widget.ClearEditText android:id="@+id/clearET_loginPwd"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="@string/login_pwdHint" android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" android:singleLine="true"
+            android:textSize="16sp"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+
+        <CheckBox android:id="@+id/chk_rememberPwd"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip" android:checked="true"/>
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/chk_rememberPwd" android:text="@string/login_rememberPwd"/>
+        <TextView android:id="@+id/tv_register"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" android:layout_marginRight="8dip"
+            android:textColor="?attr/colorPrimary" android:text="@string/register_register"/>
+    </RelativeLayout>
+
+    <Button android:id="@+id/btn_loginLogin" style="@style/full_cus_btn"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip" android:layout_marginRight="15dip"
+        android:text="@string/login_login" android:layout_marginTop="5dip"/>
+
+</LinearLayout>

@@ -89,8 +89,8 @@ public class ImageManager {
 	public static DisplayImageOptions getUserIconOptions() {
 		if (userIconOptions == null) {
 			userIconOptions = new DisplayImageOptions.Builder()
-					.showImageForEmptyUri(R.mipmap.ic_defalut_user)
-					.showImageOnFail(R.mipmap.ic_defalut_user)
+					.showImageForEmptyUri(R.mipmap.ic_default_user)
+					.showImageOnFail(R.mipmap.ic_default_user)
 					.cacheInMemory(true) // 缓存内存
 					.cacheOnDisc(true)// 缓存文件
 					.build();

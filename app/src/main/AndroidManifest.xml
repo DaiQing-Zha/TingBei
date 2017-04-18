@@ -3,10 +3,13 @@
     package="com.jxnu.zha.tingbei">
 
     <!-- 系统需要使用的权限  begin -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:name=".core.BaseApplication"
         android:allowBackup="true"
@@ -47,6 +50,10 @@
         <activity android:name=".activity.RecommendSongActivity">
         </activity>
         <activity android:name=".activity.BangDetailActivity">
+        </activity>
+        <activity android:name=".activity.LoginActivity">
+        </activity>
+        <activity android:name=".activity.RegisterActivity">
         </activity>
         <!--声明服务-->
         <service android:name=".service.MusicPlayerService">

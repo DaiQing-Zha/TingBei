@@ -21,6 +21,7 @@ import com.jxnu.zha.qinglibrary.util.SharedPreferenceUtil;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.adapter.ThemeSelectAdapter;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
+import com.jxnu.zha.tingbei.core.BaseApplication;
 import com.jxnu.zha.tingbei.fragment.MainFragment;
 
 import java.util.Arrays;
@@ -80,6 +81,10 @@ public class MainActivity extends AbstractActivity {
                 break;
             case R.id.action_setting:
 //                index = 2;
+                if (!BaseApplication.getInstance().isUserLogin()){
+                    Intent intent = new Intent(this,LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
         switchFragmentContent(R.id.tipInfo_layout,fragments[index]);

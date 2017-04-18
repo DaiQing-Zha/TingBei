@@ -83,4 +83,12 @@ public class RoutConstant {
      * 根据歌曲ID获取彩铃及振铃信息
      */
     public final static String getRingInfoByMusicId = "inter/getRingInfoByMusicId";
+    /**
+     * 登录
+     */
+    public final static String loginAction = "member/loginAction";
+    /**
+     * 注册
+     */
+    public final static String registerAction = "member/registerAction";
 }
