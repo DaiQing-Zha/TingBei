@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -56,6 +58,24 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testHeight(){
+    public void testNullObject(){
+        List<String> mLst = new ArrayList<>();
+        String ss = null;
+        mLst.add(ss);
+        for (int i = 0; i < mLst.size(); i ++){
+            System.out.println("ss1 = " + ss);
+        }
+        System.out.println("-----------------------------");
+        ss = null;
+        mLst.add(ss);
+        for (int i = 0; i < mLst.size(); i ++){
+            System.out.println("ss2 = " + ss);
+        }
+        System.out.println("-----------------------------");
+        mLst.remove(ss);
+        for (int i = 0; i < mLst.size(); i ++){
+            System.out.println("ss3 = " + ss.toString());
+        }
+        System.out.println("-----------------------------");
     }
 }
