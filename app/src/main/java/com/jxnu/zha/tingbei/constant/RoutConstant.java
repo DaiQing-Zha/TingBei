@@ -86,9 +86,21 @@ public class RoutConstant {
     /**
      * 登录
      */
-    public final static String loginAction = "member/loginAction";
+    public final static String loginAction = "inter/login";
     /**
      * 注册
      */
-    public final static String registerAction = "member/registerAction";
+    public final static String registerAction = "inter/register";
+    /**
+     * loginId是否重复
+     */
+    public final static String sameLoginId = "inter/sameLoginId";
+    /**
+     * 昵称是否重复
+     */
+    public final static String sameNickName = "inter/sameNickName";
+    /**
+     * 手机号是否重复
+     */
+    public final static String samePhone = "inter/samePhone";
 }

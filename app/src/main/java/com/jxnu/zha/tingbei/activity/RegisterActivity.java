@@ -2,6 +2,7 @@ package com.jxnu.zha.tingbei.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,6 +32,10 @@ public class RegisterActivity extends AbstractActivity {
     ClearEditText mClearEditTextUser;
     @BindView(R.id.clearET_registerPwd)
     ClearEditText mClearEditTextPwd;
+    @BindView(R.id.clearET_nickName)
+    ClearEditText mClearETNickName;
+    @BindView(R.id.clearET_phone)
+    ClearEditText mClearETPhone;
     @BindView(R.id.rg_userSex)
     RadioGroup rgUserSex;
     @BindView(R.id.rbSexMan)
@@ -64,29 +69,54 @@ public class RegisterActivity extends AbstractActivity {
 
     @OnClick(R.id.btn_registerRegister)
     public void onClickRegister(){
-        String account = mClearEditTextUser.getText().toString();
-        String pwd = mClearEditTextPwd.getText().toString();
-        if (StringUtil.isEmpty(account)){
+        String loginId = mClearEditTextUser.getText().toString();
+        String loginPwd = mClearEditTextPwd.getText().toString();
+        String nickName = mClearETNickName.getText().toString();
+        String phone = mClearETPhone.getText().toString();
+        if (StringUtil.isEmpty(loginId)){
             showSnackBarMsg(EAlertStyle.WARNING,getString(R.string.toast_accountProhibitNull));
             return;
         }
-        if (StringUtil.isEmpty(pwd)){
+        if (StringUtil.isEmpty(loginPwd)){
             showSnackBarMsg(EAlertStyle.WARNING,getString(R.string.toast_pwdProhibitNull));
             return;
         }
-        register(account,pwd,mSex);
+        if (StringUtil.isEmpty(nickName)){
+            showSnackBarMsg(EAlertStyle.WARNING,getString(R.string.toast_nickNameProhibitNull));
+            return;
+        }
+        if (StringUtil.isEmpty(phone)){
+            showSnackBarMsg(EAlertStyle.WARNING,getString(R.string.toast_phoneProhibitNull));
+            return;
+        }
+        register(loginId,loginPwd,nickName,phone);
     }
 
-    private void register(final String account, final String pwd, final String sex){
+    private void register(final String loginId, final String loginPwd, final String nickname,final String phone){
         ThreadPool.getInstance().addTask(new Runnable() {
             @Override
             public void run() {
-                Map map = new HashMap();
-                map.put("appid", HttpTools.APP_ID);
-                map.put("loginid", account);
-                map.put("pwd", pwd);
-                map.put("sex", sex);
-                String source = HttpTools.httpPost(RoutConstant.registerAction,map);
+
+                Map mapSameId = new HashMap();
+                Map mapSameNickName = new HashMap();
+                Map mapSamePhone = new HashMap();
+                mapSameId.put("appid", HttpTools.APP_ID);
+                mapSameId.put("loginid", loginId);
+                mapSameNickName.put("appid", HttpTools.APP_ID);
+                mapSameNickName.put("nickname", nickname);
+                mapSamePhone.put("appid", HttpTools.APP_ID);
+                mapSamePhone.put("phone", phone);
+                String sourceSameId = HttpTools.httpPost(RoutConstant.registerAction,mapSameId);
+                String sourceSameNickName = HttpTools.httpPost(RoutConstant.registerAction,mapSameNickName);
+                String sourcePhone = HttpTools.httpPost(RoutConstant.registerAction,mapSamePhone);
+                Log.e("mainHHH","sourceSameId = " + sourceSameId + " sourceSameNickName = " + sourceSameNickName + " sourcePhone = " + sourcePhone);
+//                Map map = new HashMap();
+//                map.put("appid", HttpTools.APP_ID);
+//                map.put("loginid", loginId);
+//                map.put("loginpwd", loginPwd);
+//                map.put("nickname", nickname);
+//                map.put("phone", phone);
+//                String source = HttpTools.httpPost(RoutConstant.registerAction,map);
                 try{
 
                 }catch (Exception e){
