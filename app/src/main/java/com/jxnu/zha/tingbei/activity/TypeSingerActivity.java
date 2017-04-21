@@ -3,16 +3,10 @@ package com.jxnu.zha.tingbei.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
@@ -20,6 +14,7 @@ import com.jxnu.zha.tingbei.adapter.TypeSingerAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
+import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.Singer;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
@@ -47,37 +42,6 @@ public class TypeSingerActivity extends AbstractActivity implements View.OnClick
     private TypeSingerAdapter mSingerAdapter;
     private String typeId = "";
     private String typeName = "";
-    /**
-     * 获取推荐页分组
-     */
-    StringRequest singerListRequest = new StringRequest(Request.Method.POST
-            , HttpTools.getAbsoluteUrl(RoutConstant.getSingerBySingerType)
-            , new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            mLoadStatusBox.loadSuccess();
-            Singer singer = new Gson().fromJson(response,Singer.class);
-            mLstSinger.addAll(singer.getObj());
-            mSingerAdapter.notifyDataSetChanged();
-            saveCache(singer);
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("mainError","error = " + error.toString());
-            readCacheData(getCacheKey(),error.toString());
-        }
-    }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map map = new HashMap();
-            map.put("appid",HttpTools.APP_ID);
-            map.put("row","1");
-            map.put("page","1");
-            map.put("typeid",typeId);
-            return map;
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,7 +81,36 @@ public class TypeSingerActivity extends AbstractActivity implements View.OnClick
      */
     private void getSingerListByTypes(){
         mLoadStatusBox.loading();
-        mRQueue.add(singerListRequest);
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                map.put("row","1");
+                map.put("page","1");
+                map.put("typeid",typeId);
+                final String response = HttpTools.httpPost(RoutConstant.getSingerBySingerType,map);
+                if (HttpTools.checkSource(response)){
+                    try{
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Singer singer = new Gson().fromJson(response,Singer.class);
+                                mLoadStatusBox.loadSuccess();
+                                mLstSinger.addAll(singer.getObj());
+                                mSingerAdapter.notifyDataSetChanged();
+                                saveCache(singer);
+                            }
+                        });
+                    }catch (Exception e){
+                        readCacheData(getCacheKey(),response);
+                    }
+                }else{
+                    readCacheData(getCacheKey(),response);
+                }
+            }
+        });
+//        mRQueue.add(singerListRequest);
     }
 
     @Override
@@ -143,7 +136,7 @@ public class TypeSingerActivity extends AbstractActivity implements View.OnClick
     protected void executeOnLoadDataFailure(String errorInfo) {
         super.executeOnLoadDataFailure(errorInfo);
         mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
-        showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+        showSnackBarMsg(EAlertStyle.ALERT, getHttpErrorMessage(errorInfo));
     }
 
     @Override
@@ -151,7 +144,7 @@ public class TypeSingerActivity extends AbstractActivity implements View.OnClick
         switch (v.getId()){
             case R.id.loadStatusBox:
                 mLoadStatusBox.loading();
-                mRQueue.add(singerListRequest);
+                getSingerListByTypes();
                 break;
         }
     }

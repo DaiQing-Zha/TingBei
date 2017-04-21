@@ -9,11 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
@@ -22,6 +17,7 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
+import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.MusicListRelease;
 import com.jxnu.zha.tingbei.model.Recommend;
@@ -49,61 +45,6 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
     private String mPicPath = "";
     MusicListAdapter mMusicListAdapter;
     List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList;
-    /**
-     * 获取推荐页分组
-     */
-    StringRequest musicListRelease = new StringRequest(Request.Method.POST
-            , HttpTools.getAbsoluteUrl(RoutConstant.getMusicListReleaseById)
-            , new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            mLoadStatusBox.loadSuccess();
-            MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
-            mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
-            mMusicListAdapter.notifyDataSetChanged();
-//            addMusicsPlayList(mObjBeanList);
-            saveCache(musicListRelease);
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("mainError","error = " + error.toString());
-            readCacheData(getCacheKey(),error.toString());
-        }
-    }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map map = new HashMap();
-            map.put("appid",HttpTools.APP_ID);
-            map.put("id",mReleaseId);
-            map.put("position","1");
-            return map;
-        }
-    };
-
-    /**
-     * 将音乐添加至播放列表
-     * @param mObjBeanList
-     */
-    private void addMusicsPlayList(List<MusicListRelease.ObjBean.MusicListBean.ListMusicBean> mObjBeanList) {
-        ArrayList<Mp3Info> arrayList = new ArrayList<>();
-        for (int i = 0; i < mObjBeanList.size(); i ++){
-            MusicListRelease.ObjBean.MusicListBean.ListMusicBean musicBean = mObjBeanList.get(i);
-            Mp3Info mp3Info = new Mp3Info();
-            mp3Info.setMusicId(musicBean.getId());
-            mp3Info.setMusicName(musicBean.getName());
-            mp3Info.setMusicUrl(musicBean.getMusicPath());
-            mp3Info.setSingerName(musicBean.getSingerName());
-            mp3Info.setMusicPicPath(musicBean.getMusicPicPath());
-            mp3Info.setSingerPicPath(musicBean.getMusicSingerPicPath());
-            arrayList.add(mp3Info);
-        }
-        for (int i = 0; i < arrayList.size(); i ++){
-            Log.e("mainHHH","musicName1 = " + arrayList.get(i).getMusicName());
-        }
-        Log.e("mainHHH","---------------------------------------------");
-        musicIBind.addMusicsToPlayList(arrayList);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,7 +96,35 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
      */
     private void getMusicListRelease(){
         mLoadStatusBox.loading();
-        mRQueue.add(musicListRelease);
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                map.put("id",mReleaseId);
+                map.put("position","1");
+                final String response = HttpTools.httpPost(RoutConstant.getMusicListReleaseById,map);
+                if (HttpTools.checkSource(response)){
+                    try{
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MusicListRelease musicListRelease = new Gson().fromJson(response,MusicListRelease.class);
+                                mLoadStatusBox.loadSuccess();
+                                mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
+                                mMusicListAdapter.notifyDataSetChanged();
+                                saveCache(musicListRelease);
+                            }
+                        });
+                    }catch (Exception e){
+                        readCacheData(getCacheKey(),response);
+                    }
+                }else{
+                    readCacheData(getCacheKey(),response);
+                }
+
+            }
+        });
     }
 
     @Override
@@ -175,14 +144,13 @@ public class MusicDetailActivity extends AbstractActivity implements View.OnClic
         MusicListRelease musicListRelease = (MusicListRelease) entity;
         mObjBeanList.addAll(musicListRelease.getObj().getMusicList().getListMusic());
         mMusicListAdapter.notifyDataSetChanged();
-//        addMusicsPlayList(mObjBeanList);
     }
 
     @Override
     protected void executeOnLoadDataFailure(String errorInfo) {
         super.executeOnLoadDataFailure(errorInfo);
         mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
-        showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+        showSnackBarMsg(EAlertStyle.ALERT, getHttpErrorMessage(errorInfo));
     }
 
     @Override

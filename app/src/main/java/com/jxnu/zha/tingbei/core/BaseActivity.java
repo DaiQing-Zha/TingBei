@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
+import com.jxnu.zha.qinglibrary.util.EHttpErrorStyle;
 import com.jxnu.zha.qinglibrary.widget.TipInfoLayout;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.service.MusicPlayerService;
@@ -190,11 +190,11 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
 
     /**
-     * 根据error获取volley请求错误时的提示信息
+     * 根据error获取http请求错误时的提示信息
      * @param error
      * @return
      */
-    public String getVolleyErrorMessage(@NonNull String error){
+    public String getHttpErrorMessage(@NonNull String error){
         String errorMessage = "";
         if (error.contains("TimeoutError")){
             errorMessage = getString(R.string.http_timeOut);
@@ -215,17 +215,17 @@ public abstract class BaseActivity extends AppCompatActivity{
      * @param error
      * @return
      */
-    protected ENetWorkErrorStyle getErrorStyle(@NonNull String error){
+    protected EHttpErrorStyle getErrorStyle(@NonNull String error){
         if (error.contains("TimeoutError")){
-            return ENetWorkErrorStyle.CONNECT_TIME_OUT;
+            return EHttpErrorStyle.CONNECT_TIME_OUT;
         }else if (error.contains("NetworkError")){
-            return ENetWorkErrorStyle.NETWORK_ERROR;
+            return EHttpErrorStyle.NETWORK_ERROR;
         } else if (error.contains("NoConnectionError")){
-            return ENetWorkErrorStyle.NETWORK_ERROR;
+            return EHttpErrorStyle.NETWORK_ERROR;
         }else if (error.contains("ServerError")){
-            return ENetWorkErrorStyle.NETWORK_ERROR404;
+            return EHttpErrorStyle.NETWORK_ERROR404;
         }else{
-            return ENetWorkErrorStyle.DEFAULT_LOAD_ERROR;
+            return EHttpErrorStyle.DEFAULT_LOAD_ERROR;
         }
     }
 }

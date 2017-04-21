@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.jxnu.zha.tingbei.engine.ServerConfig;
+import com.jxnu.zha.tingbei.model.JsonMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -80,18 +81,35 @@ public class HttpTools {
                 return str;
             }
             if (response == HttpURLConnection.HTTP_NOT_FOUND){
-                return "ServerError";
+                return JsonMessage.ServerError;
             }
-            return "NetworkError";
+            return JsonMessage.NetworkError;
         } catch (MalformedURLException e){  //URL格式或者路径错误异常
-            return "ServerError";
+            return JsonMessage.ServerError;
         } catch (TimeoutException e){
-            return "TimeoutError";
+            return JsonMessage.TimeoutError;
         }catch (IOException e){ //网络异常
-            return "NetworkError";
+            return JsonMessage.NetworkError;
         }catch (Exception e) { //普通异常
-            return "Exception";
+            return JsonMessage.ExceptionError;
         }
+    }
+
+    /**
+     * 判断source是否正确
+     * @param source
+     * @return
+     */
+    public static boolean checkSource(String source) {
+        try {
+            if (source.equals(JsonMessage.NetworkError)) return false;
+            if (source.equals(JsonMessage.ServerError)) return false;
+            if (source.equals(JsonMessage.TimeoutError)) return false;
+            if (source.equals(JsonMessage.ExceptionError)) return false;
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**

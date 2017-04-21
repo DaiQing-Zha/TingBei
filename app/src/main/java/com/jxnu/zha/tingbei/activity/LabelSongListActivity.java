@@ -3,16 +3,10 @@ package com.jxnu.zha.tingbei.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.view.LoadStatusBox;
 import com.jxnu.zha.tingbei.R;
@@ -20,6 +14,7 @@ import com.jxnu.zha.tingbei.adapter.LabelSongListAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
+import com.jxnu.zha.tingbei.manager.ThreadPool;
 import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.model.LabelSongList;
 import com.jxnu.zha.tingbei.music.model.Mp3Info;
@@ -47,36 +42,6 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
     private String labelId;
     private String labelName;
     private String TAG = "LabelSongActivity";
-    StringRequest songListQueue = new StringRequest(Request.Method.POST
-            , HttpTools.getAbsoluteUrl(RoutConstant.getSongListByLabelId)
-            , new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            Log.e(TAG,"response = " + response);
-            mLoadStatusBox.loadSuccess();
-            LabelSongList labelSongList = new Gson().fromJson(response,LabelSongList.class);
-            mLabelSongLst.addAll(labelSongList.getObj());
-            mSongListAdapter.notifyDataSetChanged();
-            saveCache(labelSongList);
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e(TAG,"error = " + error.toString());
-            readCacheData(getCacheKey(),error.toString());
-        }
-    }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map map = new HashMap();
-            map.put("appid",HttpTools.APP_ID);
-            map.put("row","1");
-            map.put("page","1");
-            map.put("labelid",labelId);
-            Log.e(TAG,"singerId = " + labelId);
-            return map;
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,7 +83,35 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
 
     private void getSongList(){
         mLoadStatusBox.loading();
-        mRQueue.add(songListQueue);
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                map.put("row","1");
+                map.put("page","1");
+                map.put("labelid",labelId);
+                final String response = HttpTools.httpPost(RoutConstant.getSongListByLabelId,map);
+                if (HttpTools.checkSource(response)){
+                    try{
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LabelSongList labelSongList = new Gson().fromJson(response,LabelSongList.class);
+                                mLoadStatusBox.loadSuccess();
+                                mLabelSongLst.addAll(labelSongList.getObj());
+                                mSongListAdapter.notifyDataSetChanged();
+                                saveCache(labelSongList);
+                            }
+                        });
+                    }catch (Exception e){
+                        readCacheData(getCacheKey(),response);
+                    }
+                }else{
+                    readCacheData(getCacheKey(),response);
+                }
+            }
+        });
     }
 
     @Override
@@ -144,7 +137,7 @@ public class LabelSongListActivity extends AbstractActivity implements View.OnCl
     protected void executeOnLoadDataFailure(String errorInfo) {
         super.executeOnLoadDataFailure(errorInfo);
         mLoadStatusBox.loadFailed(getErrorStyle(errorInfo));
-        showSnackBarMsg(EAlertStyle.ALERT,getVolleyErrorMessage(errorInfo));
+        showSnackBarMsg(EAlertStyle.ALERT, getHttpErrorMessage(errorInfo));
     }
 
     /**

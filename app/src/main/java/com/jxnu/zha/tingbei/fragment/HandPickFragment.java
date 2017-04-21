@@ -11,16 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.widget.RefreshLayout;
 import com.jxnu.zha.qinglibrary.widget.pagerindicator.AutoLoopViewPager;
@@ -30,7 +24,6 @@ import com.jxnu.zha.tingbei.activity.MusicDetailActivity;
 import com.jxnu.zha.tingbei.activity.TypeSingerActivity;
 import com.jxnu.zha.tingbei.adapter.SingerTypesAdapter;
 import com.jxnu.zha.tingbei.constant.RoutConstant;
-import com.jxnu.zha.tingbei.core.BaseFragment;
 import com.jxnu.zha.tingbei.core.MainSubFragment;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ImageManager;
@@ -73,63 +66,7 @@ public class HandPickFragment extends MainSubFragment
     private SingerTypesAdapter mSingerTypesAdapter;
     private String mIndexTopId;
     private static String TAG = "HandPickFragment";
-    /**
-     * 获取推荐页分组
-     */
-    StringRequest requestRecommendGroup = new StringRequest(Request.Method.POST
-            , HttpTools.getAbsoluteUrl(RoutConstant.getRecommendGroupOnInter)
-            , new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-//            Log.e(TAG,"response = " + response);
-            RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
-            saveCacheFile(recommendGroup,getRecommendGroupCacheKey());
-            mIndexTopId = recommendGroup.getObj().get(1).getId();
-            mRQueue.add(requestRecommend);
-            mRfContent.setRefreshing(false);
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            mRfContent.setRefreshing(false);
-            readCacheFile(getRecommendGroupCacheKey());
-        }
-    }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map map = new HashMap();
-            map.put("appid",HttpTools.APP_ID);
-            return map;
-        }
-    };
-    /**
-     * 根据分组id获取推荐页
-     */
-    StringRequest requestRecommend = new StringRequest(Request.Method.POST
-            , HttpTools.getAbsoluteUrl(RoutConstant.getRecommendByGroupId)
-            , new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            Log.e(TAG,"response = " + response);
-            Recommend recommend = new Gson().fromJson(response,Recommend.class);
-            showAutoLoopViewPage(recommend.getObj());
-            saveCacheFile(recommend,getRecommendCacheKey());
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            readCacheFile(getRecommendCacheKey());
-            Log.e(TAG,"getRecommend error ");
-        }
-    }){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map map = new HashMap();
-            map.put("appid",HttpTools.APP_ID);
-            map.put("groupid",mIndexTopId);
-            return map;
-        }
-    };
+
     @Override
     public View getRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_hand_pick,container,false);
@@ -183,8 +120,65 @@ public class HandPickFragment extends MainSubFragment
      * 获取推荐分组
      */
     private void getRecommendGroup(){
-        mRQueue.add(requestRecommendGroup);
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                final String response = HttpTools.httpPost(RoutConstant.getRecommendGroupOnInter,map);
+                if (HttpTools.checkSource(response)){
+                    try{
+                        father.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                RecommendGroup recommendGroup = new Gson().fromJson(response,RecommendGroup.class);
+                                saveCacheFile(recommendGroup,getRecommendGroupCacheKey());
+                                mIndexTopId = recommendGroup.getObj().get(1).getId();
+                                getRecommend();
+                                mRfContent.setRefreshing(false);
+                            }
+                        });
+                    }catch (Exception e){
+                        readCacheFile(getRecommendGroupCacheKey());
+                    }
+                }else{
+                    readCacheFile(getRecommendGroupCacheKey());
+                }
+            }
+        });
     }
+
+    /**
+     * 获取推荐分组
+     */
+    private void getRecommend(){
+        ThreadPool.getInstance().addTask(new Runnable() {
+            @Override
+            public void run() {
+                Map map = new HashMap();
+                map.put("appid",HttpTools.APP_ID);
+                map.put("groupid",mIndexTopId);
+                final String response = HttpTools.httpPost(RoutConstant.getRecommendByGroupId,map);
+                if (HttpTools.checkSource(response)){
+                    try{
+                        father.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Recommend recommend = new Gson().fromJson(response,Recommend.class);
+                                showAutoLoopViewPage(recommend.getObj());
+                                saveCacheFile(recommend,getRecommendCacheKey());
+                            }
+                        });
+                    }catch (Exception e){
+                        readCacheFile(getRecommendCacheKey());
+                    }
+                }else{
+                    readCacheFile(getRecommendCacheKey());
+                }
+            }
+        });
+    }
+
     /**
      * 获取歌手类型
      */
@@ -267,7 +261,7 @@ public class HandPickFragment extends MainSubFragment
         if (entity instanceof RecommendGroup){
             RecommendGroup recommendGroup = (RecommendGroup) entity;
             mIndexTopId = recommendGroup.getObj().get(1).getId();
-            mRQueue.add(requestRecommend);
+            getRecommend();
 //            Log.e(TAG,"recommendGroup---------------------------------");
         }
         if (entity instanceof Recommend){

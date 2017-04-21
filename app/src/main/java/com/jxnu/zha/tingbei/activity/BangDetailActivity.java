@@ -60,8 +60,10 @@ public class BangDetailActivity extends AbstractActivity{
                 Log.e(TAG,"--------------" + objEntity.toString());
                 ImageManager.getInstance().displayImage(objEntity.getPicPath(), mImgTopBg,
                         ImageManager.getUserImageOptions());
-                listMusicEntity.addAll(objEntity.getListMusic());
-                bangDetailAdapter.notifyDataSetChanged();
+                if (objEntity != null && objEntity.getListMusic() != null){
+                    listMusicEntity.addAll(objEntity.getListMusic());
+                    bangDetailAdapter.notifyDataSetChanged();
+                }
             }
         }
         mLstBangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

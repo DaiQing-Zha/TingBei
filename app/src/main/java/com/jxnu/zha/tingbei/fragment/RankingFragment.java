@@ -76,7 +76,7 @@ public class RankingFragment extends MainSubFragment {
         mLstLabelBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                BangList.ObjEntity objEntity = mLabelBangList.get(i);
                 Log.e(TAG,"-----------------------tuijian = " + objEntity.toString());
                 Intent intent = new Intent(father, BangDetailActivity.class);
                 Bundle bundle = new Bundle();
@@ -88,7 +88,7 @@ public class RankingFragment extends MainSubFragment {
         mLstNoRecommendBang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                BangList.ObjEntity objEntity = mRecommendBangList.get(i);
+                BangList.ObjEntity objEntity = mNoRecommendBangList.get(i);
                 Log.e(TAG,"-----------------------tuijian = " + objEntity.toString());
                 Intent intent = new Intent(father, BangDetailActivity.class);
                 Bundle bundle = new Bundle();

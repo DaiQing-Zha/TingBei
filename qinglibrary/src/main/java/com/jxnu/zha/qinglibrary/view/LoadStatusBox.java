@@ -3,13 +3,14 @@ package com.jxnu.zha.qinglibrary.view;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jxnu.zha.qinglibrary.R;
-import com.jxnu.zha.qinglibrary.util.ENetWorkErrorStyle;
+import com.jxnu.zha.qinglibrary.util.EHttpErrorStyle;
 
 /**
  * Created by DaiQing.Zha on 2017/3/19.
@@ -83,7 +84,8 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
      * 数据加载失败
      * @param style
      */
-    public void loadFailed(ENetWorkErrorStyle style){
+    public void loadFailed(EHttpErrorStyle style){
+        Log.e("mainMusicDetail","style = " + style);
         viewProgress.setVisibility(GONE);
         viewError.setVisibility(VISIBLE);
         mRlContent.setClickable(true);
@@ -112,10 +114,11 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
      * @param imgResource
      */
     private void setPromptImg(@DrawableRes int imgResource){
+        Log.e("mainMusicDetail","setPromptImg = " + imgResource);
         mImgLoadError.setImageResource(imgResource);
     }
 
-    public void setPrompt(ENetWorkErrorStyle style){
+    public void setPrompt(EHttpErrorStyle style){
         String cause = "";
         String suggest = "";
         int imgResourceId = R.mipmap.ic_default_network_error;
@@ -140,6 +143,7 @@ public class LoadStatusBox extends RelativeLayout implements View.OnClickListene
                 suggest = mContext.getString(R.string.loadState_errorDefaultLoadSuggest);
                 imgResourceId = R.mipmap.ic_default_load_error;
         }
+        Log.e("mainMusicDetail","cause = " + cause);
         setPromptMessage(cause,suggest);
         setPromptImg(imgResourceId);
     }
