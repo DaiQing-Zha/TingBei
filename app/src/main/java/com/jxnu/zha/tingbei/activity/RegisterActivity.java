@@ -1,5 +1,6 @@
 package com.jxnu.zha.tingbei.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.google.gson.Gson;
 import com.jxnu.zha.qinglibrary.util.StringUtil;
 import com.jxnu.zha.qinglibrary.widget.ClearEditText;
 import com.jxnu.zha.tingbei.R;
@@ -14,6 +16,7 @@ import com.jxnu.zha.tingbei.constant.RoutConstant;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.https.HttpTools;
 import com.jxnu.zha.tingbei.manager.ThreadPool;
+import com.jxnu.zha.tingbei.model.Entity;
 import com.jxnu.zha.tingbei.utils.EAlertStyle;
 
 import java.util.HashMap;
@@ -97,28 +100,52 @@ public class RegisterActivity extends AbstractActivity {
             @Override
             public void run() {
 
-                Map mapSameId = new HashMap();
-                Map mapSameNickName = new HashMap();
-                Map mapSamePhone = new HashMap();
-                mapSameId.put("appid", HttpTools.APP_ID);
-                mapSameId.put("loginid", loginId);
-                mapSameNickName.put("appid", HttpTools.APP_ID);
-                mapSameNickName.put("nickname", nickname);
-                mapSamePhone.put("appid", HttpTools.APP_ID);
-                mapSamePhone.put("phone", phone);
-                String sourceSameId = HttpTools.httpPost(RoutConstant.registerAction,mapSameId);
-                String sourceSameNickName = HttpTools.httpPost(RoutConstant.registerAction,mapSameNickName);
-                String sourcePhone = HttpTools.httpPost(RoutConstant.registerAction,mapSamePhone);
-                Log.e("mainHHH","sourceSameId = " + sourceSameId + " sourceSameNickName = " + sourceSameNickName + " sourcePhone = " + sourcePhone);
-//                Map map = new HashMap();
-//                map.put("appid", HttpTools.APP_ID);
-//                map.put("loginid", loginId);
-//                map.put("loginpwd", loginPwd);
-//                map.put("nickname", nickname);
-//                map.put("phone", phone);
-//                String source = HttpTools.httpPost(RoutConstant.registerAction,map);
                 try{
-
+                    Map mapSameId = new HashMap();
+                    mapSameId.put("appid", HttpTools.APP_ID);
+                    mapSameId.put("loginid", loginId);
+                    String sourceSameId = HttpTools.httpPost(RoutConstant.sameLoginId,mapSameId);
+                    Entity entityId = new Gson().fromJson(sourceSameId,Entity.class);
+                    if (entityId.getCode() != 0){
+                        showSnackBarMsg(EAlertStyle.ALERT,entityId.getMsg());
+                        return;
+                    }
+                    Map mapSameNickName = new HashMap();
+                    mapSameNickName.put("appid", HttpTools.APP_ID);
+                    mapSameNickName.put("nickname", nickname);
+                    String sourceSameNickName = HttpTools.httpPost(RoutConstant.sameNickName,mapSameNickName);
+                    Entity entityNickName = new Gson().fromJson(sourceSameNickName,Entity.class);
+                    if (entityNickName.getCode() != 0){
+                        showSnackBarMsg(EAlertStyle.ALERT,entityNickName.getMsg());
+                        return;
+                    }
+                    Map mapSamePhone = new HashMap();
+                    mapSamePhone.put("appid", HttpTools.APP_ID);
+                    mapSamePhone.put("phone", phone);
+                    String sourcePhone = HttpTools.httpPost(RoutConstant.samePhone,mapSamePhone);
+                    Entity entityPhone = new Gson().fromJson(sourcePhone,Entity.class);
+                    if (entityPhone.getCode() != 0){
+                        showSnackBarMsg(EAlertStyle.ALERT,entityPhone.getMsg());
+                        return;
+                    }
+                    Map map = new HashMap();
+                    map.put("appid", HttpTools.APP_ID);
+                    map.put("loginid", loginId);
+                    map.put("loginpwd", loginPwd);
+                    map.put("nickname", nickname);
+                    map.put("phone", phone);
+                    String source = HttpTools.httpPost(RoutConstant.registerAction,map);
+                    Entity entity = new Gson().fromJson(source,Entity.class);
+                    if (entity.getCode() == 0){
+                        showSnackBarMsg(EAlertStyle.ALERT,entity.getMsg());
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("loginid", loginId);
+                        resultIntent.putExtra("loginpwd", loginPwd);
+                        setResult(RESULT_OK, resultIntent);
+                        finish();
+                    }else{
+                        showSnackBarMsg(EAlertStyle.ALERT,entity.getMsg());
+                    }
                 }catch (Exception e){
                 }
             }

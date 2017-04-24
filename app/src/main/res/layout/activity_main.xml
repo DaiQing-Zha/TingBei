@@ -15,7 +15,7 @@
         <!--&lt;!&ndash;菜单&ndash;&gt;-->
         <android.support.design.widget.NavigationView android:id="@id/id_nvMenu"
             android:layout_width="260dp" android:layout_height="match_parent"
-            app:headerLayout="@layout/layout_menu_header" app:menu="@menu/menu_drawer"
+            app:menu="@menu/menu_drawer"
             android:layout_gravity="start"/>
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

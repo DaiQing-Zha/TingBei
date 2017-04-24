@@ -1,7 +1,10 @@
 package com.jxnu.zha.tingbei.activity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -16,10 +19,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jxnu.zha.qinglibrary.util.SharedPreferenceUtil;
 import com.jxnu.zha.tingbei.R;
 import com.jxnu.zha.tingbei.adapter.ThemeSelectAdapter;
+import com.jxnu.zha.tingbei.constant.ConstantValue;
 import com.jxnu.zha.tingbei.core.AbstractActivity;
 import com.jxnu.zha.tingbei.core.BaseApplication;
 import com.jxnu.zha.tingbei.fragment.MainFragment;
@@ -34,16 +39,25 @@ public class MainActivity extends AbstractActivity {
     private NavigationView mNavigationView;  //菜单
     private LinearLayout mMainContent;
     private Toolbar mToolbar;
+    private TextView mTvName;
     private Fragment[] fragments = new Fragment[] {new MainFragment()};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.mIsTemplate = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        registerBroadcast();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
     protected void init() {
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_menu_header,null);
         mDrawerLayout = findWidget(R.id.id_drawerLayout);
         mNavigationView = findWidget(R.id.id_nvMenu);
         mMainContent = findWidget(R.id.id_mainContent);
@@ -53,6 +67,22 @@ public class MainActivity extends AbstractActivity {
         mActionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         mActionBarDrawerToggle.syncState();//show the default icon and sync the DrawerToggle state,如果你想改变图标的话，这句话要去掉。这个会使用默认的三杠图标
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);    //不加这一句，则不旋转
+        mNavigationView.addHeaderView(view);
+        mTvName = (TextView) view.findViewById(R.id.tv_menuHead_userName);
+        mTvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!BaseApplication.getInstance().isUserLogin()){
+                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+        if (BaseApplication.getInstance().isUserLogin()){
+            if (mTvName != null){
+                mTvName.setText(BaseApplication.getInstance().getUser().getObj().getNickName());
+            }
+        }
         showMenuMain();
         setNavigationViewListener();
     }
@@ -76,15 +106,9 @@ public class MainActivity extends AbstractActivity {
                 index = 0;
                 break;
             case R.id.action_switchTheme:
-//                index = 1;
                 selectTheme();
                 break;
             case R.id.action_setting:
-//                index = 2;
-                if (!BaseApplication.getInstance().isUserLogin()){
-                    Intent intent = new Intent(this,LoginActivity.class);
-                    startActivity(intent);
-                }
                 break;
         }
         switchFragmentContent(R.id.tipInfo_layout,fragments[index]);
@@ -160,4 +184,23 @@ public class MainActivity extends AbstractActivity {
             }
         });
     }
+
+    /**
+     * 注册广播接收器
+     */
+    private void registerBroadcast(){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConstantValue.ACTION_LOGIN_SUCCESS);
+        registerReceiver(broadcastReceiver, filter);
+    }
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() { // 定义广播接收器，接收蓝牙消息
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            if (ConstantValue.ACTION_LOGIN_SUCCESS.equals(intent.getAction())){
+                if (mTvName != null){
+                    mTvName.setText(BaseApplication.getInstance().getUser().getObj().getNickName());
+                }
+            }
+        }
+    };
 }
