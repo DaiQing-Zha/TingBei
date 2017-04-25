@@ -5,5 +5,5 @@
     <TextView android:id="@+id/tvSingerTypeName"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:padding="8dip" android:textSize="@dimen/comm_size16"
-        android:textColor="@color/color_commLightGreen" android:background="@color/color_commGrayF0" />
+        android:textColor="?attr/colorPrimary" android:background="@color/color_commGrayF0" />
 </LinearLayout>
