@@ -103,4 +103,8 @@ public class RoutConstant {
      * 手机号是否重复
      */
     public final static String samePhone = "inter/samePhone";
+    /**
+     * 根据NoRing获取音乐集
+     */
+    public final static String getMusicListReleaseByIdNoRingInfo = "inter/getMusicListReleaseByIdNoRingInfo";
 }

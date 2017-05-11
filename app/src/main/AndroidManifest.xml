@@ -55,6 +55,8 @@
         </activity>
         <activity android:name=".activity.RegisterActivity">
         </activity>
+        <activity android:name=".activity.MusicListNoRingActivity">
+        </activity>
         <!--声明服务-->
         <service android:name=".service.MusicPlayerService">
         </service>

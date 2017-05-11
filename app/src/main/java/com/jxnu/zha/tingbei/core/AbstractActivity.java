@@ -389,6 +389,7 @@ public abstract class AbstractActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             CacheManager.saveObject(mContext.get(),serializable,key);
+            getFilesDir();
             return null;
         }
     }
